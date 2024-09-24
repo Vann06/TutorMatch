@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.ui.theme.TutorMatchTheme
 import com.example.tutormatch.ui.vistas.general.LoginScreen
+import com.example.tutormatch.ui.vistas.general.SignUpScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "LoginScreen") {
         composable("LoginScreen") {
-            LoginScreen(navController)
+            SignUpScreen(navController)
         }
     }
 }
@@ -50,7 +51,7 @@ fun MainScreen(navController: NavHostController) {
 fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = "LoginScreen") {
         composable("LoginScreen") {
-            LoginScreen(navController)
+            SignUpScreen(navController)
         }
     }
 }
