@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tutormatch.R
-import com.example.tutormatch.ui.theme.Azul04
+import com.example.tutormatch.ui.theme.AzulPrimario
 
 @Composable
 fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
@@ -46,7 +46,7 @@ fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
 
             // Título de la App encima del fondo
             Text(
-                text = "TUTORMATCH",
+                text = "TUTO!",
                 fontSize = 50.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -64,7 +64,7 @@ fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
 
                 Button(
                     onClick = onLoginClick,
-                    colors = ButtonDefaults.buttonColors(Azul04),
+                    colors = ButtonDefaults.buttonColors(AzulPrimario),
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .width(250.dp)
@@ -74,7 +74,7 @@ fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
                 }
                 Button(
                     onClick = onSignUpClick,
-                    colors = ButtonDefaults.buttonColors(Azul04),
+                    colors = ButtonDefaults.buttonColors(AzulPrimario),
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .width(250.dp)

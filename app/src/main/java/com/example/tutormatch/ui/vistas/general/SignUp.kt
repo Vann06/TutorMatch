@@ -23,7 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.R
+import com.example.tutormatch.ui.theme.AzulPrimario
+import com.example.tutormatch.ui.theme.AzulPrimary
 
 
 @Composable
@@ -64,7 +67,7 @@ fun SignUpScreen(navController: NavHostController) {
 
             // Título principal
             Text(
-                text = "TutorMatch",
+                text = "TUTO!",
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
                 color = Color.White,
@@ -185,7 +188,9 @@ fun SignUpScreen(navController: NavHostController) {
                         Button(
                             onClick = { selectedAccountType = "Estudiante" },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selectedAccountType == "Estudiante") Color(0xFF1976D2) else Color.Gray,
+                                containerColor = if (selectedAccountType == "Estudiante") Color(
+                                    0xFF3E54C2
+                                ) else Color.Gray,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(50)
@@ -196,7 +201,9 @@ fun SignUpScreen(navController: NavHostController) {
                         Button(
                             onClick = { selectedAccountType = "Tutor" },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selectedAccountType == "Tutor") Color(0xFF1976D2) else Color.Gray,
+                                containerColor = if (selectedAccountType == "Tutor") Color(
+                                    0xFF3E54C2
+                                ) else Color.Gray,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(50)
@@ -211,7 +218,7 @@ fun SignUpScreen(navController: NavHostController) {
                     Button(
                         onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF1976D2),
+                            containerColor = AzulPrimario,
                             contentColor = Color.White
                         ),
                         modifier = Modifier
@@ -225,4 +232,11 @@ fun SignUpScreen(navController: NavHostController) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignUpScreenPreview() {
+    // Como NavHostController es necesario, puedes pasar uno simulado o no usarlo en el preview
+    SignUpScreen(navController = rememberNavController())
 }

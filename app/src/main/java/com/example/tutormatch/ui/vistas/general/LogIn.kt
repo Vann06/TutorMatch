@@ -45,7 +45,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.tutormatch.R
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import com.example.tutormatch.ui.theme.Azul04
+import com.example.tutormatch.ui.theme.AzulClaro
+import com.example.tutormatch.ui.theme.AzulPrimario
 
 @Composable
 fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier){
@@ -70,7 +71,7 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
-            Text(text = "TUTORMATCH",
+            Text(text = "TUTO!",
                 fontSize = 50.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -89,7 +90,7 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
                     modifier = Modifier
                         .padding(vertical = 8.dp),
                     RoundedCornerShape(16.dp),
-                    border = BorderStroke(2.dp, Color.Black),
+                   // border = BorderStroke(2.dp, Color.Black),
                     colors = CardDefaults.cardColors(
                         containerColor = Color(0xFF606060)
                     ),
@@ -115,7 +116,8 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
                     Spacer(modifier = Modifier.height(50.dp))
 
                     Text(text = "Username",
-                        fontSize = 15.sp,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold,
                         color = Color(0xFF6C8AF4),
                         modifier = Modifier.padding(20.dp)
                     )
@@ -125,7 +127,7 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
                     OutlinedTextField(
                         value = user,
                         onValueChange = { user = it },
-                        label = { Text("Correo Electrónico", color = Color.White) },
+                        label = { Text("Correo Electrónico", color = Color.White)},
                         placeholder = { Text("usuario@ejemplo.com") },
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
@@ -134,8 +136,9 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(text = "Contraseña",
-                        fontSize = 15.sp,
-                        color = Color(0xFF6C8AF4),
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AzulClaro,
                         modifier = Modifier.padding(20.dp)
                     )
 
@@ -158,7 +161,7 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
                         horizontalArrangement = Arrangement.Center
                     ){
                         Button(onClick = { /*TODO*/ },
-                            colors = ButtonDefaults.buttonColors(Azul04),
+                            colors = ButtonDefaults.buttonColors(AzulPrimario),
                             modifier = Modifier
                                 .padding(vertical = 8.dp)
                                 .width(250.dp)

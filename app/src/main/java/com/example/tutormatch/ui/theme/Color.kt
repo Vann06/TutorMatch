@@ -2,12 +2,19 @@ package com.example.tutormatch.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFF3E54C2)
-val Pink80 = Color(0xFFEFB8C8)
 
-val Purple40 = Color(0xFF3E54C2)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+//MODO OSCURO
+val AzulClaro = Color(0xFF6C8AF4)
+val AzulPrimario = Color (0xFF3E54C2)
+val AzulSecundario = Color(0xFF3D44B6)
+val AzulTerciario = Color(0xFF0A126B)
 
-val Azul04 = Color (0xFF3E54C2)
+val GrisPrimario = Color(0xFF606060)
+val GrisSecundario = Color(0xFF424242)
+
+
+//MODO CLARO
+
+val AzulPrimary = Color(0xFFB3C5FF)
+val AzulSecundary = Color(0xFFBFC2FF)
+val AzulTerciary = Color(0xFFBDC2FF)
