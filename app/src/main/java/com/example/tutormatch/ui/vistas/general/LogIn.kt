@@ -47,6 +47,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import com.example.tutormatch.ui.theme.AzulClaro
 import com.example.tutormatch.ui.theme.AzulPrimario
+import com.example.tutormatch.ui.theme.GrisSecundario
 
 @Composable
 fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier){
@@ -92,7 +93,7 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
                     RoundedCornerShape(16.dp),
                    // border = BorderStroke(2.dp, Color.Black),
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFF606060)
+                        containerColor = Color.DarkGray
                     ),
 
                 ){

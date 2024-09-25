@@ -26,8 +26,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.R
 import com.example.tutormatch.ui.theme.AzulPrimario
-import com.example.tutormatch.ui.theme.AzulPrimary
-
 
 @Composable
 fun SignUpScreen(navController: NavHostController) {
@@ -69,7 +67,7 @@ fun SignUpScreen(navController: NavHostController) {
             Text(
                 text = "TUTO!",
                 fontWeight = FontWeight.Bold,
-                fontSize = 32.sp,
+                fontSize = 43.sp,
                 color = Color.White,
                 modifier = Modifier.padding(bottom = 32.dp)
             )

@@ -9,7 +9,7 @@ val AzulPrimario = Color (0xFF3E54C2)
 val AzulSecundario = Color(0xFF3D44B6)
 val AzulTerciario = Color(0xFF0A126B)
 
-val GrisPrimario = Color(0xFF606060)
+val GrisPrimario = Color(0xFF9C9C9C)
 val GrisSecundario = Color(0xFF424242)
 
 
