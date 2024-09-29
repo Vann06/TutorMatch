@@ -14,6 +14,7 @@ kotlinxSerialization = "1.6.3"
 firebaseFirestoreKtx = "25.1.0"
 firebaseAuthKtx = "23.0.0"
 
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
@@ -40,3 +41,4 @@ material3 = { module = "androidx.compose.material3:material3" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+

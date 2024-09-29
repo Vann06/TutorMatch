@@ -25,12 +25,15 @@ import com.example.tutormatch.ui.theme.AzulTerciario
 import com.example.tutormatch.ui.theme.GrisPrimario
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 
 
 @Composable
 fun PerfilEstudianteScreen(
     estudiante: Estudiante,
-    onMyTutorsClick: () -> Unit
+    onMyTutorsClick: () -> Unit,
+    navController: NavHostController
 ) {
     Surface(color = GrisPrimario) {
         Image(
@@ -221,7 +224,7 @@ fun PerfilItem(
 
 
 @Composable
-private fun Button(
+fun Button(
     expanded: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -240,7 +243,8 @@ private fun Button(
 @Composable
 fun PerfilPreview() {
     PerfilEstudianteScreen(
-        estudiante = Estudiante(nombre = "Ricardo Godinez", usuario = "Ricgo_01"),
-        onMyTutorsClick = {}
+        estudiante = Estudiante(nombre = "Ricardo Godinez", usuario = "Ricgo_01", myTutors = mutableListOf()),
+        onMyTutorsClick = {},
+        navController = NavHostController(context = LocalContext.current)
     )
 }
