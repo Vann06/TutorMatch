@@ -245,6 +245,7 @@ fun Cards (
                    Card(
                        modifier = Modifier
                            .height(20.dp)
+
                    ) {
                        Row{
                            for (i in materia){
@@ -272,7 +273,7 @@ fun MainEstudiantePreview() {
     val tutorJuanPerez = Tutor(
         nombre = "Juan Perez",
         materias = sampleMaterias,
-        fotoPerfil = R.drawable.estudiante,
+        fotoPerfil = R.drawable.tutor,
         myStudents = mutableListOf(),
         descripcion = "Descripción de Juan Perez",
         modalidad = "Presencial"
