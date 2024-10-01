@@ -32,7 +32,6 @@ import androidx.navigation.NavHostController
 @Composable
 fun PerfilEstudianteScreen(
     estudiante: Estudiante,
-    onMyTutorsClick: () -> Unit,
     navController: NavHostController
 ) {
     Surface(color = GrisPrimario) {
@@ -81,7 +80,10 @@ fun PerfilEstudianteScreen(
                     initialText = estudiante.usuario,
                     onEdit = { newUsuario -> /* Manejar nuevo usuario */ }
                 )
-                Divider(color = AzulTerciario, modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    color = AzulTerciario
+                )
 
                 ExpandablePerfilItem(
                     iconResId = R.drawable.user,
@@ -89,7 +91,10 @@ fun PerfilEstudianteScreen(
                     initialText = estudiante.nombre,
                     onEdit = { newName -> /* Manejar nuevo nombre */ }
                 )
-                Divider(color = AzulTerciario, modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    color = AzulTerciario
+                )
 
                 ExpandablePerfilItem(
                     iconResId = R.drawable.eye,
@@ -97,7 +102,10 @@ fun PerfilEstudianteScreen(
                     initialText = "********",
                     onEdit = { newPassword -> /* Manejar nueva contraseña */ }
                 )
-                Divider(color = AzulTerciario, modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    color = AzulTerciario
+                )
 
                 // Opción de notificaciones
                 PerfilItem(
@@ -105,16 +113,22 @@ fun PerfilEstudianteScreen(
                     text = "Notificaciones",
                     hasSwitch = true
                 )
-                Divider(color = AzulTerciario, modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    color = AzulTerciario
+                )
 
                 // MyTutors con onClick
                 PerfilItem(
                     iconResId = R.drawable.star,
                     text = "MyTutors",
                     hasSwitch = false,
-                    onClick = onMyTutorsClick
+                    onClick = { /* Maneja la navegación a Más */ }
                 )
-                Divider(color = AzulTerciario, modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    color = AzulTerciario
+                )
             }
         }
     }
@@ -244,7 +258,6 @@ fun Button(
 fun PerfilPreview() {
     PerfilEstudianteScreen(
         estudiante = Estudiante(nombre = "Ricardo Godinez", usuario = "Ricgo_01", myTutors = mutableListOf()),
-        onMyTutorsClick = {},
         navController = NavHostController(context = LocalContext.current)
     )
 }
