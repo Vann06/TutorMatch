@@ -27,8 +27,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PermIdentity
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Search
@@ -76,7 +78,7 @@ fun MainEstudiante(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    icon = { Icon(Icons.Filled.PermIdentity, contentDescription = "Perfil") },
+                    icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
                     label = { Text("Perfil") },
                     selected = false,
                     onClick = { /* Maneja la navegación a Inicio */ }
@@ -88,7 +90,7 @@ fun MainEstudiante(
                     onClick = { /* Maneja la navegación a Más */ }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Filled.School, contentDescription = "MyTutors") },
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "MyTutors") },
                     label = { Text("MyTutors") },
                     selected = false,
                     onClick = { /* Maneja la navegación a Más */ }

@@ -4,10 +4,16 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Estudiante(
     val id: String = "",
-    var nombre: String = "",
-    var usuario: String = "",
-    var contraseña: String = "",
+    var nombre: String = "Nicolas Maduro",
+    var usuario: String = "maduro23",
+    var contraseña: String = "si",
     val notificaciones: List<String> = emptyList(),
-    var myTutors: MutableList<Tutor>,
-    var fotoPerfil: String = ""
+    var misTutorias: MutableList<Tutoria> = mutableListOf(
+        Tutoria(),
+        Tutoria(tutor=Tutor(nombre="Diego López"))
+    ),
+    var fotoPerfil: String = "",
+    var myTutors: MutableList<Tutor> = mutableListOf()
 )
+
+

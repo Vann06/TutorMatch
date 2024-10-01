@@ -258,8 +258,9 @@ fun SolicitudTutoria(
                 trailingIcon = {
                     IconButton(onClick = { /* Add time picker logic here */ }) {
                         Icon(
-                            imageVector = Icons.Filled.DateRange,
-                            contentDescription = "Seleccionar hora"
+                            painter = painterResource(id = R.drawable.clock_icon) ,
+                            contentDescription = "Seleccionar hora",
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 },

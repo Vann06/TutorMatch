@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Materias(
 
-    val nombre: String = "",
+    val nombre: String = "Ecuaciones Diferenciales",
 )

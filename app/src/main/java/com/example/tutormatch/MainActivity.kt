@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.estructuras.Estudiante
 import com.example.tutormatch.estructuras.Materias
 import com.example.tutormatch.estructuras.Tutor
+import com.example.tutormatch.estructuras.Tutoria
 import com.example.tutormatch.ui.theme.TutorMatchTheme
 import com.example.tutormatch.ui.vistas.estudiante.MainEstudiante
 import com.example.tutormatch.ui.vistas.estudiante.PerfilEstudianteScreen
@@ -48,9 +49,43 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         Materias("Geografía")
     )
 
-    val tutor = Tutor(nombre = "Juan Perez", materias = mutableListOf(allMaterias[0], allMaterias[1]), fotoPerfil = R.drawable.estudiante, myStudents = mutableListOf(), descripcion = "descripcion", modalidad = "modalidad" )
+    // Crear un tutor de ejemplo
+    val tutor = Tutor(
+        nombre = "Juan Perez",
+        materias = mutableListOf(allMaterias[0], allMaterias[1]),
+        fotoPerfil = R.drawable.estudiante, // Asegúrate de que R.drawable.estudiante sea un recurso válido
+        myStudents = mutableListOf(),
+        descripcion = "Descripcion",
+        modalidad = "Modalidad"
+    )
 
-    val estudiante = Estudiante(nombre = "Ricardo Godinez", usuario = "Ricgo_01", myTutors = mutableListOf(tutor))
+    // Crear una lista de tutorías de ejemplo
+    val tutorias = mutableListOf(
+        Tutoria(
+            id = "1",
+            fecha = "2024-10-01",
+            hora = "10:00 AM",
+            modalidad = "Online",
+            tutor = tutor,
+            materia = allMaterias[0] // Por ejemplo, Matemáticas
+        ),
+        Tutoria(
+            id = "2",
+            fecha = "2024-10-02",
+            hora = "11:00 AM",
+            modalidad = "Presencial",
+            tutor = tutor,
+            materia = allMaterias[1] // Por ejemplo, Física
+        )
+    )
+
+    // Crear un estudiante de ejemplo
+    val estudiante = Estudiante(
+        nombre = "Ricardo Godinez",
+        usuario = "Ricgo_01",
+        misTutorias = tutorias, // Aquí asignas la lista de tutorías
+        fotoPerfil = "" // Asigna una imagen de perfil si es necesario
+    )
 
     NavHost(
         navController = navController,
@@ -67,6 +102,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         }
     }
 }
+
 
 
 
