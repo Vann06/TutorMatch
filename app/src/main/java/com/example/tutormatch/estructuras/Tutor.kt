@@ -7,7 +7,7 @@ data class Tutor(
     var nombre: String = "",
     var usuario: String = "",
     var contraseña: String = "",
-    var myStudents: MutableList<Estudiante>,
+    var myStudents: MutableList<Estudiante> ,
     var fotoPerfil: Int,
     var materias: MutableList<Materias>,
     var descripcion: String = "",
