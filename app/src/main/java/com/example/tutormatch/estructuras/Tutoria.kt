@@ -10,6 +10,8 @@ data class Tutoria (
     val modalidad: String = "Presencial",
     val tutor: Tutor = Tutor(),
     val materia: Materias = Materias(),
+    val estudiante: Estudiante = Estudiante()
+
 
 )
 

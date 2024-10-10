@@ -1,4 +1,4 @@
-package com.example.tutormatch.ui.vistas.tutor
+package com.example.tutormatch.ui.tutor.misTutorias
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -53,7 +53,7 @@ fun MisTutorias(infoEstudiante: Estudiante) {
 }
 @Preview(showBackground = true)
 @Composable
-fun PreviewMyTutors() {
+fun PreviewMisTutorias() {
     val exampleEstudiante = Estudiante(
         nombre = "Ejemplo Estudiante",
         misTutorias = mutableListOf(
@@ -102,7 +102,7 @@ fun TutoriaCard(infotutoria: Tutoria) {
             // Icono del tutor
             Image(
                 painter = painterResource(id = R.drawable.estudiante),
-                contentDescription = "Imagen de perfil de tutor",
+                contentDescription = "Imagen de perfil de alumno",
                 modifier = Modifier
                     .padding(6.dp)
                     .size(50.dp) // Tamaño más pequeño como en la imagen
@@ -178,11 +178,11 @@ fun PreviewTutoriaCard() {
     // Crear datos de ejemplo para la tutoria
     val tutorEjemplo = Tutor(
         id = "1",
-        nombre = "Tutor Ejemplo",
+        nombre = "Alumno Ejemplo",
         usuario = "usuario",
         contraseña = "contraseña",
         myStudents = mutableListOf(),
-        fotoPerfil = R.drawable.estudiante, // Cambiar por un drawable válido
+        fotoPerfil = R.drawable.estudiante,
         materias = mutableListOf(
             Materias(nombre = "Física II")
         ),
@@ -197,7 +197,7 @@ fun PreviewTutoriaCard() {
         contraseña = "contraseña123",
         notificaciones = listOf("Nueva tutoría agendada", "Mensaje de tu tutor"),
         misTutorias = mutableListOf(), // Lista vacía para comenzar
-        fotoPerfil = "https://example.com/imagen_perfil.jpg" // O un drawable si es local
+         // O un drawable si es local
     )
 
     val materiaEjemplo = Materias(

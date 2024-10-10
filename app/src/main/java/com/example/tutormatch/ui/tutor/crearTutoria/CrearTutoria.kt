@@ -1,4 +1,4 @@
-package com.example.tutormatch.ui.estudiante.SolicitudTutoria.View
+package com.example.tutormatch.ui.tutor.crearTutoria
 
 import android.widget.CalendarView
 import androidx.compose.foundation.BorderStroke
@@ -31,8 +31,8 @@ import com.example.tutormatch.estructuras.Tutor
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewSolicitudTutoria() {
-    SolicitudTutoria(
+fun PrevieCreacionTutoria() {
+    CreacionTutoria(
         navHostController = rememberNavController(),
         tutor = Tutor(
             id = "1",
@@ -55,7 +55,7 @@ fun PreviewSolicitudTutoria() {
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
-fun SolicitudTutoria(
+fun CreacionTutoria(
     navHostController: NavHostController = rememberNavController(),
     tutor: Tutor
 ) {
@@ -74,7 +74,6 @@ fun SolicitudTutoria(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        // Header with back button and title
         item {
             Row(
                 modifier = Modifier
@@ -167,11 +166,11 @@ fun SolicitudTutoria(
                     containerColor = Color.Transparent,
                     contentColor = AzulPrimario
                 ),
-                shape = RoundedCornerShape(16.dp), // Curved corners
-                border = BorderStroke(1.dp, AzulPrimario), // Border to define button shape
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, AzulPrimario),
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(0.01.dp)),
 
-            ) {
+                ) {
                 Text(text = selectedTipoTutoria ?: "Selecciona el tipo de tutoría")
             }
 
@@ -191,8 +190,6 @@ fun SolicitudTutoria(
             }
         }
 
-
-        // Date Picker (OutlinedTextField with Calendar Icon)
         item {
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -266,7 +263,7 @@ fun SolicitudTutoria(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Escribe lo que quieras estudiar",
+                text = "Escribe una descripción de que tratará tu clase: ",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
                 color = Color.Black,
@@ -298,7 +295,7 @@ fun SolicitudTutoria(
                     .padding(vertical = 16.dp),
                 colors = ButtonDefaults.buttonColors(AzulPrimario)
             ) {
-                Text(text = "Solicitar Tutoría", color = Color.White)
+                Text(text = "Crear Tutoría", color = Color.White)
             }
         }
     }
