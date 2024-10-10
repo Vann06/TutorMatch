@@ -197,7 +197,7 @@ fun PreviewTutoriaCard() {
         contraseña = "contraseña123",
         notificaciones = listOf("Nueva tutoría agendada", "Mensaje de tu tutor"),
         misTutorias = mutableListOf(), // Lista vacía para comenzar
-        fotoPerfil = "https://example.com/imagen_perfil.jpg" // O un drawable si es local
+        fotoPerfil = R.drawable.estudiante // O un drawable si es local
     )
 
     val materiaEjemplo = Materias(

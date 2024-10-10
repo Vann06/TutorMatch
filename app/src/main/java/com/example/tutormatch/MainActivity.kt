@@ -51,7 +51,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
     val tutor = Tutor(
         nombre = "Juan Perez",
         materias = mutableListOf(allMaterias[0], allMaterias[1]),
-        fotoPerfil = R.drawable.estudiante, // Asegúrate de que R.drawable.estudiante sea un recurso válido
+        fotoPerfil = R.drawable.tutor, // Asegúrate de que R.drawable.estudiante sea un recurso válido
         myStudents = mutableListOf(),
         descripcion = "Descripcion",
         modalidad = "Modalidad"
@@ -82,7 +82,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         nombre = "Ricardo Godinez",
         usuario = "Ricgo_01",
         misTutorias = tutorias, // Aquí asignas la lista de tutorías
-        fotoPerfil = "" // Asigna una imagen de perfil si es necesario
+        fotoPerfil = R.drawable.estudiante // Asigna una imagen de perfil si es necesario
     )
 
     NavHost(
