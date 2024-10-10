@@ -1,4 +1,7 @@
 package com.example.tutormatch.navigation
 
-class NavigationState {
+
+sealed class NavigationState(val route: String) {
+    data object Bienvenida: NavigationState("Bienvenida")
+
 }

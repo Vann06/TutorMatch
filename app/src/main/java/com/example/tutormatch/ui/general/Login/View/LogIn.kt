@@ -1,6 +1,5 @@
-package com.example.tutormatch.ui.vistas.general
+package com.example.tutormatch.ui.general.Login.View
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.Composable
 
 import androidx.navigation.NavHostController
@@ -9,7 +8,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,11 +40,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tutormatch.R
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import com.example.tutormatch.ui.theme.AzulClaro
 import com.example.tutormatch.ui.theme.AzulPrimario
-import com.example.tutormatch.ui.theme.GrisSecundario
 
 @Composable
 fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier){

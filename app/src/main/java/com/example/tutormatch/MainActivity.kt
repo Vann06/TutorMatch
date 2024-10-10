@@ -3,7 +3,6 @@ package com.example.tutormatch
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -18,8 +17,7 @@ import com.example.tutormatch.estructuras.Materias
 import com.example.tutormatch.estructuras.Tutor
 import com.example.tutormatch.estructuras.Tutoria
 import com.example.tutormatch.ui.theme.TutorMatchTheme
-import com.example.tutormatch.ui.vistas.estudiante.MainEstudiante
-import com.example.tutormatch.ui.vistas.estudiante.PerfilEstudianteScreen
+import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +51,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
     val tutor = Tutor(
         nombre = "Juan Perez",
         materias = mutableListOf(allMaterias[0], allMaterias[1]),
-        fotoPerfil = R.drawable.estudiante, // Asegúrate de que R.drawable.estudiante sea un recurso válido
+        fotoPerfil = R.drawable.tutor, // Asegúrate de que R.drawable.estudiante sea un recurso válido
         myStudents = mutableListOf(),
         descripcion = "Descripcion",
         modalidad = "Modalidad"
@@ -84,7 +82,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
         nombre = "Ricardo Godinez",
         usuario = "Ricgo_01",
         misTutorias = tutorias, // Aquí asignas la lista de tutorías
-        fotoPerfil = "" // Asigna una imagen de perfil si es necesario
+        fotoPerfil = R.drawable.estudiante // Asigna una imagen de perfil si es necesario
     )
 
     NavHost(
