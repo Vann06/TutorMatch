@@ -1,4 +1,4 @@
-package com.example.tutormatch.ui.vistas.general
+package com.example.tutormatch.ui.general.bienvenida.View
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

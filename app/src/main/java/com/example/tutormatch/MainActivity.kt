@@ -3,7 +3,6 @@ package com.example.tutormatch
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -18,8 +17,7 @@ import com.example.tutormatch.estructuras.Materias
 import com.example.tutormatch.estructuras.Tutor
 import com.example.tutormatch.estructuras.Tutoria
 import com.example.tutormatch.ui.theme.TutorMatchTheme
-import com.example.tutormatch.ui.vistas.estudiante.MainEstudiante
-import com.example.tutormatch.ui.vistas.estudiante.PerfilEstudianteScreen
+import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

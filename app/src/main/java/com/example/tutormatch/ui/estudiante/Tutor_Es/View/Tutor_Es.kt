@@ -1,4 +1,4 @@
-package com.example.tutormatch.ui.vistas.estudiante
+package com.example.tutormatch.ui.estudiante.Tutor_Es.View
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
