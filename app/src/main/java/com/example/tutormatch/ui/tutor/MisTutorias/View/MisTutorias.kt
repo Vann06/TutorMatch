@@ -1,4 +1,4 @@
-package com.example.tutormatch.ui.tutor.misTutorias
+package com.example.tutormatch.ui.tutor.MisTutorias.View
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -172,7 +172,7 @@ fun TutoriaCard(infotutoria: Tutoria) {
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun PreviewTutoriaCard() {
     // Crear datos de ejemplo para la tutoria

@@ -1,4 +1,4 @@
-package com.example.tutormatch.ui.tutor.crearTutoria
+package com.example.tutormatch.ui.tutor.Crear_Tuto.View
 
 import android.widget.CalendarView
 import androidx.compose.foundation.BorderStroke
