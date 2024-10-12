@@ -13,6 +13,7 @@ navigationCompose = "2.8.0"
 kotlinxSerialization = "1.6.3"
 firebaseFirestoreKtx = "25.1.0"
 firebaseAuthKtx = "23.0.0"
+coil = "2.2.2"
 
 
 [libraries]
@@ -37,6 +38,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 material3 = { module = "androidx.compose.material3:material3" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

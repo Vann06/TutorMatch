@@ -57,7 +57,6 @@ import com.example.tutormatch.ui.theme.AzulPrimario
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEstudiante(
-    navController: NavHostController,
     estudiante: Estudiante,
     tutor: Tutor,
     modifier: Modifier = Modifier,
@@ -245,8 +244,8 @@ fun Cards (
 
                    ) {
                        Row{
-                           for (i in materia){
-                               Text(text = i.nombre)
+                           materia.forEach { materiaItem ->
+                               Text(text = materiaItem.nombre, style = MaterialTheme.typography.bodySmall)
                            }
                        }
                    }
@@ -282,10 +281,7 @@ fun MainEstudiantePreview() {
         myTutors = mutableListOf(tutorJuanPerez)
     )
 
-    val navController = rememberNavController()
-    
     MainEstudiante(
-        navController = navController,
         estudiante = estudianteRicardo,
         tutor = tutorJuanPerez,
         allMaterias = sampleMaterias

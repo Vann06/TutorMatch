@@ -82,7 +82,7 @@ fun PreviewMyTutors() {
 @Composable
 fun TutoriaCard(infotutoria: Tutoria) {
 
-    val nombreTutor = infotutoria.tutor.nombre
+    val nombreTutor = infotutoria.tutor?.nombre
 
     Card(
         modifier = Modifier
@@ -116,12 +116,14 @@ fun TutoriaCard(infotutoria: Tutoria) {
                     .weight(1f)
                     .padding(start = 8.dp)
             ) {
-                Text(
-                    text = nombreTutor,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp, // Tamaño de texto más pequeño
-                    color = Color.White // Texto en blanco
-                )
+                if (nombreTutor != null) {
+                    Text(
+                        text = nombreTutor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp, // Tamaño de texto más pequeño
+                        color = Color.White // Texto en blanco
+                    )
+                }
                 Text(
                     text = "Modalidad: " + infotutoria.modalidad,
                     fontWeight = FontWeight.Light,

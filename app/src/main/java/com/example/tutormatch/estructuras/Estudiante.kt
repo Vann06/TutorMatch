@@ -9,10 +9,7 @@ data class Estudiante(
     override var usuario: String = "maduro23",
     override var contraseña: String = "si",
     val notificaciones: List<String> = emptyList(),
-    var misTutorias: MutableList<Tutoria> = mutableListOf(
-        Tutoria(),
-        Tutoria(tutor=Tutor(nombre="Diego López"))
-    ),
+    var misTutorias: MutableList<Tutoria> = mutableListOf(),
     override var fotoPerfil: Int = R.drawable.estudiante,
     var myTutors: MutableList<Tutor> = mutableListOf()
 ) : Usuario
