@@ -92,7 +92,6 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
     ) {
         composable("MainEstudiante") {
             MainEstudiante(
-                navController = navController,
                 estudiante = estudiante,
                 tutor = tutor,
                 allMaterias = allMaterias
