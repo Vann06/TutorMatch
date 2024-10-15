@@ -8,9 +8,9 @@ data class Tutoria (
     val fecha: String = "14/10/24",
     val hora: String = "18:00",
     val modalidad: String = "Presencial",
-    val tutor: Tutor? = null,
+    var tutor: Tutor? = null,
     val materia: Materias = Materias(),
-    val estudiante: Estudiante? = null
+    var estudiante: Estudiante? = null
 
 
 )

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tutormatch.ui.tutor.solicitudes.ViewModel.TutoriaViewModel
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tutormatch.R
@@ -73,33 +74,43 @@ fun SolicitudesScreen(){
                     contentDescription = "Fondo de pantalla",
                 )
 
-                Text(
-                    text = "Tutorias",
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(16.dp),
-                )
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (solicitudes.isEmpty()) {
-                        Spacer(modifier = Modifier.height(170.dp))
-                        Text(
-                            text = "No hay solicitudes de tutoría",
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.height(170.dp))
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp)
-                        ) {
-                            items(solicitudes) { solicitud ->
-                                TutoriaCard(solicitud, viewModel)
-                                Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Tutorias",
+                        style = MaterialTheme.typography.headlineLarge,
+                        modifier = Modifier.padding(16.dp),
+                        color = colorResource(id = R.color.white)
+
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        if (solicitudes.isEmpty()) {
+                            Spacer(modifier = Modifier.height(170.dp))
+                            Text(
+                                text = "No hay solicitudes de tutoría",
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        } else {
+                            Spacer(modifier = Modifier.height(100.dp))
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp)
+                            ) {
+                                items(solicitudes) { solicitud ->
+                                    TutoriaCard(solicitud, viewModel)
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
                             }
                         }
                     }

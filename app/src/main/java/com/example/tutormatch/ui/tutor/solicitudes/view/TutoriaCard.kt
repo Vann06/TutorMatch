@@ -1,5 +1,6 @@
 package com.example.tutormatch.ui.tutor.solicitudes.view
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,11 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.TutoriaConDetalles
 import com.example.tutormatch.ui.tutor.solicitudes.ViewModel.TutoriaViewModel
+
 
 @Composable
 fun TutoriaCard(solicitud: TutoriaConDetalles, viewModel: TutoriaViewModel) {
@@ -38,14 +42,14 @@ fun TutoriaCard(solicitud: TutoriaConDetalles, viewModel: TutoriaViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ){
             AsyncImage(
-                model = if (solicitud.estudiante.fotoPerfilUrl.isNotEmpty())
-                    solicitud.estudiante.fotoPerfilUrl
-                else
-                    R.drawable.estudiante,
-                contentDescription = "Foto de perfil",
+                model = solicitud.estudiante.fotoPerfilUrl.takeIf { it.isNotEmpty() },
+                placeholder = painterResource(R.drawable.estudiante),
+                error = painterResource(R.drawable.estudiante),
+                contentDescription = "Perfil del tutor",
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
+                    .border(2.dp, Color.White)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
