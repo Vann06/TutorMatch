@@ -130,6 +130,16 @@ fun PerfilTutorScreen(
                     modifier = Modifier.padding(vertical = 16.dp),
                     color = AzulTerciario
                 )
+                ExpandablePerfilItem(
+                    iconResId = R.drawable.clock_2,
+                    title = "Descripción",
+                    initialText = tutor.descripcion,
+                    onEdit = { newModalidad -> /* Manejar nueva contraseña */ }
+                )
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    color = AzulTerciario
+                )
 
 
             }

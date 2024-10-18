@@ -15,11 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.tutormatch.R
+import com.example.tutormatch.navigation.NavigationState
+import com.example.tutormatch.navigation.navigateTo
 import com.example.tutormatch.ui.theme.AzulPrimario
 
 @Composable
-fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
+fun Bienvenida(navController: NavController) {
     // Caja
     Box(
         modifier = Modifier
@@ -41,7 +44,6 @@ fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Espacio al inicio para dejar margen
             Spacer(modifier = Modifier.height(200.dp))
 
             // Título de la App encima del fondo
@@ -55,15 +57,16 @@ fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
 
             // Botones de SignIn y SignUp en la parte inferior
             Column(modifier = Modifier
-                                .fillMaxSize()
-                                .padding(3.dp),
+                .fillMaxSize()
+                .padding(3.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Spacer(modifier = Modifier.height(150.dp))
 
                 Button(
-                    onClick = onLoginClick,
+                    onClick = { navController.navigate(NavigationState.Login.route)
+                    },
                     colors = ButtonDefaults.buttonColors(AzulPrimario),
                     modifier = Modifier
                         .padding(vertical = 8.dp)
@@ -73,7 +76,8 @@ fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
                         fontSize = 25.sp)
                 }
                 Button(
-                    onClick = onSignUpClick,
+                    onClick = { navController.navigate(NavigationState.SignUp.route)
+                    },
                     colors = ButtonDefaults.buttonColors(AzulPrimario),
                     modifier = Modifier
                         .padding(vertical = 8.dp)
@@ -90,5 +94,5 @@ fun Bienvenida(onLoginClick: () -> Unit = {}, onSignUpClick: () -> Unit = {}) {
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    Bienvenida()
+    //Bienvenida(navController = )
 }

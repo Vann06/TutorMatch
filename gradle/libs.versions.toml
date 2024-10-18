@@ -1,5 +1,7 @@
 [versions]
 agp = "8.5.1"
+firebaseAuthKtxVersion = "22.0.0"
+firebaseBom = "33.4.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -14,11 +16,16 @@ kotlinxSerialization = "1.6.3"
 firebaseFirestoreKtx = "25.1.0"
 firebaseAuthKtx = "23.0.0"
 coil = "2.2.2"
+playServicesRecaptcha = "17.1.0"
+ui = "1.7.4"
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-auth-ktx-v2200 = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuthKtxVersion" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -39,6 +46,8 @@ firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-fires
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 material3 = { module = "androidx.compose.material3:material3" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+play-services-recaptcha = { module = "com.google.android.gms:play-services-recaptcha", version.ref = "playServicesRecaptcha" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -4,19 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.Estudiante
-import com.example.tutormatch.estructuras.Tutor
-import com.example.tutormatch.estructuras.Materias
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -30,43 +21,55 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.tutormatch.R
+import com.example.tutormatch.ui.estudiante.Main.Repository.EstudianteRepository
+import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewModel
 import com.example.tutormatch.ui.theme.AzulPrimario
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEstudiante(
-    estudiante: Estudiante,
-    tutor: Tutor,
-    modifier: Modifier = Modifier,
-    allMaterias: List<Materias>
+    navController: NavHostController,
+    viewModel: MainEstudianteViewModel = MainEstudianteViewModel(EstudianteRepository(
+        FirebaseFirestore.getInstance()))
 ) {
+    val materias by viewModel.materias.collectAsState()
+    val tutors by viewModel.tutors.collectAsState()
+
     var searchQuery by remember { mutableStateOf("") }
     var isDropdownVisible by remember { mutableStateOf(false) }
-    val filteredMaterias = allMaterias.filter { materia ->
+
+    val filteredMaterias = materias.filter { materia ->
         materia.nombre.contains(searchQuery, ignoreCase = true)
-    }
+    }.toMutableList()
 
     Scaffold(
         bottomBar = {
@@ -75,19 +78,19 @@ fun MainEstudiante(
                     icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
                     label = { Text("Perfil") },
                     selected = false,
-                    onClick = { /* Maneja la navegación a Inicio */ }
+                    onClick = { /* Navegación a Perfil */ }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Search, contentDescription = "Buscador") },
                     label = { Text("Buscador") },
                     selected = false,
-                    onClick = { /* Maneja la navegación a Más */ }
+                    onClick = { /* Navegación a Buscador */ }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Home, contentDescription = "MyTutors") },
-                    label = { Text("MyTutors") },
+                    label = { Text("Mis Tutores") },
                     selected = false,
-                    onClick = { /* Maneja la navegación a Más */ }
+                    onClick = { /* Navegación a Mis Tutores */ }
                 )
             }
         }
@@ -115,7 +118,7 @@ fun MainEstudiante(
                         onQueryChanged = { newQuery -> searchQuery = newQuery },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     Button(
                         onClick = { isDropdownVisible = !isDropdownVisible },
                         colors = ButtonDefaults.buttonColors(AzulPrimario),
@@ -131,7 +134,6 @@ fun MainEstudiante(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-
 
                     if (isDropdownVisible) {
                         LazyColumn(
@@ -169,12 +171,12 @@ fun MainEstudiante(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(estudiante.myTutors) { tutor -> //Esto deberia ser cuando tengamos una lista de tutores
-                            Cards(
+                        items(tutors) { tutor ->
+                            TutorCard(
                                 name = tutor.nombre,
                                 descripcion = tutor.descripcion,
-                                fotoPerfil = tutor.fotoPerfil,
-                                materia = tutor.materias,
+                                fotoPerfil = tutor.fotoPerfilUrl,
+                                materias = tutor.materiasIds // Cambiado a tutor.materiasIds
                             )
                         }
                     }
@@ -213,77 +215,46 @@ fun SearchBar(
 }
 
 @Composable
-fun Cards (
-        name: String, descripcion: String,  fotoPerfil: Int, materia: MutableList<Materias>,
-    ){
-       OutlinedCard(
-           modifier = Modifier
-               .fillMaxWidth()
-               .padding(4.dp)
+fun TutorCard(
+    name: String,
+    descripcion: String,
+    fotoPerfil: String,
+    materias: List<String>
+) {
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.tutor), // Reemplaza con la lógica para cargar imágenes
+                contentDescription = null,
+                modifier = Modifier
+                    .size(64.dp)
+                    .padding(end = 8.dp)
+            )
+            Column {
+                Text(text = name, style = MaterialTheme.typography.titleMedium)
+                Text(text = descripcion, style = MaterialTheme.typography.bodyMedium)
 
-       ) {
-           Row(
-               modifier = Modifier
-                   .fillMaxWidth()
-                   .padding(8.dp),
-               verticalAlignment = Alignment.CenterVertically
-           ) {
-               Image(
-                   painter = painterResource(id = fotoPerfil),
-                   contentDescription = null,
-                   modifier = Modifier
-                       .size(64.dp)
-                       .padding(end = 8.dp)
-               )
-               Column {
-                   Text(text = name, style = MaterialTheme.typography.titleMedium)
-                   Text(text = descripcion, style = MaterialTheme.typography.bodyMedium)
-                   Card(
-                       modifier = Modifier
-                           .height(20.dp)
-
-                   ) {
-                       Row{
-                           materia.forEach { materiaItem ->
-                               Text(text = materiaItem.nombre, style = MaterialTheme.typography.bodySmall)
-                           }
-                       }
-                   }
-
-               }
-           }
-       }
+                Row {
+                    materias.forEach { materia ->
+                        Text(text = materia, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            }
+        }
     }
-
-
+}
 
 @Preview(showBackground = true)
 @Composable
 fun MainEstudiantePreview() {
-    val sampleMaterias = mutableListOf(
-        Materias("Matemáticas"),
-        Materias("Física"),
-        Materias("Química"),
-    )
-
-    val tutorJuanPerez = Tutor(
-        nombre = "Juan Perez",
-        materias = sampleMaterias,
-        fotoPerfil = R.drawable.tutor,
-        myStudents = mutableListOf(),
-        descripcion = "Descripción de Juan Perez",
-        modalidad = "Presencial"
-    )
-
-    val estudianteRicardo = Estudiante(
-        nombre = "Ricardo Godinez",
-        usuario = "Ricgo_01",
-        myTutors = mutableListOf(tutorJuanPerez)
-    )
-
-    MainEstudiante(
-        estudiante = estudianteRicardo,
-        tutor = tutorJuanPerez,
-        allMaterias = sampleMaterias
-    )
+    // Puedes hacer un preview más detallado si necesitas
 }
