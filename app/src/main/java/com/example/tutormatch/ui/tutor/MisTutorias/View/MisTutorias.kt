@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,10 +18,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,19 +56,94 @@ import com.example.tutormatch.estructuras.Tutor
 import com.example.tutormatch.estructuras.Tutoria
 import com.example.tutormatch.ui.theme.AzulPrimario
 
-
 @Composable
-fun MisTutorias(infoEstudiante: Estudiante) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
-    ) {
-        items(infoEstudiante.misTutorias) { tutoria ->
-            TutoriaCard(infotutoria = tutoria)
+
+fun MisTutores(infoEstudiante: Estudiante) {
+
+    var isDropdownVisible by remember { mutableStateOf(false) }
+
+    Scaffold(bottomBar = {
+        NavigationBar {
+            NavigationBarItem(
+                icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
+                label = { Text("Perfil") },
+                selected = false,
+                onClick = { /* Maneja la navegación a Inicio */ }
+            )
+            NavigationBarItem(
+                icon = { Icon(Icons.Filled.Search, contentDescription = "Buscador") },
+                label = { Text("Buscador") },
+                selected = false,
+                onClick = { /* Maneja la navegación a Más */ }
+            )
+            NavigationBarItem(
+                icon = { Icon(Icons.Filled.Home, contentDescription = "MyTutors") },
+                label = { Text("MyTutors") },
+                selected = false,
+                onClick = { /* Maneja la navegación a Más */ }
+            )
+        }
+    }) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            ) {
+                // Imagen de fondo
+                Surface {
+                    Image(
+                        painter = painterResource(id = R.drawable.perfil_fondo),
+                        contentDescription = "Fondo de pantalla"
+                    )
+                }
+
+                // Título "Tutorías" en el centro del Box
+                Text(
+                    text = "Mis Tutorías",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+            }
+            Button(
+                onClick = { isDropdownVisible = !isDropdownVisible },
+                colors = ButtonDefaults.buttonColors(AzulPrimario),
+                modifier = Modifier
+                    .fillMaxWidth() // Asegúrate de que el botón ocupe el ancho completo
+                    .padding(horizontal = 16.dp) // Ajusta el espaciado horizontal
+            ) {
+                Text(
+                    text = if (isDropdownVisible) "Ocultar Materias" else "Mostrar solicitudes",
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = if (isDropdownVisible) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    contentDescription = if (isDropdownVisible) "Ocultar" else "Mostrar"
+                )
+            }
+
+            // Lista de tutorías
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 10.dp, start = 12.dp, end = 12.dp)
+            ) {
+                items(infoEstudiante.misTutorias) { tutoria ->
+                    com.example.tutormatch.ui.estudiante.MyTutors.View.TutoriaCard(infotutoria = tutoria)
+                }
+            }
         }
     }
 }
+
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewMisTutorias() {
@@ -58,14 +151,14 @@ fun PreviewMisTutorias() {
         nombre = "Ejemplo Estudiante",
         misTutorias = mutableListOf(
             Tutoria(
-                tutor = Tutor(nombre = "Ricardo Godinez"),
+                tutor = Tutor(nombre = "Juan López"),
                 modalidad = "Virtual",
                 materia = Materias(nombre = "Física 1"),
                 fecha = "02/10/24",
                 hora = "17:35"
             ),
             Tutoria(
-                tutor = Tutor(nombre = "Diego López"),
+                tutor = Tutor(nombre = "Martín Mazariegos"),
                 modalidad = "Presencial",
                 materia = Materias(nombre = "Matemáticas"),
                 fecha = "03/10/24",
@@ -74,10 +167,8 @@ fun PreviewMisTutorias() {
         )
     )
 
-    MisTutorias(infoEstudiante = exampleEstudiante)
+    MisTutores(infoEstudiante = exampleEstudiante)
 }
-
-
 
 @Composable
 fun TutoriaCard(infotutoria: Tutoria) {
@@ -110,7 +201,7 @@ fun TutoriaCard(infotutoria: Tutoria) {
                     .border(2.dp, Color.Gray, CircleShape) // Borde alrededor del icono
             )
 
-            // Columna con nombre del tutor y modalidad
+            // Columna con nombre del tutor y estado
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -124,8 +215,9 @@ fun TutoriaCard(infotutoria: Tutoria) {
                         color = Color.White // Texto en blanco
                     )
                 }
+                // Cambiar "Modalidad" por "Pendiente"
                 Text(
-                    text = "Modalidad: " + infotutoria.modalidad,
+                    text = "Pendiente",
                     fontWeight = FontWeight.Light,
                     fontSize = 14.sp,
                     color = Color.LightGray // Color más claro
@@ -174,7 +266,6 @@ fun TutoriaCard(infotutoria: Tutoria) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
 fun PreviewTutoriaCard() {
     // Crear datos de ejemplo para la tutoria
@@ -199,7 +290,6 @@ fun PreviewTutoriaCard() {
         contraseña = "contraseña123",
         notificaciones = listOf("Nueva tutoría agendada", "Mensaje de tu tutor"),
         misTutorias = mutableListOf(), // Lista vacía para comenzar
-         // O un drawable si es local
     )
 
     val materiaEjemplo = Materias(
@@ -216,5 +306,5 @@ fun PreviewTutoriaCard() {
     )
 
     // Mostrar la card de tutoría con los datos de ejemplo
-    TutoriaCard(infotutoria = tutoriaEjemplo)
+    com.example.tutormatch.ui.estudiante.MyTutors.View.TutoriaCard(infotutoria = tutoriaEjemplo)
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,8 +18,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,32 +50,94 @@ import com.example.tutormatch.ui.theme.AzulPrimario
 
 
 @Composable
-fun MyTutors(infoEstudiante: Estudiante) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
-    ) {
-        items(infoEstudiante.misTutorias) { tutoria ->
-            TutoriaCard(infotutoria = tutoria)
+fun MisTutorias(infoEstudiante: Estudiante) {
+
+    Scaffold ( bottomBar = {
+        NavigationBar {
+            NavigationBarItem(
+                icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
+                label = { Text("Perfil") },
+                selected = false,
+                onClick = { /* Maneja la navegación a Inicio */ }
+            )
+            NavigationBarItem(
+                icon = { Icon(Icons.Filled.Search, contentDescription = "Buscador") },
+                label = { Text("Buscador") },
+                selected = false,
+                onClick = { /* Maneja la navegación a Más */ }
+            )
+            NavigationBarItem(
+                icon = { Icon(Icons.Filled.Home, contentDescription = "MyTutors") },
+                label = { Text("MyTutors") },
+                selected = false,
+                onClick = { /* Maneja la navegación a Más */ }
+            )
         }
+    }){
+        innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            ) {
+                // Imagen de fondo
+                Surface {
+                    Image(
+                        painter = painterResource(id = R.drawable.perfil_fondo),
+                        contentDescription = "Fondo de pantalla"
+                    )
+                }
+
+                // Título MyTutors en el centro del Box
+                Text(
+                    text = "My Tutors",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 36.sp,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+            }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 10.dp, start = 12.dp, end = 12.dp) // Ajusta el valor de padding según sea necesario
+            ) {
+                items(infoEstudiante.misTutorias) { tutoria ->
+                    TutoriaCard(infotutoria = tutoria)
+                }
+            }
+
+        }
+
+
     }
+
+
+
 }
 @Preview(showBackground = true)
 @Composable
-fun PreviewMyTutors() {
+fun PreviewMisTutorias() {
     val exampleEstudiante = Estudiante(
         nombre = "Ejemplo Estudiante",
         misTutorias = mutableListOf(
             Tutoria(
-                tutor = Tutor(nombre = "Ricardo Godinez"),
+                tutor = Tutor(nombre = "Juan López"),
                 modalidad = "Virtual",
                 materia = Materias(nombre = "Física 1"),
                 fecha = "02/10/24",
                 hora = "17:35"
             ),
             Tutoria(
-                tutor = Tutor(nombre = "Diego López"),
+                tutor = Tutor(nombre = "Martín Mazariegos"),
                 modalidad = "Presencial",
                 materia = Materias(nombre = "Matemáticas"),
                 fecha = "03/10/24",
@@ -74,7 +146,7 @@ fun PreviewMyTutors() {
         )
     )
 
-    MyTutors(infoEstudiante = exampleEstudiante)
+    MisTutorias(infoEstudiante = exampleEstudiante)
 }
 
 
@@ -102,7 +174,7 @@ fun TutoriaCard(infotutoria: Tutoria) {
             // Icono del tutor
             Image(
                 painter = painterResource(id = R.drawable.estudiante),
-                contentDescription = "Imagen de perfil de tutor",
+                contentDescription = "Imagen de perfil de alumno",
                 modifier = Modifier
                     .padding(6.dp)
                     .size(50.dp) // Tamaño más pequeño como en la imagen
@@ -174,17 +246,16 @@ fun TutoriaCard(infotutoria: Tutoria) {
     }
 }
 
-//@Preview(showBackground = true)
 @Composable
 fun PreviewTutoriaCard() {
     // Crear datos de ejemplo para la tutoria
     val tutorEjemplo = Tutor(
         id = "1",
-        nombre = "Tutor Ejemplo",
+        nombre = "Alumno Ejemplo",
         usuario = "usuario",
         contraseña = "contraseña",
         myStudents = mutableListOf(),
-        fotoPerfil = R.drawable.estudiante, // Cambiar por un drawable válido
+        fotoPerfil = R.drawable.estudiante,
         materias = mutableListOf(
             Materias(nombre = "Física II")
         ),
@@ -199,7 +270,7 @@ fun PreviewTutoriaCard() {
         contraseña = "contraseña123",
         notificaciones = listOf("Nueva tutoría agendada", "Mensaje de tu tutor"),
         misTutorias = mutableListOf(), // Lista vacía para comenzar
-        fotoPerfil = R.drawable.estudiante // O un drawable si es local
+         // O un drawable si es local
     )
 
     val materiaEjemplo = Materias(

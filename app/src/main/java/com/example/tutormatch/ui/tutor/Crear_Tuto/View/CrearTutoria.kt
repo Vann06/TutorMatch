@@ -98,7 +98,7 @@ fun CreacionTutoria(
                 Spacer(modifier = Modifier.width(40.dp))
 
                 Text(
-                    text = "Agendar Tutoría",
+                    text = "Crear Tutoría Grupal",
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
                     color = AzulPrimario,
