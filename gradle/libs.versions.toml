@@ -18,6 +18,11 @@ firebaseAuthKtx = "23.0.0"
 coil = "2.2.2"
 playServicesRecaptcha = "17.1.0"
 ui = "1.7.4"
+kotlinxCoroutinesCore = "1.9.0"
+kotlinxCoroutinesAndroid = "1.9.0"
+lifecycleRuntimeKtxVersion = "2.6.1"
+lifecycleLivedataKtx = "2.6.1"
+runtimeLivedata = "1.4.3"
 
 
 [libraries]
@@ -48,6 +53,11 @@ material3 = { module = "androidx.compose.material3:material3" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 play-services-recaptcha = { module = "com.google.android.gms:play-services-recaptcha", version.ref = "playServicesRecaptcha" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

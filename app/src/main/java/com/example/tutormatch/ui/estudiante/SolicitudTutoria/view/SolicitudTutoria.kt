@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,51 +22,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.R
-import com.example.tutormatch.ui.theme.AzulPrimario
-import com.example.tutormatch.estructuras.Materias
+import com.example.tutormatch.estructuras.Materia
 import com.example.tutormatch.estructuras.Tutor
+import com.example.tutormatch.ui.estudiante.SolicitudTutoria.SolicitudTutoriaViewModel
 
+import com.example.tutormatch.ui.theme.AzulPrimario
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSolicitudTutoria() {
-    SolicitudTutoria(
-        navHostController = rememberNavController(),
-        tutor = Tutor(
-            id = "1",
-            nombre = "Tutor Ejemplo",
-            usuario = "usuario",
-            contraseña = "contraseña",
-            myStudents = mutableListOf(),
-            fotoPerfil = R.drawable.ic_launcher_background,
-            materias = mutableListOf(
-                Materias(nombre = "Matemáticas"),
-                Materias(nombre = "Física"),
-                Materias(nombre = "Química")
-            ),
-            descripcion = "Descripción",
-            modalidad = "Online"
-        )
-    )
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun SolicitudTutoria(
     navHostController: NavHostController = rememberNavController(),
-    tutor: Tutor
+    tutor: Tutor,
+    viewModel: SolicitudTutoriaViewModel = viewModel() // Asegúrate de que el ViewModel está importado correctamente
 ) {
-    var expandedMateria by remember { mutableStateOf(false) }
-    var selectedMateria by remember { mutableStateOf<Materias?>(null) }
-    var expandedTipoTutoria by remember { mutableStateOf(false) }
-    var selectedTipoTutoria by remember { mutableStateOf<String?>(null) }
-    var comment by remember { mutableStateOf("") }
-    var selectedDate by remember { mutableStateOf("") } // Date placeholder
-    var selectedTime by remember { mutableStateOf("") } // Time placeholder
+    // Referencias de estado del viewModel
+    val selectedMateria by viewModel.selectedMateria.collectAsState()
+    val selectedTipoTutoria by viewModel.selectedTipoTutoria.collectAsState()
+    val selectedDate by viewModel.selectedDate.collectAsState()
+    val selectedTime by viewModel.selectedTime.collectAsState()
+    val comment by viewModel.comment.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -74,7 +54,6 @@ fun SolicitudTutoria(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        // Header with back button and title
         item {
             Row(
                 modifier = Modifier
@@ -95,9 +74,7 @@ fun SolicitudTutoria(
                         modifier = Modifier.size(24.dp)
                     )
                 }
-
                 Spacer(modifier = Modifier.width(40.dp))
-
                 Text(
                     text = "Agendar Tutoría",
                     fontWeight = FontWeight.Bold,
@@ -111,7 +88,6 @@ fun SolicitudTutoria(
         // Materia dropdown
         item {
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Materia",
                 fontWeight = FontWeight.Bold,
@@ -119,40 +95,34 @@ fun SolicitudTutoria(
                 color = Color.Black,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
-
             Button(
-                onClick = { expandedMateria = true },
+                onClick = { viewModel.toggleMateriaDropdown() },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     contentColor = AzulPrimario
                 ),
-                shape = RoundedCornerShape(16.dp), // Curved corners
-                border = BorderStroke(1.dp, AzulPrimario), // Border to define button shape
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, AzulPrimario),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = selectedMateria?.nombre ?: "Selecciona la materia")
             }
-
             DropdownMenu(
-                expanded = expandedMateria,
-                onDismissRequest = { expandedMateria = false }
+                expanded = viewModel.materiaDropdownExpanded,
+                onDismissRequest = { viewModel.toggleMateriaDropdown() }
             ) {
                 tutor.materias.forEach { materia ->
                     DropdownMenuItem(
                         text = { Text(materia.nombre) },
-                        onClick = {
-                            selectedMateria = materia
-                            expandedMateria = false
-                        }
+                        onClick = { viewModel.setSelectedMateria(materia) }
                     )
                 }
             }
         }
 
-// Tipo de Tutoría dropdown
+        // Tipo de Tutoría dropdown
         item {
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Tipo de Tutoría",
                 fontWeight = FontWeight.Bold,
@@ -160,42 +130,34 @@ fun SolicitudTutoria(
                 color = Color.Black,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
-
             Button(
-                onClick = { expandedTipoTutoria = true },
+                onClick = { viewModel.toggleTipoTutoriaDropdown() },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     contentColor = AzulPrimario
                 ),
-                shape = RoundedCornerShape(16.dp), // Curved corners
-                border = BorderStroke(1.dp, AzulPrimario), // Border to define button shape
-                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(0.01.dp)),
-
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, AzulPrimario),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = selectedTipoTutoria ?: "Selecciona el tipo de tutoría")
             }
-
             DropdownMenu(
-                expanded = expandedTipoTutoria,
-                onDismissRequest = { expandedTipoTutoria = false }
+                expanded = viewModel.tipoTutoriaDropdownExpanded,
+                onDismissRequest = { viewModel.toggleTipoTutoriaDropdown() }
             ) {
                 listOf("Desde 0", "Intermedio", "Avanzado").forEach { tipo ->
                     DropdownMenuItem(
                         text = { Text(tipo) },
-                        onClick = {
-                            selectedTipoTutoria = tipo
-                            expandedTipoTutoria = false
-                        }
+                        onClick = { viewModel.setSelectedTipoTutoria(tipo) }
                     )
                 }
             }
         }
 
-
-        // Date Picker (OutlinedTextField with Calendar Icon)
+        // Date Picker
         item {
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Fecha de la tutoría",
                 fontWeight = FontWeight.Bold,
@@ -203,20 +165,15 @@ fun SolicitudTutoria(
                 color = Color.Black,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
-
             OutlinedTextField(
                 value = selectedDate,
-                onValueChange = { selectedDate = it },
+                onValueChange = { viewModel.setSelectedDate(it) },
                 readOnly = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(text = "Selecciona una fecha") },
                 trailingIcon = {
-                    IconButton(onClick = { /* Add date picker logic here */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.DateRange,
-                            contentDescription = "Seleccionar fecha"
-                        )
+                    IconButton(onClick = { /* Date picker */ }) {
+                        Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Seleccionar fecha")
                     }
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -226,10 +183,9 @@ fun SolicitudTutoria(
             )
         }
 
-        // Time Picker (OutlinedTextField with Clock Icon)
+        // Time Picker
         item {
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Hora de la tutoría",
                 fontWeight = FontWeight.Bold,
@@ -237,18 +193,16 @@ fun SolicitudTutoria(
                 color = Color.Black,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
-
             OutlinedTextField(
                 value = selectedTime,
-                onValueChange = { selectedTime = it },
+                onValueChange = { viewModel.setSelectedTime(it) },
                 readOnly = true,
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(text = "Selecciona una hora") },
                 trailingIcon = {
-                    IconButton(onClick = { /* Add time picker logic here */ }) {
+                    IconButton(onClick = { /* Time picker */ }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.clock_icon) ,
+                            painter = painterResource(id = R.drawable.clock_icon),
                             contentDescription = "Seleccionar hora",
                             modifier = Modifier.size(24.dp)
                         )
@@ -264,7 +218,6 @@ fun SolicitudTutoria(
         // Comment TextField
         item {
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Escribe lo que quieras estudiar",
                 fontWeight = FontWeight.Bold,
@@ -272,10 +225,9 @@ fun SolicitudTutoria(
                 color = Color.Black,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
-
             TextField(
                 value = comment,
-                onValueChange = { comment = it },
+                onValueChange = { viewModel.setComment(it) },
                 placeholder = { Text(text = "Escribe aquí...") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -290,7 +242,6 @@ fun SolicitudTutoria(
         // Submit button
         item {
             Spacer(modifier = Modifier.height(16.dp))
-
             Button(
                 onClick = { navHostController.navigate("home") },
                 modifier = Modifier
@@ -302,37 +253,4 @@ fun SolicitudTutoria(
             }
         }
     }
-}
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Greeting() {
-    var date by remember { mutableStateOf(value = "") }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Calendar View") },
-            )
-        },
-        content = { paddingValues: PaddingValues -> // Se utiliza el paddingValues
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues), // Se aplica el padding
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Aquí se añade el AndroidView
-                AndroidView(factory = { CalendarView(it) }, update = { calendarView: CalendarView ->
-                    calendarView.setOnDateChangeListener { _, year, month, day ->
-                        date = "$day - ${month + 1} - $year"
-                    }
-                })
-                Text(text = date)
-            }
-        }
-    )
 }

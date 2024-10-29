@@ -1,4 +1,5 @@
 package com.example.tutormatch.estructuras
+
 import com.example.tutormatch.R
 import kotlinx.serialization.Serializable
 
@@ -8,9 +9,9 @@ data class Tutor(
     override var nombre: String = "Ricardo Godínez",
     override var usuario: String = "ricgod213",
     override var contraseña: String = "si",
-    var myStudents: MutableList<Estudiante> = mutableListOf(),
+    var myStudents: List<Estudiante> = listOf(), // List en lugar de MutableList
     override var fotoPerfil: Int = R.drawable.tutor,
-    var materias: MutableList<Materias> = mutableListOf(),
+    var materias: List<Materia> = listOf(), // List en lugar de MutableList
     var descripcion: String = "Soy el tutor más basado",
-    var modalidad: String = "Presencial/Virtual",
+    var modalidad: String = "Presencial/Virtual"
 ) : Usuario

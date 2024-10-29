@@ -23,6 +23,7 @@ import com.example.tutormatch.ui.general.bienvenida.View.Bienvenida
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.tutormatch.ui.theme.TutorMatchTheme
+import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutorias
 
 class MainActivity : ComponentActivity() {
 
@@ -62,6 +63,7 @@ fun NavigationGraph(navController: NavHostController, viewModel: MainEstudianteV
         composable(NavigationState.Main_Es.route) { // Cambia a usar la clase NavigationState
             MainEstudiante(navController, viewModel)
         }
-        // Asegúrate de agregar las demás rutas según sea necesario
+        composable(NavigationState.MisTutorias.route) { MisTutorias(navController, Estudiante()) }
+
     }
 }

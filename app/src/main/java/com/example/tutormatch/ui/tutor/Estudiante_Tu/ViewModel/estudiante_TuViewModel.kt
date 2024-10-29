@@ -1,16 +1,14 @@
 package com.example.tutormatch.ui.tutor.Estudiante_Tu.ViewModel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.Estudiante1
 import com.example.tutormatch.estructuras.Materia
 import com.example.tutormatch.estructuras.Tutoria1
 import com.example.tutormatch.estructuras.TutoriaConDetalles
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
-class Estudiante_Tu_ViewModel(
+class EstudianteTuViewModel(
 ) : ViewModel() {
 
     private val _tutoriaConDetalles = MutableStateFlow<TutoriaConDetalles?>(null)

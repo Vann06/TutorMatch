@@ -14,5 +14,10 @@ sealed class NavigationState(val route: String) {
     data object Tutor_Es: NavigationState("Tutor_Es")
 
     //TUTOR
+    data object CrearTutoria: NavigationState("CrearTutoria")
+    //data object MisEstudiantes: NavigationState("EstudiantesTu")
+    data object MisTutorias: NavigationState("MisTutorias")
+    data object PerfilTutor: NavigationState("Perfil_Tu")
+
 
 }

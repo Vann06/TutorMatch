@@ -71,7 +71,12 @@ dependencies {
 
     implementation(libs.firebase.auth.ktx.v2200) // Usa la versión que necesites
     implementation(libs.play.services.recaptcha) // Usa la versión que necesites
-    implementation(libs.ui) // Asegúrate de usar la versión correcta para tu Compose
+    implementation(libs.ui)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.runtime.livedata) // Asegúrate de usar la versión correcta para tu Compose
     // Otras dependencias
 
     testImplementation(libs.junit)

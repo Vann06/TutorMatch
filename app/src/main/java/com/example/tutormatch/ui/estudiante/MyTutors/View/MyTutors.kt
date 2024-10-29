@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,24 +34,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.Estudiante
-import com.example.tutormatch.estructuras.Materias
+import com.example.tutormatch.estructuras.Materia
 import com.example.tutormatch.estructuras.Tutor
 import com.example.tutormatch.estructuras.Tutoria
+import com.example.tutormatch.ui.estudiante.MyTutors.ViewModel.MyTutorsViewModel
 import com.example.tutormatch.ui.theme.AzulPrimario
+import androidx.lifecycle.viewmodel.compose.viewModel
 
+
+@Composable
+fun MyTutorsScreen(viewModel: MyTutorsViewModel = viewModel()) {
+    val infoEstudiante = viewModel.tutoriaEstudiante.observeAsState()
+
+    infoEstudiante.value?.let { estudiante ->
+        MyTutors(infoEstudiante = estudiante)
+    }
+}
 
 @Composable
 fun MyTutors(infoEstudiante: Estudiante) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
+        modifier = Modifier.fillMaxSize().padding(12.dp)
     ) {
         items(infoEstudiante.misTutorias) { tutoria ->
             TutoriaCard(infotutoria = tutoria)
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewMyTutors() {
@@ -60,14 +71,14 @@ fun PreviewMyTutors() {
             Tutoria(
                 tutor = Tutor(nombre = "Ricardo Godinez"),
                 modalidad = "Virtual",
-                materia = Materias(nombre = "Física 1"),
+                materia = Materia(nombre = "Física 1"),
                 fecha = "02/10/24",
                 hora = "17:35"
             ),
             Tutoria(
                 tutor = Tutor(nombre = "Diego López"),
                 modalidad = "Presencial",
-                materia = Materias(nombre = "Matemáticas"),
+                materia = Materia(nombre = "Matemáticas"),
                 fecha = "03/10/24",
                 hora = "14:00"
             )
@@ -186,7 +197,7 @@ fun PreviewTutoriaCard() {
         myStudents = mutableListOf(),
         fotoPerfil = R.drawable.estudiante, // Cambiar por un drawable válido
         materias = mutableListOf(
-            Materias(nombre = "Física II")
+            Materia(nombre = "Física II")
         ),
         descripcion = "Descripción",
         modalidad = "Online"
@@ -202,7 +213,7 @@ fun PreviewTutoriaCard() {
         fotoPerfil = R.drawable.estudiante // O un drawable si es local
     )
 
-    val materiaEjemplo = Materias(
+    val materiaEjemplo = Materia(
         nombre = "Física II"
     )
 

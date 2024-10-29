@@ -9,12 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tutormatch.ui.tutor.Estudiante_Tu.ViewModel.Estudiante_Tu_ViewModel
+import com.example.tutormatch.ui.tutor.Estudiante_Tu.ViewModel.EstudianteTuViewModel
 
 @Composable
 fun EstudianteTuScreen(){
 
-    val viewModel: Estudiante_Tu_ViewModel = viewModel()
+    val viewModel: EstudianteTuViewModel = viewModel()
     val detalle by viewModel.tutoriaConDetalles.collectAsState()
 
     detalle?.let {solicitud->
