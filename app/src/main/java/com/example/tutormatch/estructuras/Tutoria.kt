@@ -1,5 +1,6 @@
 package com.example.tutormatch.estructuras
 
+import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import kotlinx.serialization.Serializable
 
 @Serializable

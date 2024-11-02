@@ -3,7 +3,7 @@ package com.example.tutormatch.ui.estudiante.Main.ViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.Materias
-import com.example.tutormatch.estructuras.Tutor1
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.example.tutormatch.ui.estudiante.Main.Repository.EstudianteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

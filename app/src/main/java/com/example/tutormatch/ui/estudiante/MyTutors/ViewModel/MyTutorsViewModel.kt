@@ -6,14 +6,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.tutormatch.estructuras.Estudiante
-import com.example.tutormatch.estructuras.Materia
-import com.example.tutormatch.estructuras.Tutor
-import com.example.tutormatch.estructuras.Tutoria
+import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 
 class MyTutorsViewModel : ViewModel() {
-    private val _tutorias = MutableLiveData<Estudiante>()
-    val tutoriaEstudiante: LiveData<Estudiante> = _tutorias
+    private val _tutorias = MutableLiveData<List<Tutoria1>>()
+    val tutorias: LiveData<List<Tutoria1>> = _tutorias
+
+    private val _estudiante = MutableLiveData<Estudiante1>()
+    val estudiante: LiveData<Estudiante1> = _estudiante
 
     init {
         loadTutorias()
@@ -21,30 +22,45 @@ class MyTutorsViewModel : ViewModel() {
 
     private fun loadTutorias() {
         viewModelScope.launch {
-            // Simula una carga de datos con retraso
-            delay(2000)
+            delay(2000) // Simulamos un retraso en la carga
 
-            val exampleEstudiante = Estudiante(
+            val exampleEstudiante = Estudiante1(
+                id = "exampleEstudianteId",
                 nombre = "Ejemplo Estudiante",
-                misTutorias = mutableListOf(
-                    Tutoria(
-                        tutor = Tutor(nombre = "Ricardo Godinez"),
-                        modalidad = "Virtual",
-                        materia = Materia(nombre = "Física 1"),
-                        fecha = "02/10/24",
-                        hora = "17:35"
-                    ),
-                    Tutoria(
-                        tutor = Tutor(nombre = "Diego López"),
-                        modalidad = "Presencial",
-                        materia = Materia(nombre = "Matemáticas"),
-                        fecha = "03/10/24",
-                        hora = "14:00"
-                    )
+                usuario = "ejemploEstudiante",
+                fotoPerfilUrl = "url_de_foto_perfil",
+                email = "ejemplo@correo.com",
+                tutoresIds = listOf("tutorId1", "tutorId2")
+            )
+
+            val exampleTutorias = listOf(
+                Tutoria1(
+                    id = "1",
+                    estudianteId = exampleEstudiante.id,
+                    tutorId = "tutorId1",
+                    materiaId = "materiaId1",
+                    modalidad = "Virtual",
+                    fecha = "02/10/24",
+                    hora = "17:35",
+                    mensaje = "Consulta sobre Física 1",
+                    estado = "Pendiente"
+                ),
+                Tutoria1(
+                    id = "2",
+                    estudianteId = exampleEstudiante.id,
+                    tutorId = "tutorId2",
+                    materiaId = "materiaId2",
+                    modalidad = "Presencial",
+                    fecha = "03/10/24",
+                    hora = "14:00",
+                    mensaje = "Consulta sobre Matemáticas",
+                    estado = "Pendiente"
                 )
             )
 
-            _tutorias.value = exampleEstudiante
+            // Asignamos los datos al LiveData
+            _estudiante.value = exampleEstudiante
+            _tutorias.value = exampleTutorias
         }
     }
 }

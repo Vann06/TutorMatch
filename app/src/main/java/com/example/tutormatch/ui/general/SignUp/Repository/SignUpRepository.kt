@@ -2,7 +2,7 @@ package com.example.tutormatch.ui.general.SignUp.Repository
 
 
 
-import com.example.tutormatch.estructuras.Estudiante1
+import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await

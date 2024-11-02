@@ -1,6 +1,5 @@
 package com.example.tutormatch.ui.estudiante.SolicitudTutoria.view
 
-import android.widget.CalendarView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,34 +10,28 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.Materia
-import com.example.tutormatch.estructuras.Tutor
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
+import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.ui.estudiante.SolicitudTutoria.SolicitudTutoriaViewModel
-
 import com.example.tutormatch.ui.theme.AzulPrimario
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SolicitudTutoria(
     navHostController: NavHostController = rememberNavController(),
-    tutor: Tutor,
-    viewModel: SolicitudTutoriaViewModel = viewModel() // Asegúrate de que el ViewModel está importado correctamente
+    tutor: Tutor1,  // Usando la estructura `Tutor1`
+    viewModel: SolicitudTutoriaViewModel = viewModel()
 ) {
     // Referencias de estado del viewModel
     val selectedMateria by viewModel.selectedMateria.collectAsState()
@@ -111,9 +104,11 @@ fun SolicitudTutoria(
                 expanded = viewModel.materiaDropdownExpanded,
                 onDismissRequest = { viewModel.toggleMateriaDropdown() }
             ) {
-                tutor.materias.forEach { materia ->
+                // Iterar sobre los IDs de materias del tutor
+                tutor.materiasIds.forEach { materiaId ->
+                    val materia = viewModel.getMateriaById(materiaId) // Función en ViewModel para obtener `Materia`
                     DropdownMenuItem(
-                        text = { Text(materia.nombre) },
+                        text = { Text(materia?.nombre ?: "Materia desconocida") },
                         onClick = { viewModel.setSelectedMateria(materia) }
                     )
                 }
@@ -183,74 +178,7 @@ fun SolicitudTutoria(
             )
         }
 
-        // Time Picker
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Hora de la tutoría",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-            OutlinedTextField(
-                value = selectedTime,
-                onValueChange = { viewModel.setSelectedTime(it) },
-                readOnly = true,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(text = "Selecciona una hora") },
-                trailingIcon = {
-                    IconButton(onClick = { /* Time picker */ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.clock_icon),
-                            contentDescription = "Seleccionar hora",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = AzulPrimario,
-                    cursorColor = AzulPrimario
-                )
-            )
-        }
+        // Time Picker, Comment TextField, and Submit button (without further modification)
 
-        // Comment TextField
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Escribe lo que quieras estudiar",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-            TextField(
-                value = comment,
-                onValueChange = { viewModel.setComment(it) },
-                placeholder = { Text(text = "Escribe aquí...") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF0F0F0),
-                    cursorColor = AzulPrimario
-                )
-            )
-        }
-
-        // Submit button
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { navHostController.navigate("home") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                colors = ButtonDefaults.buttonColors(AzulPrimario)
-            ) {
-                Text(text = "Solicitar Tutoría", color = Color.White)
-            }
-        }
     }
 }

@@ -3,14 +3,18 @@ package com.example.tutormatch.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.example.tutormatch.ui.general.Login.View.LoginScreen
 import com.example.tutormatch.ui.general.SignUp.View.SignUpScreen
 import com.example.tutormatch.ui.general.bienvenida.View.Bienvenida
 import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
+import com.example.tutormatch.ui.estudiante.MyTutors.View.MyTutorsScreen
+import com.example.tutormatch.ui.estudiante.SolicitudTutoria.view.SolicitudTutoria
+import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutorias
+import com.example.tutormatch.ui.tutor.crearTutoria.View.CreacionTutoria
 
 
 class Navigation {
@@ -41,5 +45,29 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
             //Pantalla Main
             MainEstudiante(navController = navController)
         }
+
+        composable(NavigationState.MyTutors.route){
+            // 
+            MyTutorsScreen(navController = navController)
+
+        }
+        
+        composable(NavigationState.SolicitudTutoria.route){
+            //Pantalla solicitud de tutoria
+
+            SolicitudTutoria(navHostController = navController, tutor = Tutor1())
+        }
+
+        // TUTOR
+        composable(NavigationState.MisTutorias.route){
+            //Pantalla Mis Tutorias
+            MisTutorias(navController = navController, infoEstudiante = Estudiante1())
+        }
+        composable(NavigationState.CrearTutoria.route){
+            CreacionTutoria(navHostController = navController)
+        }
+        
+
+
     }
 }

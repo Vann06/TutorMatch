@@ -1,4 +1,4 @@
-package com.example.tutormatch.estructuras
+package com.example.tutormatch.estructuras.firebaseImplementation
 
 interface Usuario1 {
     val id: String

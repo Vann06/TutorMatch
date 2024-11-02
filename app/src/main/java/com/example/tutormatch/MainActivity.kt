@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.estructuras.Estudiante
+import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.navigation.Navigation
 import com.example.tutormatch.navigation.NavigationState
 import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
@@ -20,8 +21,6 @@ import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewMod
 import com.example.tutormatch.ui.general.Login.View.LoginScreen
 import com.example.tutormatch.ui.general.SignUp.View.SignUpScreen
 import com.example.tutormatch.ui.general.bienvenida.View.Bienvenida
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.tutormatch.ui.theme.TutorMatchTheme
 import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutorias
 
@@ -63,7 +62,7 @@ fun NavigationGraph(navController: NavHostController, viewModel: MainEstudianteV
         composable(NavigationState.Main_Es.route) { // Cambia a usar la clase NavigationState
             MainEstudiante(navController, viewModel)
         }
-        composable(NavigationState.MisTutorias.route) { MisTutorias(navController, Estudiante()) }
+        composable(NavigationState.MisTutorias.route) { MisTutorias(navController, Estudiante1()) }
 
     }
 }

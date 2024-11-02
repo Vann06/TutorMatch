@@ -1,4 +1,4 @@
-package com.example.tutormatch.estructuras
+package com.example.tutormatch.estructuras.firebaseImplementation
 
 class Tutoria1 (
     val id: String = "",

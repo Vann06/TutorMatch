@@ -1,9 +1,9 @@
 package com.example.tutormatch.ui.tutor.Estudiante_Tu.ViewModel
 
 import androidx.lifecycle.ViewModel
-import com.example.tutormatch.estructuras.Estudiante1
-import com.example.tutormatch.estructuras.Materia
-import com.example.tutormatch.estructuras.Tutoria1
+import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
+import com.example.tutormatch.estructuras.firebaseImplementation.Materia
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.example.tutormatch.estructuras.TutoriaConDetalles
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -28,19 +28,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.Estudiante
-import com.example.tutormatch.estructuras.Materia
-import com.example.tutormatch.estructuras.Tutor
-import com.example.tutormatch.estructuras.Tutoria
+import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
+import com.example.tutormatch.estructuras.firebaseImplementation.Materia
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.example.tutormatch.navigation.NavigationState
 import com.example.tutormatch.ui.tutor.MisTutorias.ViewModel.MisTutoriasViewModel
 
 @Composable
-fun MisTutorias(navController: NavController, infoEstudiante: Estudiante) {
-    // Obtener instancia del ViewModel
+fun MisTutorias(navController: NavController, infoEstudiante: Estudiante1?) {
     val viewModel: MisTutoriasViewModel = viewModel()
-
-    // Recoger el estado de mis tutorías
     val misTutorias by viewModel.misTutorias.collectAsState()
 
     LazyColumn(
@@ -55,14 +51,14 @@ fun MisTutorias(navController: NavController, infoEstudiante: Estudiante) {
 }
 
 @Composable
-fun TutoriaCard(navController: NavController, infotutoria: Tutoria) {
-    val nombreTutor = infotutoria.tutor?.nombre
+fun TutoriaCard(navController: NavController, infotutoria: Tutoria1) {
+    val nombreTutor = infotutoria.tutorId // Aquí podrías usar un método para obtener el nombre del tutor si se requiere
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = {
-                navController.navigate(NavigationState.MisTutorias) // Cambiar a un destino específico si es necesario
+                navController.navigate(NavigationState.MisTutorias)
             })
             .padding(8.dp)
             .shadow(12.dp, shape = RoundedCornerShape(8.dp)),
@@ -75,52 +71,47 @@ fun TutoriaCard(navController: NavController, infotutoria: Tutoria) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icono del tutor
             Image(
                 painter = painterResource(id = R.drawable.estudiante),
-                contentDescription = "Imagen de perfil de alumno",
+                contentDescription = "Imagen de perfil de tutor",
                 modifier = Modifier
                     .padding(6.dp)
-                    .size(50.dp) // Tamaño más pequeño como en la imagen
+                    .size(50.dp)
                     .clip(CircleShape)
-                    .border(2.dp, Color.Gray, CircleShape) // Borde alrededor del icono
+                    .border(2.dp, Color.Gray, CircleShape)
             )
 
-            // Columna con nombre del tutor y modalidad
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
             ) {
-                if (nombreTutor != null) {
-                    Text(
-                        text = nombreTutor,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp, // Tamaño de texto más pequeño
-                        color = Color.White // Texto en blanco
-                    )
-                }
+                Text(
+                    text = nombreTutor ?: "Tutor desconocido",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.White
+                )
                 Text(
                     text = "Modalidad: " + infotutoria.modalidad,
                     fontWeight = FontWeight.Light,
                     fontSize = 14.sp,
-                    color = Color.LightGray // Color más claro
+                    color = Color.LightGray
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Materia con Card circular
                 Card(
                     shape = CircleShape,
                     colors = CardDefaults.cardColors(
-                        containerColor = Color.Blue // Fondo azul (cambia a tu color deseado)
+                        containerColor = Color.Blue
                     ),
                     modifier = Modifier
                         .padding(top = 4.dp)
-                        .wrapContentSize() // Tamaño compacto
+                        .wrapContentSize()
                 ) {
                     Text(
-                        text = infotutoria.materia.nombre,
+                        text = infotutoria.materiaId ?: "Materia desconocida",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
                         color = Color.White,
@@ -129,15 +120,14 @@ fun TutoriaCard(navController: NavController, infotutoria: Tutoria) {
                 }
             }
 
-            // Columna con fecha y hora
             Column(
-                horizontalAlignment = Alignment.End // Alineación a la derecha
+                horizontalAlignment = Alignment.End
             ) {
                 Text(
                     text = "Fecha: " + infotutoria.fecha,
                     fontWeight = FontWeight.Light,
                     fontSize = 12.sp,
-                    color = Color.LightGray // Color más claro
+                    color = Color.LightGray
                 )
                 Text(
                     text = "Hora: " + infotutoria.hora,
@@ -153,42 +143,31 @@ fun TutoriaCard(navController: NavController, infotutoria: Tutoria) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewTutoriaCard() {
-    // Crear datos de ejemplo para la tutoría
-    val tutorEjemplo = Tutor(
+    val materiaEjemplo = Materia(
         id = "1",
-        nombre = "Alumno Ejemplo",
-        usuario = "usuario",
-        contraseña = "contraseña",
-        myStudents = mutableListOf(),
-        fotoPerfil = R.drawable.estudiante,
-        materias = mutableListOf(
-            Materia(nombre = "Física II")
-        ),
-        descripcion = "Descripción",
-        modalidad = "Online"
+        nombre = "Física II"
     )
 
-    // Crear un objeto Tutoria
-    val tutoriaEjemplo = Tutoria(
+    val tutoriaEjemplo = Tutoria1(
         id = "1",
+        estudianteId = "2",
+        tutorId = "1",
+        materiaId = materiaEjemplo.id,
         fecha = "14 Sep, 2024",
         hora = "10:00 AM",
         modalidad = "Presencial",
-        tutor = tutorEjemplo,
-        materia = Materia(nombre = "Física II")
+        mensaje = "Por favor, revisar temas de mecánica",
+        estado = "Pendiente"
     )
 
-    // Crear un Estudiante y agregar la tutoría
-    val estudianteEjemplo = Estudiante(
+    val estudianteEjemplo = Estudiante1(
         id = "2",
         nombre = "Estudiante Ejemplo",
         usuario = "estudiante_usuario",
-        contraseña = "contraseña123",
-        notificaciones = listOf("Nueva tutoría agendada", "Mensaje de tu tutor"),
-        misTutorias = mutableListOf(tutoriaEjemplo) // Añadir la tutoría de ejemplo
+        fotoPerfilUrl = "url_de_imagen",
+        email = "estudiante@ejemplo.com",
+        tutoresIds = listOf("1")
     )
 
-    // Mostrar la card de tutoría con los datos de ejemplo
     TutoriaCard(infotutoria = tutoriaEjemplo, navController = NavController(LocalContext.current))
 }
-

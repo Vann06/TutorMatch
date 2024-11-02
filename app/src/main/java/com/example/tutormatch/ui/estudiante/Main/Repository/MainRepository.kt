@@ -1,10 +1,7 @@
 package com.example.tutormatch.ui.estudiante.Main.Repository
 
-import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.Estudiante
 import com.example.tutormatch.estructuras.Materias
-import com.example.tutormatch.estructuras.Tutor
-import com.example.tutormatch.estructuras.Tutor1
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,4 +1,4 @@
-package com.example.tutormatch.estructuras
+package com.example.tutormatch.estructuras.firebaseImplementation
 
 class Tutor1 (
     override val id: String = "",

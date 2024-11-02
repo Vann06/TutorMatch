@@ -4,13 +4,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.tutormatch.estructuras.Materia
+import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 class SolicitudTutoriaViewModel : ViewModel() {
+
+    // Lista de materias (puedes modificar esto para que venga de una base de datos o un repositorio)
+    private val materias = listOf(
+        Materia(id = "1", nombre = "Matemáticas"),
+        Materia(id = "2", nombre = "Física"),
+        Materia(id = "3", nombre = "Química")
+    )
 
     // Estados para las variables
     private val _selectedMateria = MutableStateFlow<Materia?>(null)
@@ -36,7 +41,7 @@ class SolicitudTutoriaViewModel : ViewModel() {
         materiaDropdownExpanded = !materiaDropdownExpanded
     }
 
-    fun setSelectedMateria(materia: Materia) {
+    fun setSelectedMateria(materia: Materia?) {
         _selectedMateria.value = materia
         toggleMateriaDropdown() // Cierra el dropdown después de seleccionar
     }
@@ -64,5 +69,10 @@ class SolicitudTutoriaViewModel : ViewModel() {
 
     fun setComment(comment: String) {
         _comment.value = comment
+    }
+
+    // Función para obtener una materia por ID
+    fun getMateriaById(materiaId: String): Materia? {
+        return materias.find { it.id == materiaId }
     }
 }
