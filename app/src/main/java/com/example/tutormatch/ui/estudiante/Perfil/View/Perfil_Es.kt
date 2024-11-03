@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,111 +26,143 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.example.tutormatch.navigation.NavigationState
+import com.example.tutormatch.ui.estudiante.Perfil.ViewModel.PerfilEstudianteViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tutormatch.navigation.AppBar
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilEstudianteScreen(
-    estudiante: Estudiante,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: PerfilEstudianteViewModel = viewModel()
 ) {
-    Surface(color = GrisPrimario) {
-        Image(
-            painter = painterResource(id = R.drawable.perfil_fondo),
-            contentDescription = "Perfil de Usuario",
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(Alignment.TopStart)
-        )
+    val estudiante by viewModel.estudiante.collectAsState()
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(30.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Spacer(modifier = Modifier.height(60.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-
+    Scaffold(
+        topBar = {
+            AppBar(title = "Perfil", navController = navController)
+        },
+        content = { paddingValues ->
+            estudiante?.let { estudiante ->
+                Surface(
+                    color = GrisPrimario,
+                    modifier = Modifier.padding(paddingValues)
+                ) {
                     Image(
-                        painter = painterResource(id = R.drawable.estudiante),
-                        contentDescription = "Foto de Perfil",
+                        painter = painterResource(id = R.drawable.perfil_fondo),
+                        contentDescription = "Perfil de Usuario",
                         modifier = Modifier
-                            .size(150.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color.White)
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.TopStart)
                     )
-                    Text(
-                        text = estudiante.nombre,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(start = 20.dp)
-                            .fillMaxWidth()
-                    )
+
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(30.dp),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Spacer(modifier = Modifier.height(60.dp))
+
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.estudiante),
+                                    contentDescription = "Foto de Perfil",
+                                    modifier = Modifier
+                                        .size(150.dp)
+                                        .clip(CircleShape)
+                                        .border(2.dp, Color.White)
+                                )
+                                Text(
+                                    text = estudiante.nombre,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 20.sp,
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .padding(start = 20.dp)
+                                        .fillMaxWidth()
+                                )
+                            }
+
+                            // Opciones Expandibles
+                            ExpandablePerfilItem(
+                                iconResId = R.drawable.user,
+                                title = "Usuario",
+                                initialText = estudiante.usuario,
+                                onEdit = { newUsuario ->
+                                    val updatedEstudiante = estudiante.copy(usuario = newUsuario)
+                                    viewModel.actualizarEstudiante(updatedEstudiante)
+                                }
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = AzulTerciario
+                            )
+
+                            ExpandablePerfilItem(
+                                iconResId = R.drawable.user,
+                                title = "Nombre",
+                                initialText = estudiante.nombre,
+                                onEdit = { newName ->
+                                    val updatedEstudiante = estudiante.copy(nombre = newName)
+                                    viewModel.actualizarEstudiante(updatedEstudiante)
+                                }
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = AzulTerciario
+                            )
+
+                            ExpandablePerfilItem(
+                                iconResId = R.drawable.eye,
+                                title = "Contraseña",
+                                initialText = "********",
+                                onEdit = { newPassword -> /* Manejar nueva contraseña */ }
+                            )
+                            // Opción de notificaciones
+                            PerfilItem(
+                                iconResId = R.drawable.bell,
+                                text = "Notificaciones",
+                                hasSwitch = true
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = AzulTerciario
+                            )
+
+                            // MyTutors con onClick
+                            PerfilItem(
+                                iconResId = R.drawable.star,
+                                text = "MyTutors",
+                                hasSwitch = false,
+                                onClick = {
+                                    navController.navigate(NavigationState.MyTutors.route)
+                                }
+                            )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = AzulTerciario
+                            )
+                        }
+                    }
                 }
-
-                // Opciones Expandibles
-                ExpandablePerfilItem(
-                    iconResId = R.drawable.user,
-                    title = "Usuario",
-                    initialText = estudiante.usuario,
-                    onEdit = { newUsuario -> /* Manejar nuevo usuario */ }
-                )
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    color = AzulTerciario
-                )
-
-                ExpandablePerfilItem(
-                    iconResId = R.drawable.user,
-                    title = "Nombre",
-                    initialText = estudiante.nombre,
-                    onEdit = { newName -> /* Manejar nuevo nombre */ }
-                )
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    color = AzulTerciario
-                )
-
-                ExpandablePerfilItem(
-                    iconResId = R.drawable.eye,
-                    title = "Contraseña",
-                    initialText = "********",
-                    onEdit = { newPassword -> /* Manejar nueva contraseña */ }
-                )
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    color = AzulTerciario
-                )
-
-                // Opción de notificaciones
-                PerfilItem(
-                    iconResId = R.drawable.bell,
-                    text = "Notificaciones",
-                    hasSwitch = true
-                )
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    color = AzulTerciario
-                )
-
-                // MyTutors con onClick
-                PerfilItem(
-                    iconResId = R.drawable.star,
-                    text = "MyTutors",
-                    hasSwitch = false,
-                    onClick = { /* Maneja la navegación a Más */ }
-                )
-                HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    color = AzulTerciario
-                )
+            } ?: run {
+                // Mostrar un indicador de carga o mensaje de error
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
-    }
+    )
 }
 
 
@@ -251,11 +284,3 @@ fun Button(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PerfilPreview() {
-    PerfilEstudianteScreen(
-        estudiante = Estudiante(nombre = "Ricardo Godinez", usuario = "Ricgo_01", myTutors = mutableListOf()),
-        navController = NavHostController(context = LocalContext.current)
-    )
-}

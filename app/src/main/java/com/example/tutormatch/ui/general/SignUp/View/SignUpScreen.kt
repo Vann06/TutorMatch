@@ -70,10 +70,10 @@ fun SignUpScreen(navController: NavHostController) {
 
     Box(
         modifier = Modifier.fillMaxSize().background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFF0D47A1), Color(0xFF1976D2))
-                )
+            Brush.verticalGradient(
+                colors = listOf(Color(0xFF0D47A1), Color(0xFF1976D2))
             )
+        )
     ) {
         Image(
             painter = painterResource(id = R.drawable.fondo1),

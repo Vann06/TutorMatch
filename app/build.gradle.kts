@@ -76,7 +76,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.runtime.livedata) // Asegúrate de usar la versión correcta para tu Compose
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.room.ktx) // Asegúrate de usar la versión correcta para tu Compose
     // Otras dependencias
 
     testImplementation(libs.junit)
@@ -91,4 +92,6 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.material3)
     implementation(libs.coil.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
 }

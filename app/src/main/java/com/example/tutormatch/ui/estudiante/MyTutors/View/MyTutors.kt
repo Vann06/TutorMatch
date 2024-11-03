@@ -8,10 +8,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,36 +42,70 @@ import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.tutormatch.navigation.AppBar
+import com.example.tutormatch.navigation.NavigationState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTutorsScreen(
-    navController: NavController,
+    navController: NavHostController,
     viewModel: MyTutorsViewModel = viewModel()
 ) {
-    val infoEstudiante = viewModel.estudiante.observeAsState()
     val tutorias = viewModel.tutorias.observeAsState()
 
-    infoEstudiante.value?.let { estudiante ->
-        tutorias.value?.let { listaTutorias ->
-            MyTutors(
-                infoEstudiante = estudiante,
-                listaTutorias = listaTutorias,
-                navController = navController
-            )
+    Scaffold(
+        topBar = {
+            AppBar(title = "Mis Tutores", navController = navController)
+        },
+        bottomBar = {
+            BottomNavigationBar(navController = navController)
+        },
+        content = { paddingValues ->
+            tutorias.value?.let { listaTutorias ->
+                if (listaTutorias.isNotEmpty()) {
+                    MyTutors(
+                        listaTutorias = listaTutorias,
+                        navController = navController,
+                        modifier = Modifier.padding(paddingValues)
+                    )
+                } else {
+                    // Mostrar mensaje de que no hay tutorías
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "No tienes tutorías aún")
+                    }
+                }
+            } ?: run {
+                // Mostrar indicador de carga
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         }
-    }
+    )
 }
 
 @Composable
 fun MyTutors(
-    infoEstudiante: Estudiante1,
     listaTutorias: List<Tutoria1>,
-    navController: NavController
+    navController: NavController,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(12.dp)
+            .padding(horizontal = 16.dp)
     ) {
         items(listaTutorias) { tutoria ->
             TutoriaCard(
@@ -69,6 +115,7 @@ fun MyTutors(
         }
     }
 }
+
 
 @Composable
 fun TutoriaCard(
@@ -163,5 +210,47 @@ fun TutoriaCard(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun BottomNavigationBar(navController: NavHostController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    NavigationBar {
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
+            label = { Text("Perfil") },
+            selected = currentRoute == NavigationState.Perfil_Es.route,
+            onClick = {
+                navController.navigate(NavigationState.Perfil_Es.route) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.Search, contentDescription = "Buscador") },
+            label = { Text("Buscador") },
+            selected = currentRoute == NavigationState.Main_Es.route,
+            onClick = {
+                navController.navigate(NavigationState.Main_Es.route) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.Home, contentDescription = "Mis Tutores") },
+            label = { Text("Mis Tutores") },
+            selected = currentRoute == NavigationState.MyTutors.route,
+            onClick = {
+                navController.navigate(NavigationState.MyTutors.route) {
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
     }
 }

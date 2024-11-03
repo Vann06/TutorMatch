@@ -12,6 +12,7 @@ import com.example.tutormatch.ui.general.SignUp.View.SignUpScreen
 import com.example.tutormatch.ui.general.bienvenida.View.Bienvenida
 import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
 import com.example.tutormatch.ui.estudiante.MyTutors.View.MyTutorsScreen
+import com.example.tutormatch.ui.estudiante.Perfil.View.PerfilEstudianteScreen
 import com.example.tutormatch.ui.estudiante.SolicitudTutoria.view.SolicitudTutoria
 import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutorias
 import com.example.tutormatch.ui.tutor.crearTutoria.View.CreacionTutoria
@@ -51,12 +52,15 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
             MyTutorsScreen(navController = navController)
 
         }
-        
         composable(NavigationState.SolicitudTutoria.route){
             //Pantalla solicitud de tutoria
-
             SolicitudTutoria(navHostController = navController, tutor = Tutor1())
         }
+        composable(NavigationState.Perfil_Es.route) {
+            //Pantalla Perfil del estudiante
+            PerfilEstudianteScreen(navController = navController)
+        }
+
 
         // TUTOR
         composable(NavigationState.MisTutorias.route){

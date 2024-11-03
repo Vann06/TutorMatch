@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.tutormatch.R
+import com.example.tutormatch.navigation.NavigationState
 import com.example.tutormatch.ui.estudiante.Main.Repository.EstudianteRepository
 import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewModel
 import com.example.tutormatch.ui.theme.AzulPrimario
@@ -78,19 +79,28 @@ fun MainEstudiante(
                     icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
                     label = { Text("Perfil") },
                     selected = false,
-                    onClick = { /* Navegación a Perfil */ }
+                    onClick = {  navController.navigate(NavigationState.Perfil_Es.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    } }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Search, contentDescription = "Buscador") },
                     label = { Text("Buscador") },
                     selected = false,
-                    onClick = { /* Navegación a Buscador */ }
+                    onClick = { navController.navigate(NavigationState.Main_Es.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    } }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Home, contentDescription = "MyTutors") },
                     label = { Text("Mis Tutores") },
                     selected = false,
-                    onClick = { /* Navegación a Mis Tutores */ }
+                    onClick = {  navController.navigate(NavigationState.MyTutors.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }}
                 )
             }
         }

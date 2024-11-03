@@ -11,6 +11,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import com.example.tutormatch.ui.theme.AzulPrimario
+import com.example.tutormatch.ui.theme.AzulTerciario
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,7 +21,7 @@ fun AppBar(title: String, navController: NavController) {
         title = {
             Text(text = title, color = Color.White)
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor =  Color(0xFF5FA450)),
+        colors = TopAppBarDefaults.topAppBarColors(containerColor =  AzulTerciario),
         navigationIcon = {
             if (navController.previousBackStackEntry != null) {
                 run {
