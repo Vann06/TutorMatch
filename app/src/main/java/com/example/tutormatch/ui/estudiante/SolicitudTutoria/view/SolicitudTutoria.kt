@@ -105,7 +105,7 @@ fun SolicitudTutoria(
                 onDismissRequest = { viewModel.toggleMateriaDropdown() }
             ) {
                 // Iterar sobre los IDs de materias del tutor
-                tutor.materiasIds.forEach { materiaId ->
+                tutor.materias.forEach { materiaId ->
                     val materia = viewModel.getMateriaById(materiaId) // Función en ViewModel para obtener `Materia`
                     DropdownMenuItem(
                         text = { Text(materia?.nombre ?: "Materia desconocida") },

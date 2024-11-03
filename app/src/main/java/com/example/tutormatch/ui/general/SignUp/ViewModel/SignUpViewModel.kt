@@ -33,7 +33,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
                 if (accountType == "Estudiante") {
                     navController.navigate(NavigationState.Main_Es.route)
                 } else if (accountType == "Tutor") {
-                    navController.navigate(NavigationState.Tutor_Es.route)
+                    navController.navigate(NavigationState.MisTutorias.route)
                 }
 
             }.onFailure {

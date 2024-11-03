@@ -14,8 +14,9 @@ import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
 import com.example.tutormatch.ui.estudiante.MyTutors.View.MyTutorsScreen
 import com.example.tutormatch.ui.estudiante.Perfil.View.PerfilEstudianteScreen
 import com.example.tutormatch.ui.estudiante.SolicitudTutoria.view.SolicitudTutoria
-import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutorias
+import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutoriasScreen
 import com.example.tutormatch.ui.tutor.crearTutoria.View.CreacionTutoria
+import com.example.tutormatch.ui.tutor.perfil.PerfilTutorScreen
 
 
 class Navigation {
@@ -29,49 +30,40 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
     ) {
         // GENERAL
         composable(NavigationState.Bienvenida.route) {
-            // Pantalla de Bienvenida
             Bienvenida(navController = navController)
         }
         composable(NavigationState.Login.route) {
-            // Pantalla de Login
             LoginScreen(navController = navController)
         }
         composable(NavigationState.SignUp.route) {
-            // Pantalla de Sign Up
             SignUpScreen(navController = navController)
         }
 
         // ESTUDIANTE
-        composable(NavigationState.Main_Es.route){
-            //Pantalla Main
+        composable(NavigationState.Main_Es.route) {
             MainEstudiante(navController = navController)
         }
-
-        composable(NavigationState.MyTutors.route){
-            // 
+        composable(NavigationState.MyTutors.route) {
             MyTutorsScreen(navController = navController)
-
         }
-        composable(NavigationState.SolicitudTutoria.route){
-            //Pantalla solicitud de tutoria
+        composable(NavigationState.SolicitudTutoria.route) {
             SolicitudTutoria(navHostController = navController, tutor = Tutor1())
         }
         composable(NavigationState.Perfil_Es.route) {
-            //Pantalla Perfil del estudiante
             PerfilEstudianteScreen(navController = navController)
         }
 
-
         // TUTOR
-        composable(NavigationState.MisTutorias.route){
-            //Pantalla Mis Tutorias
-            MisTutorias(navController = navController, infoEstudiante = Estudiante1())
+        composable(NavigationState.MisTutorias.route) {
+            // Aquí debes definir la pantalla para MisTutorias
+            MisTutoriasScreen(navController = navController)
         }
-        composable(NavigationState.CrearTutoria.route){
-            CreacionTutoria(navHostController = navController)
+        composable(NavigationState.CrearTutoria.route) {
+            CreacionTutoria(navController = navController)
         }
-        
-
-
+        composable(NavigationState.PerfilTutor.route) {
+            // Aquí debes definir la pantalla para el Perfil del Tutor
+            PerfilTutorScreen(navController = navController)
+        }
     }
 }

@@ -123,6 +123,10 @@ fun PerfilEstudianteScreen(
                                 initialText = "********",
                                 onEdit = { newPassword -> /* Manejar nueva contraseña */ }
                             )
+                            Divider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = AzulTerciario
+                            )
                             // Opción de notificaciones
                             PerfilItem(
                                 iconResId = R.drawable.bell,

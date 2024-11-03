@@ -22,7 +22,7 @@ import com.example.tutormatch.ui.general.Login.View.LoginScreen
 import com.example.tutormatch.ui.general.SignUp.View.SignUpScreen
 import com.example.tutormatch.ui.general.bienvenida.View.Bienvenida
 import com.example.tutormatch.ui.theme.TutorMatchTheme
-import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutorias
+import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutoriasScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -62,7 +62,7 @@ fun NavigationGraph(navController: NavHostController, viewModel: MainEstudianteV
         composable(NavigationState.Main_Es.route) { // Cambia a usar la clase NavigationState
             MainEstudiante(navController, viewModel)
         }
-        composable(NavigationState.MisTutorias.route) { MisTutorias(navController, Estudiante1()) }
+        composable(NavigationState.MisTutorias.route) { MisTutoriasScreen(navController) }
 
     }
 }

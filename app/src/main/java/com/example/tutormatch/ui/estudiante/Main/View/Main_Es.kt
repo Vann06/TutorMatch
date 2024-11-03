@@ -186,7 +186,7 @@ fun MainEstudiante(
                                 name = tutor.nombre,
                                 descripcion = tutor.descripcion,
                                 fotoPerfil = tutor.fotoPerfilUrl,
-                                materias = tutor.materiasIds // Cambiado a tutor.materiasIds
+                                materias = tutor.materias // Cambiado a tutor.materiasIds
                             )
                         }
                     }

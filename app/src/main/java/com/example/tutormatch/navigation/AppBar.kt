@@ -2,6 +2,7 @@ package com.example.tutormatch.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import com.example.tutormatch.ui.theme.AzulPrimario
+import com.example.tutormatch.ui.theme.AzulSecundario
 import com.example.tutormatch.ui.theme.AzulTerciario
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,17 +23,16 @@ fun AppBar(title: String, navController: NavController) {
         title = {
             Text(text = title, color = Color.White)
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor =  AzulTerciario),
+        colors = TopAppBarDefaults.topAppBarColors(containerColor =  AzulSecundario),
         navigationIcon = {
             if (navController.previousBackStackEntry != null) {
                 run {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                            contentDescription = null,
+                            tint = Color.White )
                     }
                 }
-            } else {
-                null
             }
         })
 }

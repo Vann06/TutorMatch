@@ -22,15 +22,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
+import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.ui.tutor.crearTutoria.viewmodel.CrearTutoriaViewModel
 import com.example.tutormatch.ui.theme.AzulPrimario
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreacionTutoria(
-    navHostController: NavHostController = rememberNavController(),
-    viewModel: CrearTutoriaViewModel = viewModel() // se asocia el ViewModel
+    navController: NavHostController,
+    viewModel: CrearTutoriaViewModel = viewModel()
 ) {
     var expandedMateria by remember { mutableStateOf(false) }
     var selectedMateria by remember { mutableStateOf<Materia?>(null) }
@@ -44,232 +44,220 @@ fun CreacionTutoria(
     val materias = viewModel.materiasDisponibles.collectAsState().value
     val tiposDeTutoria = viewModel.tiposDeTutoria.collectAsState().value
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(horizontal = 16.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        item {
-            Row(
+    Scaffold(
+        topBar = {
+            AppBar(title = "Crear Tutoría", navController = navController)
+        },
+        content = { paddingValues ->
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(horizontal = 16.dp)
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.Start
             ) {
-                Button(
-                    onClick = { navHostController.navigate("home") },
-                    colors = ButtonDefaults.buttonColors(AzulPrimario),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Volver",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
+                // Materia dropdown
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Materia",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(vertical = 4.dp)
                     )
-                }
 
-                Spacer(modifier = Modifier.width(40.dp))
-
-                Text(
-                    text = "Agendar Tutoría",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    color = AzulPrimario,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-        }
-
-        // Materia dropdown
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Materia",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
-            Button(
-                onClick = { expandedMateria = true },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = AzulPrimario
-                ),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, AzulPrimario),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = selectedMateria?.nombre ?: "Selecciona la materia")
-            }
-
-            DropdownMenu(
-                expanded = expandedMateria,
-                onDismissRequest = { expandedMateria = false }
-            ) {
-                materias.forEach { materia ->
-                    DropdownMenuItem(
-                        text = { Text(materia.nombre) },
-                        onClick = {
-                            selectedMateria = materia
-                            expandedMateria = false
-                        }
-                    )
-                }
-            }
-        }
-
-        // Tipo de Tutoría dropdown
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Tipo de Tutoría",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
-            Button(
-                onClick = { expandedTipoTutoria = true },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = AzulPrimario
-                ),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, AzulPrimario),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = selectedTipoTutoria ?: "Selecciona el tipo de tutoría")
-            }
-
-            DropdownMenu(
-                expanded = expandedTipoTutoria,
-                onDismissRequest = { expandedTipoTutoria = false }
-            ) {
-                tiposDeTutoria.forEach { tipo ->
-                    DropdownMenuItem(
-                        text = { Text(tipo) },
-                        onClick = {
-                            selectedTipoTutoria = tipo
-                            expandedTipoTutoria = false
-                        }
-                    )
-                }
-            }
-        }
-
-        // Fecha y Hora
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Fecha de la tutoría",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
-            OutlinedTextField(
-                value = selectedDate,
-                onValueChange = { selectedDate = it },
-                readOnly = true,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(text = "Selecciona una fecha") },
-                trailingIcon = {
-                    IconButton(onClick = { /* Add date picker logic */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.DateRange,
-                            contentDescription = "Seleccionar fecha"
-                        )
+                    Button(
+                        onClick = { expandedMateria = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = AzulPrimario
+                        ),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, AzulPrimario),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = selectedMateria?.nombre ?: "Selecciona la materia")
                     }
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = AzulPrimario,
-                    cursorColor = AzulPrimario
-                )
-            )
-        }
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Hora de la tutoría",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-
-            OutlinedTextField(
-                value = selectedTime,
-                onValueChange = { selectedTime = it },
-                readOnly = true,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(text = "Selecciona una hora") },
-                trailingIcon = {
-                    IconButton(onClick = { /* Add time picker logic */ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.clock_icon),
-                            contentDescription = "Seleccionar hora",
-                            modifier = Modifier.size(24.dp)
-                        )
+                    DropdownMenu(
+                        expanded = expandedMateria,
+                        onDismissRequest = { expandedMateria = false }
+                    ) {
+                        materias.forEach { materia ->
+                            DropdownMenuItem(
+                                text = { Text(materia.nombre) },
+                                onClick = {
+                                    selectedMateria = materia
+                                    expandedMateria = false
+                                }
+                            )
+                        }
                     }
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = AzulPrimario,
-                    cursorColor = AzulPrimario
-                )
-            )
-        }
+                }
 
-        // Descripción y Botón de Crear Tutoría
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
+                // Tipo de Tutoría dropdown
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Escribe una descripción de que tratará tu clase:",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.Black,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
+                    Text(
+                        text = "Tipo de Tutoría",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
 
-            TextField(
-                value = comment,
-                onValueChange = { comment = it },
-                placeholder = { Text(text = "Escribe aquí...") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF0F0F0),
-                    cursorColor = AzulPrimario
-                )
-            )
-        }
+                    Button(
+                        onClick = { expandedTipoTutoria = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = AzulPrimario
+                        ),
+                        shape = RoundedCornerShape(16.dp),
+                        border = BorderStroke(1.dp, AzulPrimario),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = selectedTipoTutoria ?: "Selecciona el tipo de tutoría")
+                    }
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
+                    DropdownMenu(
+                        expanded = expandedTipoTutoria,
+                        onDismissRequest = { expandedTipoTutoria = false }
+                    ) {
+                        tiposDeTutoria.forEach { tipo ->
+                            DropdownMenuItem(
+                                text = { Text(tipo) },
+                                onClick = {
+                                    selectedTipoTutoria = tipo
+                                    expandedTipoTutoria = false
+                                }
+                            )
+                        }
+                    }
+                }
 
-            Button(
-                onClick = { navHostController.navigate("home") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                colors = ButtonDefaults.buttonColors(AzulPrimario)
-            ) {
-                Text(text = "Crear Tutoría", color = Color.White)
+                // Fecha y Hora
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Fecha de la tutoría",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = selectedDate,
+                        onValueChange = { selectedDate = it },
+                        readOnly = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text(text = "Selecciona una fecha") },
+                        trailingIcon = {
+                            IconButton(onClick = { /* Lógica para selector de fecha */ }) {
+                                Icon(
+                                    imageVector = Icons.Filled.DateRange,
+                                    contentDescription = "Seleccionar fecha"
+                                )
+                            }
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = AzulPrimario,
+                            cursorColor = AzulPrimario
+                        )
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Hora de la tutoría",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = selectedTime,
+                        onValueChange = { selectedTime = it },
+                        readOnly = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text(text = "Selecciona una hora") },
+                        trailingIcon = {
+                            IconButton(onClick = { /* Lógica para selector de hora */ }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.clock_icon),
+                                    contentDescription = "Seleccionar hora",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = AzulPrimario,
+                            cursorColor = AzulPrimario
+                        )
+                    )
+                }
+
+                // Descripción
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Escribe una descripción de qué tratará tu clase:",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+
+                    TextField(
+                        value = comment,
+                        onValueChange = { comment = it },
+                        placeholder = { Text(text = "Escribe aquí...") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp),
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = Color(0xFFF0F0F0),
+                            cursorColor = AzulPrimario
+                        )
+                    )
+                }
+
+                // Botón de Crear Tutoría
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            // Lógica para crear la tutoría
+                            viewModel.crearTutoria(
+                                materia = selectedMateria,
+                                tipoTutoria = selectedTipoTutoria,
+                                fecha = selectedDate,
+                                hora = selectedTime,
+                                descripcion = comment
+                            )
+                            // Navegar a la pantalla deseada después de crear la tutoría
+                            navController.navigate("home")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        colors = ButtonDefaults.buttonColors(AzulPrimario)
+                    ) {
+                        Text(text = "Crear Tutoría", color = Color.White)
+                    }
+                }
             }
         }
-    }
+    )
 }
+

@@ -1,45 +1,70 @@
 package com.example.tutormatch.ui.tutor.crearTutoria.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
+import com.example.tutormatch.ui.tutor.crearTutoria.Repository.CrearTutoriaRepository
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class CrearTutoriaViewModel : ViewModel() {
+class CrearTutoriaViewModel(
+    private val repository: CrearTutoriaRepository = CrearTutoriaRepository()
+) : ViewModel() {
 
-    // Lista de materias disponibles para la tutoría
     private val _materiasDisponibles = MutableStateFlow<List<Materia>>(emptyList())
-    val materiasDisponibles: StateFlow<List<Materia>> get() = _materiasDisponibles
+    val materiasDisponibles: StateFlow<List<Materia>> = _materiasDisponibles
 
-    // Lista de tipos de tutoría (nivel)
-    private val _tiposDeTutoria = MutableStateFlow<List<String>>(emptyList())
-    val tiposDeTutoria: StateFlow<List<String>> get() = _tiposDeTutoria
+    private val _tiposDeTutoria = MutableStateFlow<List<String>>(listOf("Presencial", "Virtual"))
+    val tiposDeTutoria: StateFlow<List<String>> = _tiposDeTutoria
+
+    private val _estadoCreacion = MutableStateFlow<Result<String>?>(null)
+    val estadoCreacion: StateFlow<Result<String>?> = _estadoCreacion
 
     init {
-        cargarDatosSimulados()
+        cargarMateriasDisponibles()
     }
 
-    // Cargar datos simulados de materias y tipos de tutoría
-    private fun cargarDatosSimulados() {
-        val materia1 = Materia(
-            id = "mat1",
-            nombre = "Matemáticas"
-        )
-        val materia2 = Materia(
-            id = "mat2",
-            nombre = "Física"
-        )
-        val materia3 = Materia(
-            id = "mat3",
-            nombre = "Química"
+    private fun cargarMateriasDisponibles() {
+        viewModelScope.launch {
+            val materias = repository.obtenerMaterias()
+            _materiasDisponibles.value = materias
+        }
+    }
+
+    fun crearTutoria(
+        materia: Materia?,
+        tipoTutoria: String?,
+        fecha: String,
+        hora: String,
+        descripcion: String
+    ) {
+        if (materia == null || tipoTutoria == null || fecha.isEmpty() || hora.isEmpty()) {
+            _estadoCreacion.value = Result.failure(Exception("Todos los campos son obligatorios"))
+            return
+        }
+
+        val nuevaTutoria = Tutoria1(
+            id = "",
+            tutorId = FirebaseAuth.getInstance().currentUser?.uid ?: "",
+            materiaId = materia.id,
+            fecha = fecha,
+            hora = hora,
+            modalidad = tipoTutoria,
+            mensaje = descripcion,
+            estado = "Disponible"
         )
 
-        // Lista simulada de materias
-        val listaMaterias = listOf(materia1, materia2, materia3)
-        _materiasDisponibles.value = listaMaterias
+        viewModelScope.launch {
+            val resultado = repository.crearTutoria(nuevaTutoria)
+            _estadoCreacion.value = resultado
+        }
+    }
 
-        // Lista simulada de tipos de tutoría (nivel)
-        val listaTiposDeTutoria = listOf("Desde 0", "Intermedio", "Avanzado")
-        _tiposDeTutoria.value = listaTiposDeTutoria
+    // Reiniciar el estado después de manejarlo
+    fun resetEstadoCreacion() {
+        _estadoCreacion.value = null
     }
 }

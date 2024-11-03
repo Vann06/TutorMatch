@@ -2,22 +2,19 @@ package com.example.tutormatch.navigation
 
 
 sealed class NavigationState(val route: String) {
-    data object Bienvenida: NavigationState("Bienvenida")
-    data object Login : NavigationState("Login")
-    data object SignUp : NavigationState("SignUp")
+    object Bienvenida : NavigationState("Bienvenida")
+    object Login : NavigationState("Login")
+    object SignUp : NavigationState("SignUp")
 
-    //ESTUDIANTE
-    data object Main_Es: NavigationState("Main_Es")
-    data object MyTutors: NavigationState("MyTutors")
-    data object Perfil_Es: NavigationState("Perfil_Es")
-    data object SolicitudTutoria: NavigationState("SolicitudTutoria")
-    data object Tutor_Es: NavigationState("Tutor_Es")
+    // ESTUDIANTE
+    object Main_Es : NavigationState("Main_Es")
+    object MyTutors : NavigationState("MyTutors")
+    object Perfil_Es : NavigationState("Perfil_Es")
+    object SolicitudTutoria : NavigationState("SolicitudTutoria")
+    object Tutor_Es : NavigationState("Tutor_Es")
 
-    //TUTOR
-    data object CrearTutoria: NavigationState("CrearTutoria")
-    //data object MisEstudiantes: NavigationState("EstudiantesTu")
-    data object MisTutorias: NavigationState("MisTutorias")
-    data object PerfilTutor: NavigationState("Perfil_Tu")
-
-
+    // TUTOR
+    object CrearTutoria : NavigationState("CrearTutoria")
+    object MisTutorias : NavigationState("MisTutorias")
+    object PerfilTutor : NavigationState("Perfil_Tu")
 }
