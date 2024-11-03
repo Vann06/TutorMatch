@@ -12,6 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,10 +21,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,84 +51,99 @@ import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.navigation.NavigationState
+import com.example.tutormatch.ui.theme.AzulPrimario
 import com.example.tutormatch.ui.tutor.MisTutorias.ViewModel.MisTutoriasViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MisTutoriasScreen(navController: NavHostController, viewModel: MisTutoriasViewModel = viewModel()) {
-    val misTutorias by viewModel.misTutorias.collectAsState()
+fun MisTutoriasScreen(navController: NavHostController) {
+    val tabs = listOf("Mis Tutorías", "Solicitudes")
+    var selectedTabIndex by remember { mutableStateOf(0) }
 
     Scaffold(
+        topBar = {
+            AppBar(title = "Tutorías", navController = navController)
+        },
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
                     label = { Text("Perfil") },
                     selected = false,
-                    onClick = {  navController.navigate(NavigationState.PerfilTutor.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    } }
+                    onClick = { navController.navigate(NavigationState.PerfilTutor.route) }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Search, contentDescription = "Tutorías") },
                     label = { Text("Tutorías") },
-                    selected = false,
-                    onClick = { navController.navigate(NavigationState.MisTutorias.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    } }
+                    selected = true,
+                    onClick = { /* Ya estamos en esta pantalla */ }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Home, contentDescription = "Crear Tutoría") },
                     label = { Text("Crear Tutoría") },
                     selected = false,
-                    onClick = {  navController.navigate(NavigationState.CrearTutoria.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    }}
+                    onClick = { navController.navigate(NavigationState.CrearTutoria.route) }
                 )
             }
         },
-        topBar = {
-            AppBar(title = "Tutorías", navController = navController)
-        },
         content = { paddingValues ->
-            if (misTutorias.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
+            Column(modifier = Modifier.padding(paddingValues)) {
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    containerColor = AzulPrimario,
+                    contentColor = Color.White
                 ) {
-                    items(misTutorias) { tutoria ->
-                        TutoriaCard(navController = navController, infotutoria = tutoria)
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTabIndex == index,
+                            onClick = { selectedTabIndex = index },
+                            text = { Text(title) },
+                            selectedContentColor = Color.White,
+                            unselectedContentColor = Color.LightGray
+                        )
                     }
                 }
-            } else {
-                // Mostrar mensaje de que no hay tutorías
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "No tienes tutorías pendientes")
+
+                when (selectedTabIndex) {
+                    0 -> {
+                        MisTutoriasContent(navController = navController)
+                    }
+                    1 -> {
+                        SolicitudesContent(navController = navController)
+                    }
                 }
             }
         }
     )
 }
 
-
 @Composable
-fun TutoriaCard(navController: NavController, infotutoria: Tutoria1) {
-    val nombreTutor = infotutoria.tutorId // Aquí podrías usar un método para obtener el nombre del tutor si se requiere
+fun TutoriaCard(
+    navController: NavController,
+    tutoria: Tutoria1,
+    esSolicitud: Boolean = false, // Indica si es una solicitud
+    onAceptarSolicitud: ((Tutoria1) -> Unit)? = null, // Función para aceptar la solicitud
+    onRechazarSolicitud: ((Tutoria1) -> Unit)? = null // Función para rechazar la solicitud
+) {
+    // Obtener el nombre de la materia (si es necesario)
+    val materiaNombre = remember { mutableStateOf("Materia desconocida") }
+
+    // Obtener la información de la materia desde Firestore
+    LaunchedEffect(tutoria.materiaId) {
+        val firestore = FirebaseFirestore.getInstance()
+        val materiaSnapshot = firestore.collection("materias").document(tutoria.materiaId).get().await()
+        val materia = materiaSnapshot.toObject(Materia::class.java)
+        materiaNombre.value = materia?.nombre ?: "Materia desconocida"
+    }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = {
-                navController.navigate(NavigationState.MisTutorias)
+                // Navegación o acción al hacer clic en la tarjeta
+                // Puedes agregar lógica aquí si es necesario
             })
             .padding(8.dp)
             .shadow(12.dp, shape = RoundedCornerShape(8.dp)),
@@ -128,108 +151,83 @@ fun TutoriaCard(navController: NavController, infotutoria: Tutoria1) {
             containerColor = Color.DarkGray
         )
     ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.estudiante),
-                contentDescription = "Imagen de perfil de tutor",
-                modifier = Modifier
-                    .padding(6.dp)
-                    .size(50.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Gray, CircleShape)
-            )
-
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp)
+        Column(modifier = Modifier.padding(8.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = nombreTutor ?: "Tutor desconocido",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = Color.White
-                )
-                Text(
-                    text = "Modalidad: " + infotutoria.modalidad,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 14.sp,
-                    color = Color.LightGray
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Card(
-                    shape = CircleShape,
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Blue
-                    ),
-                    modifier = Modifier
-                        .padding(top = 4.dp)
-                        .wrapContentSize()
-                ) {
+                // Información principal
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = infotutoria.materiaId ?: "Materia desconocida",
-                        fontWeight = FontWeight.SemiBold,
+                        text = "Fecha: ${tutoria.fecha}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Hora: ${tutoria.hora}",
                         fontSize = 14.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                        color = Color.LightGray
+                    )
+                    Text(
+                        text = "Modalidad: ${tutoria.modalidad}",
+                        fontSize = 14.sp,
+                        color = Color.LightGray
                     )
                 }
+                // Mostrar el estado de la tutoría o solicitud
+                Text(
+                    text = tutoria.estado,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    color = when (tutoria.estado) {
+                        "Aceptada" -> Color.Green
+                        "Rechazada" -> Color.Red
+                        else -> Color.Yellow
+                    }
+                )
             }
-
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
+            Spacer(modifier = Modifier.height(8.dp))
+            // Mostrar la materia
+            Text(
+                text = "Materia: ${materiaNombre.value}",
+                fontSize = 14.sp,
+                color = Color.White
+            )
+            // Mostrar el mensaje o descripción si existe
+            if (tutoria.mensaje.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Fecha: " + infotutoria.fecha,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 12.sp,
-                    color = Color.LightGray
+                    text = "Mensaje: ${tutoria.mensaje}",
+                    fontSize = 14.sp,
+                    color = Color.White
                 )
-                Text(
-                    text = "Hora: " + infotutoria.hora,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 12.sp,
-                    color = Color.LightGray
-                )
+            }
+            // Si es una solicitud, mostrar botones para aceptar o rechazar
+            if (esSolicitud) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(
+                        onClick = { onAceptarSolicitud?.invoke(tutoria) },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
+                    ) {
+                        Text("Aceptar")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = { onRechazarSolicitud?.invoke(tutoria) },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text("Rechazar")
+                    }
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewTutoriaCard() {
-    val materiaEjemplo = Materia(
-        id = "1",
-        nombre = "Física II"
-    )
 
-    val tutoriaEjemplo = Tutoria1(
-        id = "1",
-        estudianteId = "2",
-        tutorId = "1",
-        materiaId = materiaEjemplo.id,
-        fecha = "14 Sep, 2024",
-        hora = "10:00 AM",
-        modalidad = "Presencial",
-        mensaje = "Por favor, revisar temas de mecánica",
-        estado = "Pendiente"
-    )
-
-    val estudianteEjemplo = Estudiante1(
-        id = "2",
-        nombre = "Estudiante Ejemplo",
-        usuario = "estudiante_usuario",
-        fotoPerfilUrl = "url_de_imagen",
-        email = "estudiante@ejemplo.com",
-        tutoresIds = listOf("1")
-    )
-
-    TutoriaCard(infotutoria = tutoriaEjemplo, navController = NavController(LocalContext.current))
-}

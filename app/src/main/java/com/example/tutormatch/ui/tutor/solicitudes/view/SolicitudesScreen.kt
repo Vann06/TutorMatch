@@ -27,16 +27,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tutormatch.ui.tutor.solicitudes.ViewModel.TutoriaViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tutormatch.R
+import com.example.tutormatch.ui.tutor.MisTutorias.ViewModel.MisTutoriasViewModel
 
+/*
 @Composable
 fun SolicitudesScreen(){
-    val viewModel: TutoriaViewModel = viewModel()
+    val viewModel: MisTutoriasViewModel = viewModel()
     val solicitudes by viewModel.solicitudesTutoria.collectAsState()
 
     Scaffold(
@@ -125,3 +126,6 @@ fun SolicitudesScreen(){
 fun PreviewSolicitudesTutoriaScreen() {
     SolicitudesScreen()
 }
+
+
+ */

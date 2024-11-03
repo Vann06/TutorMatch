@@ -23,9 +23,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.TutoriaConDetalles
-import com.example.tutormatch.ui.tutor.solicitudes.ViewModel.TutoriaViewModel
 
-
+/*
 @Composable
 fun TutoriaCard(solicitud: TutoriaConDetalles, viewModel: TutoriaViewModel) {
     OutlinedCard (
@@ -72,3 +71,4 @@ fun TutoriaCard(solicitud: TutoriaConDetalles, viewModel: TutoriaViewModel) {
     }
 }
 
+*/
