@@ -47,11 +47,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.tutormatch.R
 import com.example.tutormatch.navigation.NavigationState
 import com.example.tutormatch.ui.estudiante.Main.Repository.EstudianteRepository
 import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewModel
+import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewModelFactory
 import com.example.tutormatch.ui.theme.AzulPrimario
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -59,11 +62,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun MainEstudiante(
     navController: NavHostController,
-    viewModel: MainEstudianteViewModel = MainEstudianteViewModel(EstudianteRepository(
-        FirebaseFirestore.getInstance()))
-) {
+    viewModel: MainEstudianteViewModel = viewModel(
+        factory = MainEstudianteViewModelFactory(EstudianteRepository(FirebaseFirestore.getInstance()))
+    )
+)
+{
     val materias by viewModel.materias.collectAsState()
+    val materiasMap by viewModel.materiasMap.collectAsState()
     val tutors by viewModel.tutors.collectAsState()
+    val materiaSeleccionada by viewModel.materiaSeleccionada.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
     var isDropdownVisible by remember { mutableStateOf(false) }
@@ -72,6 +79,14 @@ fun MainEstudiante(
         materia.nombre.contains(searchQuery, ignoreCase = true)
     }.toMutableList()
 
+    val tutorsFiltrados = if (materiaSeleccionada != null) {
+        tutors.filter { tutor ->
+            tutor.materias.contains(materiaSeleccionada)
+        }
+    } else {
+        tutors
+    }
+
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -79,7 +94,7 @@ fun MainEstudiante(
                     icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
                     label = { Text("Perfil") },
                     selected = false,
-                    onClick = {  navController.navigate(NavigationState.Perfil_Es.route) {
+                    onClick = { navController.navigate(NavigationState.Perfil_Es.route) {
                         launchSingleTop = true
                         restoreState = true
                     } }
@@ -87,17 +102,14 @@ fun MainEstudiante(
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Search, contentDescription = "Buscador") },
                     label = { Text("Buscador") },
-                    selected = false,
-                    onClick = { navController.navigate(NavigationState.Main_Es.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    } }
+                    selected = true,
+                    onClick = { /* Ya estamos en esta pantalla */ }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Home, contentDescription = "MyTutors") },
                     label = { Text("Mis Tutores") },
                     selected = false,
-                    onClick = {  navController.navigate(NavigationState.MyTutors.route) {
+                    onClick = { navController.navigate(NavigationState.MyTutors.route) {
                         launchSingleTop = true
                         restoreState = true
                     }}
@@ -149,7 +161,7 @@ fun MainEstudiante(
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .heightIn(max = 200.dp) // Limita la altura máxima
+                                .heightIn(max = 200.dp)
                         ) {
                             items(filteredMaterias) { materia ->
                                 Card(
@@ -159,11 +171,32 @@ fun MainEstudiante(
                                         .clickable {
                                             searchQuery = materia.nombre
                                             isDropdownVisible = false
+                                            viewModel.setMateriaSeleccionada(materia.id)
                                         },
                                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                                 ) {
                                     Text(
                                         text = materia.nombre,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+                            }
+                            // Opción para mostrar todos los tutores
+                            item {
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp)
+                                        .clickable {
+                                            searchQuery = ""
+                                            isDropdownVisible = false
+                                            viewModel.setMateriaSeleccionada(null)
+                                        },
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                                ) {
+                                    Text(
+                                        text = "Mostrar Todos",
                                         style = MaterialTheme.typography.bodyMedium,
                                         modifier = Modifier.padding(16.dp)
                                     )
@@ -181,12 +214,13 @@ fun MainEstudiante(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(tutors) { tutor ->
+                        items(tutorsFiltrados) { tutor ->
                             TutorCard(
                                 name = tutor.nombre,
                                 descripcion = tutor.descripcion,
                                 fotoPerfil = tutor.fotoPerfilUrl,
-                                materias = tutor.materias // Cambiado a tutor.materiasIds
+                                materiasIds = tutor.materias,
+                                materiasMap = materiasMap
                             )
                         }
                     }
@@ -223,13 +257,13 @@ fun SearchBar(
         )
     )
 }
-
 @Composable
 fun TutorCard(
     name: String,
     descripcion: String,
     fotoPerfil: String,
-    materias: List<String>
+    materiasIds: List<String>,
+    materiasMap: Map<String, String>
 ) {
     OutlinedCard(
         modifier = Modifier
@@ -243,7 +277,11 @@ fun TutorCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.tutor), // Reemplaza con la lógica para cargar imágenes
+                painter = if (fotoPerfil.isNotEmpty()) {
+                    rememberAsyncImagePainter(fotoPerfil)
+                } else {
+                    painterResource(id = R.drawable.tutor)
+                },
                 contentDescription = null,
                 modifier = Modifier
                     .size(64.dp)
@@ -254,14 +292,20 @@ fun TutorCard(
                 Text(text = descripcion, style = MaterialTheme.typography.bodyMedium)
 
                 Row {
-                    materias.forEach { materia ->
-                        Text(text = materia, style = MaterialTheme.typography.bodySmall)
+                    materiasIds.forEach { materiaNombre ->
+                        Text(
+                            text = materiaNombre,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
                     }
                 }
+
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

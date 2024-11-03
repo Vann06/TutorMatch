@@ -44,6 +44,9 @@ import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.ui.theme.AzulTerciario
 import com.example.tutormatch.ui.theme.GrisPrimario
 import com.example.tutormatch.ui.tutor.Perfil.ViewModel.PerfilTutorViewModel
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.layout.ContentScale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,26 +64,38 @@ fun PerfilTutorScreen(
             tutor?.let { tutor ->
                 Surface(
                     color = GrisPrimario,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.perfil_fondo),
-                        contentDescription = "Perfil de Usuario",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentSize(Alignment.TopStart)
-                    )
-
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Column(
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        // Imagen de fondo en la parte superior
+                        Image(
+                            painter = painterResource(id = R.drawable.perfil_fondo),
+                            contentDescription = "Perfil de Usuario",
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(30.dp),
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            Spacer(modifier = Modifier.height(60.dp))
+                                .height(200.dp) // Ajusta la altura según tus necesidades
+                                .align(Alignment.TopStart)
+                        )
 
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Contenido desplazable
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            // Espacio para que el contenido comience debajo de la imagen de fondo
+                            Spacer(modifier = Modifier.height(160.dp)) // Debe ser un poco menos que la altura de la imagen
+
+                            // Foto y nombre del tutor
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 30.dp)
+                            ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.tutor),
                                     contentDescription = "Foto de Perfil",
@@ -100,106 +115,119 @@ fun PerfilTutorScreen(
                                 )
                             }
 
-                            // Opciones Expandibles
-                            ExpandablePerfilItem(
-                                iconResId = R.drawable.user,
-                                title = "Usuario",
-                                initialText = tutor.usuario,
-                                onEdit = { newUsuario ->
-                                    val updatedTutor = tutor.copy(usuario = newUsuario)
-                                    viewModel.actualizarTutor(updatedTutor)
-                                }
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = AzulTerciario
-                            )
+                            Spacer(modifier = Modifier.height(16.dp))
 
-                            ExpandablePerfilItem(
-                                iconResId = R.drawable.user,
-                                title = "Nombre",
-                                initialText = tutor.nombre,
-                                onEdit = { newName ->
-                                    val updatedTutor = tutor.copy(nombre = newName)
-                                    viewModel.actualizarTutor(updatedTutor)
-                                }
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = AzulTerciario
-                            )
+                            // Resto del contenido
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 30.dp)
+                            ) {
+                                // Opciones Expandibles
 
-                            // Contraseña (requiere manejo especial con FirebaseAuth)
-                            ExpandablePerfilItem(
-                                iconResId = R.drawable.eye,
-                                title = "Contraseña",
-                                initialText = "********",
-                                onEdit = { newPassword ->
-                                    // Manejar actualización de contraseña
+                                // Usuario
+                                ExpandablePerfilItem(
+                                    iconResId = R.drawable.user,
+                                    title = "Usuario",
+                                    initialText = tutor.usuario,
+                                    onEdit = { newUsuario ->
+                                        val updatedTutor = tutor.copy(usuario = newUsuario)
+                                        viewModel.actualizarTutor(updatedTutor)
+                                    }
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    color = AzulTerciario
+                                )
 
-                                }
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = AzulTerciario
-                            )
+                                // Nombre
+                                ExpandablePerfilItem(
+                                    iconResId = R.drawable.user,
+                                    title = "Nombre",
+                                    initialText = tutor.nombre,
+                                    onEdit = { newName ->
+                                        val updatedTutor = tutor.copy(nombre = newName)
+                                        viewModel.actualizarTutor(updatedTutor)
+                                    }
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    color = AzulTerciario
+                                )
 
-                            // Opción de notificaciones
-                            PerfilItem(
-                                iconResId = R.drawable.bell,
-                                text = "Notificaciones",
-                                hasSwitch = true
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = AzulTerciario
-                            )
+                                // Contraseña
+                                ExpandablePerfilItem(
+                                    iconResId = R.drawable.eye,
+                                    title = "Contraseña",
+                                    initialText = "********",
+                                    onEdit = { newPassword ->
+                                        // Manejar actualización de contraseña
+                                    }
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    color = AzulTerciario
+                                )
 
-                            // Materias
-                            ExpandablePerfilItem(
-                                iconResId = R.drawable.star,
-                                title = "Materias",
-                                initialText = tutor.materias.joinToString(", "),
-                                onEdit = { newMaterias ->
-                                    val materiasList = newMaterias.split(",").map { it.trim() }
-                                    val updatedTutor = tutor.copy(materias = materiasList)
-                                    viewModel.actualizarTutor(updatedTutor)
-                                }
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = AzulTerciario
-                            )
+                                // Notificaciones
+                                PerfilItem(
+                                    iconResId = R.drawable.bell,
+                                    text = "Notificaciones",
+                                    hasSwitch = true
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    color = AzulTerciario
+                                )
 
-                            // Modalidad
-                            ExpandablePerfilItem(
-                                iconResId = R.drawable.clock_2,
-                                title = "Modalidad",
-                                initialText = tutor.modalidad,
-                                onEdit = { newModalidad ->
-                                    val updatedTutor = tutor.copy(modalidad = newModalidad)
-                                    viewModel.actualizarTutor(updatedTutor)
-                                }
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = AzulTerciario
-                            )
+                                // Materias
+                                ExpandablePerfilItem(
+                                    iconResId = R.drawable.star,
+                                    title = "Materias",
+                                    initialText = tutor.materias.joinToString(", "),
+                                    onEdit = { newMaterias ->
+                                        val materiasList = newMaterias.split(",").map { it.trim() }
+                                        val updatedTutor = tutor.copy(materias = materiasList)
+                                        viewModel.actualizarTutor(updatedTutor)
+                                    }
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    color = AzulTerciario
+                                )
 
-                            // Descripción
-                            ExpandablePerfilItem(
-                                iconResId = R.drawable.clock_2,
-                                title = "Descripción",
-                                initialText = tutor.descripcion,
-                                onEdit = { newDescripcion ->
-                                    val updatedTutor = tutor.copy(descripcion = newDescripcion)
-                                    viewModel.actualizarTutor(updatedTutor)
-                                }
-                            )
-                            Divider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = AzulTerciario
-                            )
+                                // Modalidad
+                                ExpandablePerfilItem(
+                                    iconResId = R.drawable.clock_2,
+                                    title = "Modalidad",
+                                    initialText = tutor.modalidad,
+                                    onEdit = { newModalidad ->
+                                        val updatedTutor = tutor.copy(modalidad = newModalidad)
+                                        viewModel.actualizarTutor(updatedTutor)
+                                    }
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    color = AzulTerciario
+                                )
+
+                                // Descripción
+                                ExpandablePerfilItem(
+                                    iconResId = R.drawable.clock_2,
+                                    title = "Descripción",
+                                    initialText = tutor.descripcion,
+                                    onEdit = { newDescripcion ->
+                                        val updatedTutor = tutor.copy(descripcion = newDescripcion)
+                                        viewModel.actualizarTutor(updatedTutor)
+                                    }
+                                )
+                                Divider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    color = AzulTerciario
+                                )
+
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
                         }
                     }
                 }
@@ -214,9 +242,9 @@ fun PerfilTutorScreen(
                     CircularProgressIndicator()
                 }
             }
-        }
-    )
+        })
 }
+
 
 
 //  Funcion para opciones expandibles y modificar datos

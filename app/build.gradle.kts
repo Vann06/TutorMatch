@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
 
+
     // Jetpack Compose
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -77,6 +78,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth.ktx.v2200)
+
 
     // Play Services
     implementation(libs.play.services.recaptcha)
