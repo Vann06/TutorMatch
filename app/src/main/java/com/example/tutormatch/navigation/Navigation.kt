@@ -3,17 +3,22 @@ package com.example.tutormatch.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.example.tutormatch.ui.general.Login.View.LoginScreen
 import com.example.tutormatch.ui.general.SignUp.View.SignUpScreen
 import com.example.tutormatch.ui.general.bienvenida.View.Bienvenida
 import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
+import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewModel
 import com.example.tutormatch.ui.estudiante.MyTutors.View.MyTutorsScreen
 import com.example.tutormatch.ui.estudiante.Perfil.View.PerfilEstudianteScreen
 import com.example.tutormatch.ui.estudiante.SolicitudTutoria.view.SolicitudTutoria
+import com.example.tutormatch.ui.estudiante.Tutor_Es.View.PerfilTutorEstudiante
+import com.example.tutormatch.ui.estudiante.Tutor_Es.View.PerfilTutorEstudianteScreen
 import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutoriasScreen
 import com.example.tutormatch.ui.tutor.crearTutoria.View.CreacionTutoria
 import com.example.tutormatch.ui.tutor.perfil.PerfilTutorScreen
@@ -22,7 +27,7 @@ import com.example.tutormatch.ui.tutor.perfil.PerfilTutorScreen
 class Navigation {
 }
 @Composable
-fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) {
+fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, viewModel: MainEstudianteViewModel) {
     NavHost(
         navController = navController,
         startDestination = NavigationState.Bienvenida.route,
@@ -41,7 +46,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
 
         // ESTUDIANTE
         composable(NavigationState.Main_Es.route) {
-            MainEstudiante(navController = navController)
+            MainEstudiante(navController = navController, viewModel = viewModel)
         }
         composable(NavigationState.MyTutors.route) {
             MyTutorsScreen(navController = navController)
@@ -53,6 +58,19 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
             PerfilEstudianteScreen(navController = navController)
         }
 
+        composable(
+            route = NavigationState.PerfilTutorEstudiante.route,
+            arguments = listOf(navArgument("tutorId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val tutorId = backStackEntry.arguments?.getString("tutorId")
+            if (tutorId != null) {
+                PerfilTutorEstudianteScreen(tutorId = tutorId, navController = navController)
+            } else {
+                // Manejo de error si tutorId es nulo
+                navController.popBackStack()
+            }
+        }
+
         // TUTOR
         composable(NavigationState.MisTutorias.route) {
             // Aquí debes definir la pantalla para MisTutorias
@@ -61,9 +79,9 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier) 
         composable(NavigationState.CrearTutoria.route) {
             CreacionTutoria(navController = navController)
         }
-        composable(NavigationState.PerfilTutor.route) {
+        //composable(NavigationState.PerfilTutor.route) {
             // Aquí debes definir la pantalla para el Perfil del Tutor
-            PerfilTutorScreen(navController = navController)
-        }
+           // PerfilTutorScreen(navController = navController)
+        //}
     }
 }

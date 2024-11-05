@@ -2,10 +2,7 @@ package com.example.tutormatch.ui.tutor.solicitudes.ViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
-import com.example.tutormatch.estructuras.TutoriaConDetalles
-import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow

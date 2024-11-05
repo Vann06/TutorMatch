@@ -57,6 +57,7 @@ import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewMod
 import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewModelFactory
 import com.example.tutormatch.ui.theme.AzulPrimario
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.tutormatch.ui.estudiante.Tutor_Es.View.PerfilTutorEstudiante
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -220,7 +221,10 @@ fun MainEstudiante(
                                 descripcion = tutor.descripcion,
                                 fotoPerfil = tutor.fotoPerfilUrl,
                                 materiasIds = tutor.materias,
-                                materiasMap = materiasMap
+                                materiasMap = materiasMap,
+                                onClick = {
+                                    navController.navigate(NavigationState.PerfilTutorEstudiante.createRoute(tutor.id))
+                                }
                             )
                         }
                     }
@@ -263,12 +267,15 @@ fun TutorCard(
     descripcion: String,
     fotoPerfil: String,
     materiasIds: List<String>,
-    materiasMap: Map<String, String>
+    materiasMap: Map<String, String>,
+    onClick: () -> Unit
+
 ) {
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
+            .clickable { onClick() }
     ) {
         Row(
             modifier = Modifier

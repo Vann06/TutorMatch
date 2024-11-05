@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.TutoriaConDetalles
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaConDetalles
 import com.example.tutormatch.ui.theme.AzulClaro
 import com.example.tutormatch.ui.theme.AzulPrimario
 

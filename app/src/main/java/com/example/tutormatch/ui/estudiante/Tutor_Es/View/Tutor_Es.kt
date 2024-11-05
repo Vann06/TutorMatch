@@ -17,9 +17,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,17 +31,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.Tutor
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
+import com.example.tutormatch.ui.estudiante.Tutor_Es.ViewModel.PerfilTutorEstudianteViewModel
+import com.example.tutormatch.ui.estudiante.Tutor_Es.ViewModel.PerfilTutorEstudianteViewModelFactory
 import com.example.tutormatch.ui.theme.AzulClaro
 import com.example.tutormatch.ui.theme.AzulPrimario
 
 
 @Composable
 fun PerfilTutorEstudiante(
-    tutor: Tutor,
+    tutor: Tutor1,
     navController: NavHostController
 ) {
     Surface(color = Color.White) {
@@ -60,14 +66,27 @@ fun PerfilTutorEstudiante(
                 Spacer(modifier = Modifier.height(60.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.tutor),
-                        contentDescription = "Foto de Perfil",
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, Color.White)
-                    )
+                    // Imagen de perfil
+                    if (tutor.fotoPerfilUrl.isNotEmpty()) {
+                        Image(
+                            painter = rememberAsyncImagePainter(tutor.fotoPerfilUrl),
+                            contentDescription = "Foto de Perfil",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clip(CircleShape)
+                                .border(2.dp, Color.White)
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.tutor),
+                            contentDescription = "Foto de Perfil",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clip(CircleShape)
+                                .border(2.dp, Color.White)
+                        )
+                    }
+
                     Text(
                         text = tutor.nombre,
                         fontWeight = FontWeight.ExtraBold,
@@ -83,7 +102,7 @@ fun PerfilTutorEstudiante(
 
                 // Sección Modalidad
                 Text(
-                    text = "Modalidad :",
+                    text = "Modalidad:",
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     color = AzulClaro
@@ -110,7 +129,7 @@ fun PerfilTutorEstudiante(
 
                 // Sección Descripción
                 Text(
-                    text = "Descripción :",
+                    text = "Descripción:",
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     color = AzulClaro
@@ -135,7 +154,7 @@ fun PerfilTutorEstudiante(
                 Button(
                     onClick = { /* Lógica para agendar tutoría */ },
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)  // Centrar botón
+                        .align(Alignment.CenterHorizontally)
                         .padding(vertical = 8.dp)
                         .width(250.dp),
                     colors = ButtonDefaults.buttonColors(AzulPrimario)
@@ -156,7 +175,8 @@ fun PerfilTutorEstudiante(
                         .padding(vertical = 8.dp)
                         .align(Alignment.CenterHorizontally)
                         .width(250.dp),
-                    colors = ButtonDefaults.buttonColors(AzulPrimario)                ) {
+                    colors = ButtonDefaults.buttonColors(AzulPrimario)
+                ) {
                     Text(
                         text = "Tutoría Grupal",
                         color = Color.White,
@@ -171,17 +191,16 @@ fun PerfilTutorEstudiante(
 @Preview(showBackground = true)
 @Composable
 fun PreviewPerfilTutorEstudiante() {
-    // Instancia de prueba para el Tutor
-    val tutorPrueba = Tutor(
+    // Instancia de prueba para el Tutor1
+    val tutorPrueba = Tutor1(
         id = "1",
         nombre = "Juan Pérez",
         usuario = "jperez",
-        contraseña = "12345",
-        myStudents = mutableListOf(),
-        fotoPerfil = R.drawable.tutor,
-        materias = mutableListOf(),
-        descripcion = "Soy un tutor con experiencia en matemáticas y física. Me gusta enseñar de forma interactiva.",
-        modalidad = "Virtual, Presencial"
+        fotoPerfilUrl = "", // Puedes colocar una URL válida para probar
+        email = "juan.perez@example.com",
+        materias = listOf("Matemáticas", "Física"),
+        modalidad = "Virtual, Presencial",
+        descripcion = "Soy un tutor con experiencia en matemáticas y física. Me gusta enseñar de forma interactiva."
     )
 
     // Llamada a la función para mostrar la vista previa

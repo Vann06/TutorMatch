@@ -9,15 +9,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.tutormatch.estructuras.Estudiante
 import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.navigation.Navigation
 import com.example.tutormatch.navigation.NavigationState
 import com.example.tutormatch.ui.estudiante.Main.View.MainEstudiante
 import com.example.tutormatch.ui.estudiante.Main.ViewModel.MainEstudianteViewModel
+import com.example.tutormatch.ui.estudiante.Tutor_Es.View.PerfilTutorEstudianteScreen
 import com.example.tutormatch.ui.general.Login.View.LoginScreen
 import com.example.tutormatch.ui.general.SignUp.View.SignUpScreen
 import com.example.tutormatch.ui.general.bienvenida.View.Bienvenida
@@ -40,6 +43,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Navigation(
                         navController = navController, // Llama a la función Navigation
+                        viewModel = estudianteViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -50,19 +54,44 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun NavigationGraph(navController: NavHostController, viewModel: MainEstudianteViewModel, modifier: Modifier = Modifier) {
+fun NavigationGraph(
+    navController: NavHostController,
+    viewModel: MainEstudianteViewModel,
+    modifier: Modifier = Modifier
+) {
     NavHost(
         navController = navController,
-        startDestination = NavigationState.Bienvenida.route, // Cambia a usar la clase NavigationState
+        startDestination = NavigationState.Bienvenida.route,
         modifier = modifier
     ) {
-        composable(NavigationState.Bienvenida.route) { Bienvenida(navController) }
-        composable(NavigationState.Login.route) { LoginScreen(navController) }
-        composable(NavigationState.SignUp.route) { SignUpScreen(navController) }
-        composable(NavigationState.Main_Es.route) { // Cambia a usar la clase NavigationState
+        composable(NavigationState.Bienvenida.route) {
+            Bienvenida(navController)
+        }
+        composable(NavigationState.Login.route) {
+            LoginScreen(navController)
+        }
+        composable(NavigationState.SignUp.route) {
+            SignUpScreen(navController)
+        }
+        composable(NavigationState.Main_Es.route) {
             MainEstudiante(navController, viewModel)
         }
-        composable(NavigationState.MisTutorias.route) { MisTutoriasScreen(navController) }
+        composable(NavigationState.MisTutorias.route) {
+            MisTutoriasScreen(navController)
+        }
 
+        // **Agrega este bloque para la ruta PerfilTutorEstudiante**
+        composable(
+            route = NavigationState.PerfilTutorEstudiante.route,
+            arguments = listOf(navArgument("tutorId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val tutorId = backStackEntry.arguments?.getString("tutorId")
+            if (tutorId != null) {
+                PerfilTutorEstudianteScreen(tutorId = tutorId, navController = navController)
+            } else {
+                // Manejo de error si tutorId es nulo
+                navController.popBackStack()
+            }
+        }
     }
 }
