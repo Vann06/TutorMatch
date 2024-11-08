@@ -53,7 +53,8 @@ fun MyTutorsScreen(
     navController: NavHostController,
     viewModel: MyTutorsViewModel = viewModel()
 ) {
-    val tutorias = viewModel.tutorias.observeAsState()
+    val tutorias by viewModel.tutorias.observeAsState()
+    val error by viewModel.error.observeAsState()
 
     Scaffold(
         topBar = {
@@ -63,33 +64,45 @@ fun MyTutorsScreen(
             BottomNavigationBar(navController = navController)
         },
         content = { paddingValues ->
-            tutorias.value?.let { listaTutorias ->
-                if (listaTutorias.isNotEmpty()) {
-                    MyTutors(
-                        listaTutorias = listaTutorias,
-                        navController = navController,
-                        modifier = Modifier.padding(paddingValues)
-                    )
-                } else {
-                    // Mostrar mensaje de que no hay tutorías
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "No tienes tutorías aún")
-                    }
-                }
-            } ?: run {
-                // Mostrar indicador de carga
+            if (error != null) {
+                // Mostrar mensaje de error
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    Text(text = "Error: $error", color = Color.Red)
+                }
+            } else {
+                tutorias?.let { listaTutorias ->
+                    if (listaTutorias.isNotEmpty()) {
+                        MyTutors(
+                            listaTutorias = listaTutorias,
+                            navController = navController,
+                            modifier = Modifier.padding(paddingValues)
+                        )
+                    } else {
+                        // Mostrar mensaje de que no hay tutorías
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "No tienes tutorías aún")
+                        }
+                    }
+                } ?: run {
+                    // Mostrar indicador de carga
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
