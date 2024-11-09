@@ -1,5 +1,8 @@
 package com.example.tutormatch.ui.estudiante.SolicitudTutoria.view
 
+import android.app.TimePickerDialog
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +28,7 @@ import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.ui.estudiante.SolicitudTutoria.SolicitudTutoriaViewModel
 import com.example.tutormatch.ui.theme.AzulPrimario
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +43,11 @@ fun SolicitudTutoria(
     val selectedDate by viewModel.selectedDate.collectAsState()
     val selectedTime by viewModel.selectedTime.collectAsState()
     val comment by viewModel.comment.collectAsState()
+
+    // Estado para el Time Picker y Date Picker
+    val timePickerDialogState = remember { mutableStateOf(false) }
+    val datePickerDialogState = remember { mutableStateOf(false) }
+    val calendar = Calendar.getInstance()
 
     LazyColumn(
         modifier = Modifier
@@ -104,7 +113,6 @@ fun SolicitudTutoria(
                 expanded = viewModel.materiaDropdownExpanded,
                 onDismissRequest = { viewModel.toggleMateriaDropdown() }
             ) {
-                // Iterar sobre los IDs de materias del tutor
                 tutor.materias.forEach { materiaId ->
                     val materia = viewModel.getMateriaById(materiaId) // Función en ViewModel para obtener `Materia`
                     DropdownMenuItem(
@@ -167,7 +175,7 @@ fun SolicitudTutoria(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(text = "Selecciona una fecha") },
                 trailingIcon = {
-                    IconButton(onClick = { /* Date picker */ }) {
+                    IconButton(onClick = { datePickerDialogState.value = true }) {
                         Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Seleccionar fecha")
                     }
                 },
@@ -178,7 +186,104 @@ fun SolicitudTutoria(
             )
         }
 
-        // Time Picker, Comment TextField, and Submit button (without further modification)
+        // DatePicker Dialog
+        if (datePickerDialogState.value) {
+            val datePicker = android.app.DatePickerDialog(
+                navHostController.context,
+                { _, year, month, dayOfMonth ->
+                    // Formatear la fecha
+                    val selectedDateFormatted = "$dayOfMonth/${month + 1}/$year"
+                    viewModel.setSelectedDate(selectedDateFormatted)
+                    datePickerDialogState.value = false
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePicker.show()
+        }
 
+        // Time Picker
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Hora de la tutoría",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = Color.Black,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = selectedTime,
+                onValueChange = {},
+                readOnly = true,
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text(text = "Selecciona una hora") },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        timePickerDialogState.value = true
+                    }) {
+                        Icon(painter = painterResource(id = R.drawable.clock_icon), contentDescription = "Seleccionar hora")
+                    }
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AzulPrimario,
+                    cursorColor = AzulPrimario
+                )
+            )
+        }
+
+        // TimePicker Dialog
+        if (timePickerDialogState.value) {
+            val timePicker = TimePickerDialog(
+                navHostController.context,
+                { _, hour, minute ->
+                    viewModel.setSelectedTime("$hour:$minute")
+                    timePickerDialogState.value = false
+                },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                true
+            )
+            timePicker.show()
+        }
+
+        // Comment TextField
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Comentario",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = Color.Black,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = comment,
+                onValueChange = { viewModel.setComment(it) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Escribe tu comentario") },
+                maxLines = 3,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = AzulPrimario,
+                    cursorColor = AzulPrimario
+                )
+            )
+        }
+
+        // Submit Button
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    // aqui va lo de solicitud de tutoria del viewmodel
+                },
+                colors = ButtonDefaults.buttonColors(AzulPrimario),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Enviar Solicitud", color = Color.White)
+            }
+        }
     }
 }

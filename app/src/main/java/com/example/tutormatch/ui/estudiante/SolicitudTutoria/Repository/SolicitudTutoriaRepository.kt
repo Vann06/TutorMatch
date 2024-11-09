@@ -14,7 +14,8 @@ class SolicitudTutoriaRepository {
     // Crear una nueva tutoría en Firestore
     suspend fun createTutoria(tutoria: Tutoria1): Result<Unit> {
         return try {
-            tutoriaCollection.document(tutoria.id).set(tutoria).await()
+
+            tutoriaCollection.add(tutoria).await()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

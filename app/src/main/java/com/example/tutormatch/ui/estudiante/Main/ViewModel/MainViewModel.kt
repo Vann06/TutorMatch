@@ -7,7 +7,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.example.tutormatch.ui.estudiante.Main.Repository.EstudianteRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -56,6 +55,15 @@ class MainEstudianteViewModel(private val repository: EstudianteRepository) : Vi
             }
         }
     }
+
+    /**
+     * Obtiene un tutor por su ID.
+     * @param tutorId El ID del tutor a buscar.
+     * @return El objeto Tutor1 correspondiente, o null si no existe.
+     */
+    fun getTutorById(tutorId: String): Tutor1? {
+        return _tutors.value.find { it.id == tutorId }
+    }
 }
 
 class MainEstudianteViewModelFactory(
@@ -69,4 +77,3 @@ class MainEstudianteViewModelFactory(
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-

@@ -152,7 +152,9 @@ fun PerfilTutorEstudiante(
 
                 // Botón "Agendar Tutoría"
                 Button(
-                    onClick = { /* Lógica para agendar tutoría */ },
+                    onClick = { val tutorId = tutor.id // Reemplaza 'tutor' con la variable que representa al tutor actual
+                        navController.navigate("SolicitudTutoria/$tutorId")
+                              },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(vertical = 8.dp)

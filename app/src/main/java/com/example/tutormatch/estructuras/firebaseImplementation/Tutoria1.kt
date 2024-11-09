@@ -1,7 +1,7 @@
 package com.example.tutormatch.estructuras.firebaseImplementation
 
 data class Tutoria1(
-    val id: String = "",
+    var id: String = "",
     val estudianteId: String = "",
     val tutorId: String = "",
     val materiaId: String = "",

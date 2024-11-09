@@ -10,7 +10,10 @@ sealed class NavigationState(val route: String) {
     object Main_Es : NavigationState("Main_Es")
     object MyTutors : NavigationState("MyTutors")
     object Perfil_Es : NavigationState("Perfil_Es")
-    object SolicitudTutoria : NavigationState("SolicitudTutoria")
+    object SolicitudTutoria : NavigationState("SolicitudTutoria/{tutorId}") {
+        fun createRoute(tutorId: String) = "SolicitudTutoria/$tutorId"
+    }
+
     object Tutor_Es : NavigationState("Tutor_Es")
 
     object PerfilTutorEstudiante : NavigationState("PerfilTutorEstudiante/{tutorId}") {

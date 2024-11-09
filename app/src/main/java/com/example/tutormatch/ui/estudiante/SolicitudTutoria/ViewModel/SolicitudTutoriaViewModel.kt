@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class SolicitudTutoriaViewModel(
+open class SolicitudTutoriaViewModel(
     private val repository: SolicitudTutoriaRepository = SolicitudTutoriaRepository()
 ) : ViewModel() {
 
@@ -88,7 +88,8 @@ class SolicitudTutoriaViewModel(
             fecha = selectedDate.value,
             hora = selectedTime.value,
             modalidad = selectedTipoTutoria.value ?: "",
-            mensaje = comment.value
+            mensaje = comment.value,
+            estado = "Pendiente" // Agregamos un estado inicial
         )
 
         viewModelScope.launch {
