@@ -22,12 +22,12 @@ class MisTutoriasViewModel : ViewModel() {
         cargarMisTutorias()
     }
 
-    private fun cargarMisTutorias() {
+    fun cargarMisTutorias() {
         viewModelScope.launch {
             try {
                 val tutorId = FirebaseAuth.getInstance().currentUser?.uid
                 if (tutorId != null) {
-                    val tutorias = obtenerTutoriasDelTutor(tutorId)
+                    val tutorias = obtenerTutoriasAceptadasDelTutor(tutorId)
                     _misTutorias.value = tutorias
                     _estadoCarga.value = Result.success(Unit)
                 } else {
@@ -39,11 +39,12 @@ class MisTutoriasViewModel : ViewModel() {
         }
     }
 
-    private suspend fun obtenerTutoriasDelTutor(tutorId: String): List<Tutoria1> {
+    private suspend fun obtenerTutoriasAceptadasDelTutor(tutorId: String): List<Tutoria1> {
         val firestore = FirebaseFirestore.getInstance()
         return try {
             val snapshot = firestore.collection("tutorias")
                 .whereEqualTo("tutorId", tutorId)
+                .whereEqualTo("estado", "Aceptada")
                 .get()
                 .await()
 

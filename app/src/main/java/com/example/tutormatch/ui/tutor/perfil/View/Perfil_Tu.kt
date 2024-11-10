@@ -46,6 +46,8 @@ import com.example.tutormatch.ui.theme.GrisPrimario
 import com.example.tutormatch.ui.tutor.Perfil.ViewModel.PerfilTutorViewModel
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Checkbox
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.layout.ContentScale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -197,11 +199,13 @@ fun PerfilTutorScreen(
                                 )
 
                                 // Modalidad
-                                ExpandablePerfilItem(
+                                MultiSelectPerfilItem(
                                     iconResId = R.drawable.clock_2,
                                     title = "Modalidad",
-                                    initialText = tutor.modalidad,
-                                    onEdit = { newModalidad ->
+                                    options = listOf("Virtual", "Presencial"),
+                                    selectedOptions = tutor.modalidad.split(", ").map { it.trim() },
+                                    onSave = { selectedModalidades ->
+                                        val newModalidad = selectedModalidades.joinToString(", ")
                                         val updatedTutor = tutor.copy(modalidad = newModalidad)
                                         viewModel.actualizarTutor(updatedTutor)
                                     }
@@ -210,6 +214,7 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
+
 
                                 // Descripción
                                 ExpandablePerfilItem(
@@ -350,4 +355,76 @@ fun PerfilItem(
         }
     }
 }
+
+@Composable
+fun MultiSelectPerfilItem(
+    iconResId: Int,
+    title: String,
+    options: List<String>,
+    selectedOptions: List<String>,
+    onSave: (List<String>) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedOptionsState = remember { mutableStateListOf(*selectedOptions.toTypedArray()) }
+
+    Column {
+        // Título y botón para expandir
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded }
+                .padding(8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = iconResId),
+                contentDescription = "Icono de opción",
+                modifier = Modifier.size(45.dp)
+            )
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 16.dp)
+            )
+            com.example.tutormatch.ui.estudiante.Perfil.View.Button(
+                expanded = expanded,
+                onClick = { expanded = !expanded })
+        }
+
+        // Contenido expandible
+        if (expanded) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                options.forEach { option ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = selectedOptionsState.contains(option),
+                            onCheckedChange = { isChecked ->
+                                if (isChecked) {
+                                    selectedOptionsState.add(option)
+                                } else {
+                                    selectedOptionsState.remove(option)
+                                }
+                            }
+                        )
+                        Text(text = option, color = Color.White)
+                    }
+                }
+                Button(
+                    onClick = {
+                        onSave(selectedOptionsState)
+                        expanded = false
+                    },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(text = "Guardar")
+                }
+            }
+        }
+    }
+}
+
 

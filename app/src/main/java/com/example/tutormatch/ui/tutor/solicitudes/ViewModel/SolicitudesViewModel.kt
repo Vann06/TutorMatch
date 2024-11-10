@@ -19,7 +19,7 @@ class SolicitudesViewModel : ViewModel() {
         cargarSolicitudes()
     }
 
-    private fun cargarSolicitudes() {
+    fun cargarSolicitudes() {
         viewModelScope.launch {
             val tutorId = FirebaseAuth.getInstance().currentUser?.uid
             if (tutorId != null) {

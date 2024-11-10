@@ -6,10 +6,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.example.tutormatch.ui.tutor.MisTutorias.ViewModel.MisTutoriasViewModel
 import com.example.tutormatch.ui.tutor.solicitudes.ViewModel.SolicitudesViewModel
@@ -18,6 +23,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun MisTutoriasContent(navController: NavHostController, viewModel: MisTutoriasViewModel = viewModel()) {
     val misTutorias by viewModel.misTutorias.collectAsState()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.cargarMisTutorias()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     if (misTutorias.isNotEmpty()) {
         LazyColumn(
@@ -43,6 +62,20 @@ fun MisTutoriasContent(navController: NavHostController, viewModel: MisTutoriasV
 fun SolicitudesContent(navController: NavHostController, viewModel: SolicitudesViewModel = viewModel()) {
     val solicitudes by viewModel.solicitudes.collectAsState()
 
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.cargarSolicitudes()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     if (solicitudes.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier
@@ -51,16 +84,7 @@ fun SolicitudesContent(navController: NavHostController, viewModel: SolicitudesV
             items(solicitudes) { solicitud ->
                 TutoriaCard(
                     navController = navController,
-                    tutoria = solicitud,
-                    esSolicitud = true,
-                    onAceptarSolicitud = { tutoriaAceptada ->
-                        // Lógica para aceptar la solicitud
-                        viewModel.aceptarSolicitud(tutoriaAceptada)
-                    },
-                    onRechazarSolicitud = { tutoriaRechazada ->
-                        // Lógica para rechazar la solicitud
-                        viewModel.rechazarSolicitud(tutoriaRechazada)
-                    }
+                    tutoria = solicitud
                 )
             }
         }

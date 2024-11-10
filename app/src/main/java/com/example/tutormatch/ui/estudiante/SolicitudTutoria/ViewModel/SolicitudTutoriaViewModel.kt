@@ -1,26 +1,35 @@
 package com.example.tutormatch.ui.estudiante.SolicitudTutoria
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
-open class SolicitudTutoriaViewModel(
+class SolicitudTutoriaViewModel(
     private val repository: SolicitudTutoriaRepository = SolicitudTutoriaRepository()
 ) : ViewModel() {
 
     // *** Variables de Estado ***
-    private val _materias = MutableStateFlow<List<Materia>>(emptyList())
-    val materias: StateFlow<List<Materia>> = _materias
+    private val _tutor = MutableStateFlow<Tutor1?>(null)
+    val tutor: StateFlow<Tutor1?> = _tutor
+
+    private val _materiasTutor = MutableStateFlow<List<Materia>>(emptyList())
+    val materiasTutor: StateFlow<List<Materia>> = _materiasTutor
+
+    private val _modalidadesTutor = MutableStateFlow<List<String>>(emptyList())
+    val modalidadesTutor: StateFlow<List<String>> = _modalidadesTutor
 
     private val _selectedMateria = MutableStateFlow<Materia?>(null)
     val selectedMateria: StateFlow<Materia?> = _selectedMateria
+
+    private val _selectedModalidad = MutableStateFlow<String?>(null)
+    val selectedModalidad: StateFlow<String?> = _selectedModalidad
 
     private val _selectedTipoTutoria = MutableStateFlow<String?>(null)
     val selectedTipoTutoria: StateFlow<String?> = _selectedTipoTutoria
@@ -37,18 +46,73 @@ open class SolicitudTutoriaViewModel(
     private val _tutoriaCreationStatus = MutableStateFlow<Result<Unit>?>(null)
     val tutoriaCreationStatus: StateFlow<Result<Unit>?> = _tutoriaCreationStatus
 
-    private val _materiaCreationStatus = MutableStateFlow<Result<Unit>?>(null)
-    val materiaCreationStatus: StateFlow<Result<Unit>?> = _materiaCreationStatus
-
-    var materiaDropdownExpanded by mutableStateOf(false)
+    var materiaDropdownExpanded = mutableStateOf(false)
         private set
 
-    var tipoTutoriaDropdownExpanded by mutableStateOf(false)
+    var modalidadDropdownExpanded = mutableStateOf(false)
+        private set
+
+    var tipoTutoriaDropdownExpanded = mutableStateOf(false)
         private set
 
     // *** Métodos de Configuración ***
+
+    // Obtener el tutor por ID y sus materias y modalidades
+    fun obtenerTutorPorId(tutorId: String) {
+        viewModelScope.launch {
+            val result = repository.obtenerTutorPorId(tutorId)
+            if (result.isSuccess) {
+                val tutor = result.getOrNull()
+                _tutor.value = tutor
+
+                tutor?.let {
+                    // Procesar materias
+                    val materiasList = it.materias.map { materiaNombre ->
+                        Materia(id = materiaNombre, nombre = materiaNombre)
+                    }
+                    _materiasTutor.value = materiasList
+
+                    // Procesar modalidades
+                    val modalidadesList = it.modalidad.split(",").map { modalidad ->
+                        modalidad.trim()
+                    }
+                    _modalidadesTutor.value = modalidadesList
+                }
+            } else {
+                // Manejar error al obtener el tutor
+                println("Error al obtener el tutor: ${result.exceptionOrNull()?.message}")
+            }
+        }
+    }
+
+    /*
+        fun fetchMateriasTutor(materiasNombres: List<String>) {
+            println("Nombres de materias del tutor: $materiasNombres")
+            viewModelScope.launch {
+                val result = repository.getMateriasByNombres(materiasNombres)
+                if (result.isSuccess) {
+                    _materiasTutor.value = result.getOrDefault(emptyList())
+                    println("Materias del tutor obtenidas: ${_materiasTutor.value}")
+                } else {
+                    println("Error al obtener materias del tutor: ${result.exceptionOrNull()?.message}")
+                }
+            }
+        }
+
+        fun fetchAllMaterias() {
+            viewModelScope.launch {
+                val materias = repository.getAllMaterias()
+                println("Materias obtenidas en la prueba: $materias")
+            }
+        }
+
+     */
+
     fun toggleMateriaDropdown() {
-        materiaDropdownExpanded = !materiaDropdownExpanded
+        materiaDropdownExpanded.value = !materiaDropdownExpanded.value
+    }
+    fun toggleModalidadDropdown() {
+        modalidadDropdownExpanded.value = !modalidadDropdownExpanded.value
     }
 
     fun setSelectedMateria(materia: Materia?) {
@@ -57,12 +121,16 @@ open class SolicitudTutoriaViewModel(
     }
 
     fun toggleTipoTutoriaDropdown() {
-        tipoTutoriaDropdownExpanded = !tipoTutoriaDropdownExpanded
+        tipoTutoriaDropdownExpanded.value = !tipoTutoriaDropdownExpanded.value
     }
 
     fun setSelectedTipoTutoria(tipo: String) {
         _selectedTipoTutoria.value = tipo
         toggleTipoTutoriaDropdown()
+    }
+    fun setSelectedModalidad(modalidad: String) {
+        _selectedModalidad.value = modalidad
+        toggleModalidadDropdown()
     }
 
     fun setSelectedDate(date: String) {
@@ -77,51 +145,38 @@ open class SolicitudTutoriaViewModel(
         _comment.value = comment
     }
 
-    // *** Métodos para Crear y Obtener Tutorías ***
+    // *** Métodos para Crear la Tutoría ***
     fun createTutoria(estudianteId: String, tutorId: String) {
-        val materiaId = selectedMateria.value?.id ?: return
+        val materiaId = selectedMateria.value?.id ?: run {
+            // Manejar el caso de materia no seleccionada
+            _tutoriaCreationStatus.value = Result.failure(Exception("Debe seleccionar una materia"))
+            return
+        }
+        val modalidadSeleccionada = selectedModalidad.value ?: run {
+            // Manejar el caso de modalidad no seleccionada
+            _tutoriaCreationStatus.value = Result.failure(Exception("Debe seleccionar una modalidad"))
+            return
+        }
         val tutoria = Tutoria1(
-            id = System.currentTimeMillis().toString(), // ID único basado en el tiempo
+            id = UUID.randomUUID().toString(), // ID único
             estudianteId = estudianteId,
             tutorId = tutorId,
             materiaId = materiaId,
             fecha = selectedDate.value,
             hora = selectedTime.value,
-            modalidad = selectedTipoTutoria.value ?: "",
+            modalidad = modalidadSeleccionada, // Usar la modalidad seleccionada
             mensaje = comment.value,
-            estado = "Pendiente" // Agregamos un estado inicial
+            estado = "Pendiente" // Estado inicial
         )
 
         viewModelScope.launch {
-            _tutoriaCreationStatus.value = repository.createTutoria(tutoria)
+            val result = repository.createTutoria(tutoria)
+            _tutoriaCreationStatus.value = result
         }
     }
 
-    // *** Métodos para Materias ***
-    fun fetchMaterias() {
-        viewModelScope.launch {
-            val result = repository.getMaterias()
-            if (result.isSuccess) {
-                _materias.value = result.getOrDefault(emptyList())
-            } else {
-                println("Error al obtener materias: ${result.exceptionOrNull()?.message}")
-            }
-        }
-    }
 
-    fun addMateria(materia: Materia) {
-        viewModelScope.launch {
-            val result = repository.agregarMateria(materia)
-            _materiaCreationStatus.value = result
-            if (result.isSuccess) {
-                fetchMaterias() // Actualiza la lista después de agregar
-            } else {
-                println("Error al agregar materia: ${result.exceptionOrNull()?.message}")
-            }
-        }
-    }
-
-    fun getMateriaById(id: String): Materia? {
-        return _materias.value.find { it.id == id }
+    fun resetTutoriaCreationStatus() {
+        _tutoriaCreationStatus.value = null
     }
 }

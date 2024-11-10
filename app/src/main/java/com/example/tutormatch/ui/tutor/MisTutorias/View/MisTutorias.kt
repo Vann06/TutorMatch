@@ -39,12 +39,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
@@ -118,116 +120,75 @@ fun MisTutoriasScreen(navController: NavHostController) {
         }
     )
 }
-
 @Composable
 fun TutoriaCard(
     navController: NavController,
     tutoria: Tutoria1,
-    esSolicitud: Boolean = false, // Indica si es una solicitud
-    onAceptarSolicitud: ((Tutoria1) -> Unit)? = null, // Función para aceptar la solicitud
-    onRechazarSolicitud: ((Tutoria1) -> Unit)? = null // Función para rechazar la solicitud
+    esSolicitud: Boolean = false
 ) {
-    // Obtener el nombre de la materia (si es necesario)
-    val materiaNombre = remember { mutableStateOf("Materia desconocida") }
+    // Estados para almacenar la información
+    val materiaNombre = remember { mutableStateOf(tutoria.materiaId) }
+    val estudiante = remember { mutableStateOf<Estudiante1?>(null) }
 
-    // Obtener la información de la materia desde Firestore
-    LaunchedEffect(tutoria.materiaId) {
+    // Obtener la información del estudiante
+    LaunchedEffect(tutoria.estudianteId) {
         val firestore = FirebaseFirestore.getInstance()
-        val materiaSnapshot = firestore.collection("materias").document(tutoria.materiaId).get().await()
-        val materia = materiaSnapshot.toObject(Materia::class.java)
-        materiaNombre.value = materia?.nombre ?: "Materia desconocida"
+        val estudianteSnapshot = firestore.collection("estudiantes").document(tutoria.estudianteId).get().await()
+        val estudianteData = estudianteSnapshot.toObject(Estudiante1::class.java)
+        estudiante.value = estudianteData
     }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = {
-                // Navegación o acción al hacer clic en la tarjeta
-                // Puedes agregar lógica aquí si es necesario
+                // Navegar a la vista detallada de la solicitud
+                navController.navigate(NavigationState.Estudiante_Tu.createRoute(tutoria.id))
             })
             .padding(8.dp)
             .shadow(12.dp, shape = RoundedCornerShape(8.dp)),
         colors = CardDefaults.cardColors(
-            containerColor = Color.DarkGray
+            containerColor = Color(0xFF424242) // Color gris oscuro
         )
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Información principal
-                Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Foto de perfil del estudiante
+                AsyncImage(
+                    model = estudiante.value?.fotoPerfilUrl.takeIf { !it.isNullOrEmpty() },
+                    placeholder = painterResource(R.drawable.estudiante),
+                    error = painterResource(R.drawable.estudiante),
+                    contentDescription = "Perfil del estudiante",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column {
+                    // Título: Materia solicitada
                     Text(
-                        text = "Fecha: ${tutoria.fecha}",
+                        text = materiaNombre.value,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.White
                     )
+                    // Subtítulo: Nombre del estudiante
                     Text(
-                        text = "Hora: ${tutoria.hora}",
-                        fontSize = 14.sp,
-                        color = Color.LightGray
-                    )
-                    Text(
-                        text = "Modalidad: ${tutoria.modalidad}",
+                        text = estudiante.value?.nombre ?: "Estudiante desconocido",
                         fontSize = 14.sp,
                         color = Color.LightGray
                     )
                 }
-                // Mostrar el estado de la tutoría o solicitud
-                Text(
-                    text = tutoria.estado,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = when (tutoria.estado) {
-                        "Aceptada" -> Color.Green
-                        "Rechazada" -> Color.Red
-                        else -> Color.Yellow
-                    }
-                )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            // Mostrar la materia
+            // Mensaje del estudiante
             Text(
-                text = "Materia: ${materiaNombre.value}",
+                text = tutoria.mensaje,
                 fontSize = 14.sp,
-                color = Color.White
+                color = Color.White,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
-            // Mostrar el mensaje o descripción si existe
-            if (tutoria.mensaje.isNotBlank()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Mensaje: ${tutoria.mensaje}",
-                    fontSize = 14.sp,
-                    color = Color.White
-                )
-            }
-            // Si es una solicitud, mostrar botones para aceptar o rechazar
-            if (esSolicitud) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Button(
-                        onClick = { onAceptarSolicitud?.invoke(tutoria) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
-                    ) {
-                        Text("Aceptar")
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        onClick = { onRechazarSolicitud?.invoke(tutoria) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                    ) {
-                        Text("Rechazar")
-                    }
-                }
-            }
         }
     }
 }
-
-

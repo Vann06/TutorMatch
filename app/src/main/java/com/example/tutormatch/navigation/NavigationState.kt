@@ -24,4 +24,7 @@ sealed class NavigationState(val route: String) {
     object CrearTutoria : NavigationState("CrearTutoria")
     object MisTutorias : NavigationState("MisTutorias")
     object PerfilTutor : NavigationState("Perfil_Tu")
+    object Estudiante_Tu : NavigationState("Estudiante_Tu/{tutoriaId}") {
+        fun createRoute(tutoriaId: String) = "Estudiante_Tu/$tutoriaId"
+    }
 }

@@ -29,14 +29,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaConDetalles
 import com.example.tutormatch.ui.theme.AzulClaro
 import com.example.tutormatch.ui.theme.AzulPrimario
+import com.example.tutormatch.ui.tutor.Estudiante_Tu.ViewModel.EstudianteTuViewModel
 
 @Composable
-fun EstudianteTuContenido(solicitud: TutoriaConDetalles){
+fun EstudianteTuContenido(solicitud: TutoriaConDetalles,
+                          navController: NavHostController,
+                          viewModel: EstudianteTuViewModel
+){
 
     Surface(color = Color.White) {
 
@@ -177,6 +182,8 @@ fun EstudianteTuContenido(solicitud: TutoriaConDetalles){
                 ){
                     Button(
                         onClick = {
+                            viewModel.aceptarSolicitud(solicitud.tutoria.id)
+                            navController.popBackStack()
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -185,6 +192,8 @@ fun EstudianteTuContenido(solicitud: TutoriaConDetalles){
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = {
+                            viewModel.rechazarSolicitud(solicitud.tutoria.id)
+                            navController.popBackStack()
                         },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)

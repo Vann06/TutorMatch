@@ -2,75 +2,109 @@ package com.example.tutormatch.ui.estudiante.SolicitudTutoria
 
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import com.google.firebase.firestore.FieldPath
+
 
 class SolicitudTutoriaRepository {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val tutoriaCollection = firestore.collection("tutorias")
-    private val materiasCollection = firestore.collection("materias") // Nueva colección de materias
 
-    // Crear una nueva tutoría en Firestore
-    suspend fun createTutoria(tutoria: Tutoria1): Result<Unit> {
+    // Obtener el tutor por ID
+    suspend fun obtenerTutorPorId(tutorId: String): Result<Tutor1> {
         return try {
-
-            tutoriaCollection.add(tutoria).await()
-            Result.success(Unit)
+            val snapshot = firestore.collection("tutores").document(tutorId).get().await()
+            val tutor = snapshot.toObject(Tutor1::class.java)
+            if (tutor != null) {
+                Result.success(tutor)
+            } else {
+                Result.failure(Exception("Tutor no encontrado"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
-
-    // Obtener una lista de todas las tutorías
-    suspend fun getTutorias(): Result<List<Tutoria1>> {
+/*
+    suspend fun getMateriasByIds(materiasIds: List<String>): Result<List<Materia>> {
+        println("Consultando materias con IDs: $materiasIds")
         return try {
-            val snapshot = tutoriaCollection.get().await()
-            val tutorias = snapshot.documents.mapNotNull { it.toObject(Tutoria1::class.java) }
-            Result.success(tutorias)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    // Obtener una tutoría específica por ID
-    suspend fun getTutoriaById(id: String): Result<Tutoria1?> {
-        return try {
-            val document = tutoriaCollection.document(id).get().await()
-            Result.success(document.toObject(Tutoria1::class.java))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    // *** Nuevos métodos para Materia ***
-
-    // Agregar una nueva materia
-    suspend fun agregarMateria(materia: Materia): Result<Unit> {
-        return try {
-            materiasCollection.document(materia.id).set(materia).await()
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    // Obtener una lista de todas las materias
-    suspend fun getMaterias(): Result<List<Materia>> {
-        return try {
-            val snapshot = materiasCollection.get().await()
-            val materias = snapshot.documents.mapNotNull { it.toObject(Materia::class.java) }
+            val materias = mutableListOf<Materia>()
+            val batchSize = 10 // Firestore limita 'whereIn' a 10 elementos
+            val chunks = materiasIds.chunked(batchSize)
+            for (chunk in chunks) {
+                println("Consultando chunk de IDs: $chunk")
+                val snapshot = firestore.collection("materias")
+                    .whereIn(FieldPath.documentId(), chunk)
+                    .get()
+                    .await()
+                val materiasChunk = snapshot.documents.mapNotNull { document ->
+                    val materia = document.toObject(Materia::class.java)
+                    materia?.apply { id = document.id } // Asignar el ID del documento a la materia
+                }
+                println("Materias obtenidas en este chunk: $materiasChunk")
+                materias.addAll(materiasChunk)
+            }
             Result.success(materias)
         } catch (e: Exception) {
+            println("Error al obtener materias: ${e.message}")
             Result.failure(e)
         }
     }
 
-    // Obtener una materia específica por ID
-    suspend fun getMateriaById(id: String): Result<Materia?> {
+ */
+
+    /*
+    suspend fun getMateriasByNombres(materiasNombres: List<String>): Result<List<Materia>> {
+        println("Consultando materias con nombres: $materiasNombres")
         return try {
-            val document = materiasCollection.document(id).get().await()
-            Result.success(document.toObject(Materia::class.java))
+            val materias = mutableListOf<Materia>()
+            val batchSize = 10 // Firestore limita 'whereIn' a 10 elementos
+            val chunks = materiasNombres.chunked(batchSize)
+            for (chunk in chunks) {
+                println("Consultando chunk de nombres: $chunk")
+                val snapshot = firestore.collection("materias")
+                    .whereIn("nombre", chunk)
+                    .get()
+                    .await()
+                val materiasChunk = snapshot.documents.mapNotNull { document ->
+                    val materia = document.toObject(Materia::class.java)
+                    materia?.apply { id = document.id } // Asignar el ID del documento
+                }
+                println("Materias obtenidas en este chunk: $materiasChunk")
+                materias.addAll(materiasChunk)
+            }
+            Result.success(materias)
+        } catch (e: Exception) {
+            println("Error al obtener materias: ${e.message}")
+            Result.failure(e)
+        }
+    }
+    suspend fun getAllMaterias(): List<Materia> {
+        return try {
+            val snapshot = firestore.collection("materias")
+                .get()
+                .await()
+            val materias = snapshot.documents.mapNotNull { document ->
+                val materia = document.toObject(Materia::class.java)
+                materia?.apply { id = document.id }
+            }
+            println("Todas las materias en Firestore: $materias")
+            materias
+        } catch (e: Exception) {
+            println("Error al obtener todas las materias: ${e.message}")
+            emptyList()
+        }
+    }
+*/
+
+
+    // Crear una nueva tutoría
+    suspend fun createTutoria(tutoria: Tutoria1): Result<Unit> {
+        return try {
+            firestore.collection("tutorias").document(tutoria.id).set(tutoria).await()
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

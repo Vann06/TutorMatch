@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Materia(
-    val id: String = "",
+    var id: String = "",
     val nombre: String = ""
 )
