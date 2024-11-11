@@ -23,8 +23,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,8 +47,11 @@ import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.navigation.NavigationState
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -135,13 +141,21 @@ fun TutoriaCard(
     infotutoria: Tutoria1,
     navController: NavController
 ) {
+    // Estados para almacenar la información adicional
+    val tutor = remember { mutableStateOf<Tutor1?>(null) }
+    val materiaNombre = remember { mutableStateOf(infotutoria.materiaId) } // Asumimos que materiaId es el nombre
+
+    // Obtener la información del tutor
+    LaunchedEffect(infotutoria.tutorId) {
+        val firestore = FirebaseFirestore.getInstance()
+        val tutorSnapshot = firestore.collection("tutores").document(infotutoria.tutorId).get().await()
+        val tutorData = tutorSnapshot.toObject(Tutor1::class.java)
+        tutor.value = tutorData
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                // Navegación al detalle de la tutoría, usando el ID del tutor o de la tutoría
-                navController.navigate("detalle_tutoria/${infotutoria.id}")
-            }
             .padding(8.dp)
             .shadow(12.dp, shape = RoundedCornerShape(8.dp)),
         colors = CardDefaults.cardColors(
@@ -155,7 +169,7 @@ fun TutoriaCard(
         ) {
             // Icono del tutor
             Image(
-                painter = painterResource(id = R.drawable.estudiante),
+                painter = painterResource(id = R.drawable.tutor),
                 contentDescription = "Imagen de perfil de tutor",
                 modifier = Modifier
                     .padding(6.dp)
@@ -164,14 +178,14 @@ fun TutoriaCard(
                     .border(2.dp, Color.Gray, CircleShape)
             )
 
-            // Columna con ID del tutor y modalidad
+            // Columna con nombre del tutor y modalidad
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
             ) {
                 Text(
-                    text = "Tutor ID: ${infotutoria.tutorId}",
+                    text = "Tutor: ${tutor.value?.nombre ?: "Cargando..."}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = Color.White
@@ -196,7 +210,7 @@ fun TutoriaCard(
                         .wrapContentSize()
                 ) {
                     Text(
-                        text = "Materia ID: ${infotutoria.materiaId}",
+                        text = "Materia: ${materiaNombre.value}",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
                         color = Color.White,

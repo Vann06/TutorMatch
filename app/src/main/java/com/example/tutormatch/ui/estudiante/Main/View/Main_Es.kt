@@ -25,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,26 +68,36 @@ fun MainEstudiante(
     viewModel: MainEstudianteViewModel = viewModel(
         factory = MainEstudianteViewModelFactory(EstudianteRepository(FirebaseFirestore.getInstance()))
     )
-)
-{
+) {
     val materias by viewModel.materias.collectAsState()
     val materiasMap by viewModel.materiasMap.collectAsState()
     val tutors by viewModel.tutors.collectAsState()
-    val materiaSeleccionada by viewModel.materiaSeleccionada.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
     var isDropdownVisible by remember { mutableStateOf(false) }
 
+    // Filtrar tutores según el nombre y las materias que enseñan
+    val tutorsFiltrados = tutors.filter { tutor ->
+        val matchesName = tutor.nombre.contains(searchQuery, ignoreCase = true)
+
+        // Obtener los nombres de las materias que el tutor enseña
+        val tutorMateriasNombres = tutor.materias.mapNotNull { materiaId ->
+            materiasMap[materiaId]
+        }
+
+        // Verificar si alguna de las materias coincide con la búsqueda
+        val matchesSubject = tutorMateriasNombres.any { materiaNombre ->
+            materiaNombre.contains(searchQuery, ignoreCase = true)
+        }
+
+        matchesName || matchesSubject
+    }
+
+    // Materias para mostrar en el dropdown (puedes filtrar si deseas)
     val filteredMaterias = materias.filter { materia ->
         materia.nombre.contains(searchQuery, ignoreCase = true)
-    }.toMutableList()
-
-    val tutorsFiltrados = if (materiaSeleccionada != null) {
-        tutors.filter { tutor ->
-            tutor.materias.contains(materiaSeleccionada)
-        }
-    } else {
-        tutors
     }
 
     Scaffold(
@@ -95,10 +107,12 @@ fun MainEstudiante(
                     icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Perfil") },
                     label = { Text("Perfil") },
                     selected = false,
-                    onClick = { navController.navigate(NavigationState.Perfil_Es.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    } }
+                    onClick = {
+                        navController.navigate(NavigationState.Perfil_Es.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Search, contentDescription = "Buscador") },
@@ -107,13 +121,15 @@ fun MainEstudiante(
                     onClick = { /* Ya estamos en esta pantalla */ }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Filled.Home, contentDescription = "MyTutors") },
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Mis Tutores") },
                     label = { Text("Mis Tutores") },
                     selected = false,
-                    onClick = { navController.navigate(NavigationState.MyTutors.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                    }}
+                    onClick = {
+                        navController.navigate(NavigationState.MyTutors.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
                 )
             }
         }
@@ -138,7 +154,9 @@ fun MainEstudiante(
 
                     SearchBar(
                         query = searchQuery,
-                        onQueryChanged = { newQuery -> searchQuery = newQuery },
+                        onQueryChanged = { newQuery ->
+                            searchQuery = newQuery
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -172,7 +190,6 @@ fun MainEstudiante(
                                         .clickable {
                                             searchQuery = materia.nombre
                                             isDropdownVisible = false
-                                            viewModel.setMateriaSeleccionada(materia.id)
                                         },
                                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                                 ) {
@@ -192,7 +209,6 @@ fun MainEstudiante(
                                         .clickable {
                                             searchQuery = ""
                                             isDropdownVisible = false
-                                            viewModel.setMateriaSeleccionada(null)
                                         },
                                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                                 ) {
@@ -208,24 +224,53 @@ fun MainEstudiante(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        items(tutorsFiltrados) { tutor ->
-                            TutorCard(
-                                name = tutor.nombre,
-                                descripcion = tutor.descripcion,
-                                fotoPerfil = tutor.fotoPerfilUrl,
-                                materiasIds = tutor.materias,
-                                materiasMap = materiasMap,
-                                onClick = {
-                                    navController.navigate(NavigationState.PerfilTutorEstudiante.createRoute(tutor.id))
+                    if (loading) {
+                        // Mostrar indicador de carga
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else if (errorMessage != null) {
+                        // Mostrar mensaje de error
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = errorMessage ?: "Error desconocido", color = Color.Red)
+                        }
+                    } else {
+                        // Mostrar lista de tutores
+                        if (tutorsFiltrados.isNotEmpty()) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth(),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                items(tutorsFiltrados) { tutor ->
+                                    TutorCard(
+                                        name = tutor.nombre,
+                                        descripcion = tutor.descripcion,
+                                        fotoPerfil = tutor.fotoPerfilUrl,
+                                        materiasIds = tutor.materias,
+                                        materiasMap = materiasMap,
+                                        onClick = {
+                                            navController.navigate(NavigationState.PerfilTutorEstudiante.createRoute(tutor.id))
+                                        }
+                                    )
                                 }
-                            )
+                            }
+                        } else {
+                            // Mostrar mensaje de que no hay tutores
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "No se encontraron tutores", color = Color.Black)
+                            }
                         }
                     }
                 }
@@ -314,8 +359,3 @@ fun TutorCard(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun MainEstudiantePreview() {
-    // Puedes hacer un preview más detallado si necesitas
-}

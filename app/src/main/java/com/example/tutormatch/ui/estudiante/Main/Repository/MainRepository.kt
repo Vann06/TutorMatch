@@ -10,6 +10,7 @@ import kotlinx.coroutines.tasks.await
 
 class EstudianteRepository(private val firestore: FirebaseFirestore) {
 
+
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
@@ -22,7 +23,11 @@ class EstudianteRepository(private val firestore: FirebaseFirestore) {
 
         return try {
             val snapshot = firestore.collection("materias").get().await()
-            snapshot.toObjects(Materia::class.java).toMutableList()
+            val materiasList = snapshot.documents.map { document ->
+                val materia = document.toObject(Materia::class.java)
+                materia?.copy(id = document.id) // Asignar el ID del documento
+            }.filterNotNull().toMutableList()
+            materiasList
         } catch (e: Exception) {
             _errorMessage.value = "Error al obtener materias: ${e.message}"
             mutableListOf()

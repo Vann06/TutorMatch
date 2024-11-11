@@ -1,5 +1,6 @@
 package com.example.tutormatch.ui.estudiante.Main.ViewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -45,6 +46,10 @@ class MainEstudianteViewModel(private val repository: EstudianteRepository) : Vi
             _errorMessage.value = null
             try {
                 val materiasList = repository.getMaterias()
+                Log.d("MainEstudianteViewModel", "Materias cargadas: ${materiasList.size}")
+                materiasList.forEach { materia ->
+                    Log.d("MainEstudianteViewModel", "Materia: ${materia.id} - ${materia.nombre}")
+                }
                 _materias.value = materiasList
                 _materiasMap.value = materiasList.associate { it.id to it.nombre }
                 _tutors.value = repository.getTutors()
@@ -56,11 +61,7 @@ class MainEstudianteViewModel(private val repository: EstudianteRepository) : Vi
         }
     }
 
-    /**
-     * Obtiene un tutor por su ID.
-     * @param tutorId El ID del tutor a buscar.
-     * @return El objeto Tutor1 correspondiente, o null si no existe.
-     */
+
     fun getTutorById(tutorId: String): Tutor1? {
         return _tutors.value.find { it.id == tutorId }
     }

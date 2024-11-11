@@ -7,32 +7,27 @@ import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.example.tutormatch.ui.estudiante.MyTutors.Repository.MyTutorsRepository
 import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.asLiveData
 
 class MyTutorsViewModel(
     private val repository: MyTutorsRepository = MyTutorsRepository()
 ) : ViewModel() {
 
-    private val _tutorias = MutableLiveData<List<Tutoria1>>()
-    val tutorias: LiveData<List<Tutoria1>> get() = _tutorias
-
+    val tutorias: LiveData<List<Tutoria1>>
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
-    private val estudianteId = "ID_ESTUDIANTE_EJEMPLO"
+    // Obtener el ID del estudiante autenticado
+    private val estudianteId: String? = FirebaseAuth.getInstance().currentUser?.uid
 
     init {
-        loadTutorias()
-    }
-
-    private fun loadTutorias() {
-        viewModelScope.launch {
-            try {
-                val result = repository.getTutoriasByEstudiante(estudianteId)
-                _tutorias.value = result
-            } catch (exception: Exception) {
-                // Manejo de error
-                _error.value = "Error al cargar las tutorías: ${exception.message}"
-            }
+        if (estudianteId != null) {
+            tutorias = repository.getTutoriasByEstudiante(estudianteId)
+                .asLiveData()
+        } else {
+            tutorias = MutableLiveData()
+            _error.value = "Estudiante no autenticado"
         }
     }
 }

@@ -2,25 +2,34 @@ package com.example.tutormatch.ui.estudiante.MyTutors.Repository
 
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class MyTutorsRepository {
 
     private val db = FirebaseFirestore.getInstance()
 
-    suspend fun getTutoriasByEstudiante(estudianteId: String): List<Tutoria1> {
-        return try {
-            val snapshot = db.collection("tutorias")
-                .whereEqualTo("estudianteId", estudianteId)
-                .get()
-                .await()
+    fun getTutoriasByEstudiante(estudianteId: String): Flow<List<Tutoria1>> = callbackFlow {
+        val listenerRegistration = db.collection("tutorias")
+            .whereEqualTo("estudianteId", estudianteId)
+            .whereEqualTo("estado", "Aceptada")
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    close(exception)
+                    return@addSnapshotListener
+                }
 
-            snapshot.documents.map { doc ->
-                doc.toObject(Tutoria1::class.java)!!
+                if (snapshot != null) {
+                    val tutorias = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(Tutoria1::class.java)
+                    }
+                    trySend(tutorias)
+                }
             }
-        } catch (e: Exception) {
-            // Manejo de error
-            throw Exception("Error al obtener tutorías: ${e.message}")
+
+        awaitClose {
+            listenerRegistration.remove()
         }
     }
 }
