@@ -110,7 +110,8 @@ fun PerfilEstudianteScreen(
                                 onEdit = { newName ->
                                     val updatedEstudiante = estudiante.copy(nombre = newName)
                                     viewModel.actualizarEstudiante(updatedEstudiante)
-                                }
+                                },
+
                             )
                             Divider(
                                 modifier = Modifier.padding(vertical = 16.dp),
@@ -255,7 +256,7 @@ fun PerfilItem(
                 text = text,
                 fontWeight = FontWeight.Bold,
                 fontSize = 25.sp,
-                color = Color.White,
+                color = Color.Black,
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp)
