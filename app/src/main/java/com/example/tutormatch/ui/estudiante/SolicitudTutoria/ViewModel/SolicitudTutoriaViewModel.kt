@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
 class SolicitudTutoriaViewModel(
@@ -174,9 +176,28 @@ class SolicitudTutoriaViewModel(
             _tutoriaCreationStatus.value = result
         }
     }
+    // Agregar el método para cargar la tutoría existente
+    fun cargarTutoriaExistente(tutoriaId: String) {
+        viewModelScope.launch {
+            val firestore = FirebaseFirestore.getInstance()
+            val tutoriaSnapshot = firestore.collection("tutorias").document(tutoriaId).get().await()
+            val tutoria = tutoriaSnapshot.toObject(Tutoria1::class.java)
 
+            tutoria?.let {
+                // Setear los valores de la tutoría en los StateFlows
+                _selectedMateria.value = Materia(id = it.materiaId, nombre = it.materiaId) // Ajusta si tienes nombres diferentes
+                _selectedModalidad.value = it.modalidad
+                _selectedTipoTutoria.value = it.mensaje // Aquí usa el campo que corresponda
+                _selectedDate.value = it.fecha
+                _selectedTime.value = it.hora
+                _comment.value = it.mensaje
+            }
+        }
+    }
 
     fun resetTutoriaCreationStatus() {
         _tutoriaCreationStatus.value = null
     }
+
+
 }

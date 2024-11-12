@@ -206,16 +206,7 @@ fun TutoriaDetalleEstudianteContent(
                             ) {
                                 Button(
                                     onClick = {
-                                        // Navegar a la pantalla de solicitud de tutoría con datos prellenados
-                                        navController.navigate(
-                                            NavigationState.SolicitudTutoria.createRoute(
-                                                detalleTutoria.tutor.id,
-                                                detalleTutoria.tutoria.id
-                                            )
-
-                                        )
-                                        viewModel.cancelarTutoria(detalleTutoria.tutoria.id)
-
+                                        viewModel.reagendarTutoria(navController, detalleTutoria)
                                     },
                                     modifier = Modifier.weight(1f)
                                 ) {

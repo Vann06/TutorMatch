@@ -1,6 +1,5 @@
 package com.example.tutormatch.ui.estudiante.SolicitudTutoria.view
 
-// SolicitudTutoria.kt
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
@@ -66,8 +65,9 @@ fun SolicitudTutoria(
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Obtener el tutor por ID al iniciar
-    LaunchedEffect(key1 = tutorId) {
+    LaunchedEffect(key1 = tutorId, key2 = tutoriaId) {
         viewModel.obtenerTutorPorId(tutorId)
+        tutoriaId?.let { viewModel.cargarTutoriaExistente(it) }
     }
 
     // Referencias de estado del viewModel
@@ -148,10 +148,10 @@ fun SolicitudTutoria(
                             onClick = { viewModel.toggleMateriaDropdown() },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
-                                contentColor = Color(0xFF1976D2)
+                                contentColor = Color(0xFF3D44B6)
                             ),
                             shape = MaterialTheme.shapes.medium,
-                            border = BorderStroke(1.dp, Color(0xFF1976D2)),
+                            border = BorderStroke(1.dp, Color(0xFF3D44B6)),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(text = selectedMateria?.nombre ?: "Selecciona la materia")
@@ -185,10 +185,10 @@ fun SolicitudTutoria(
                             onClick = { viewModel.toggleTipoTutoriaDropdown() },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
-                                contentColor = Color(0xFF1976D2)
+                                contentColor = Color(0xFF3D44B6)
                             ),
                             shape = MaterialTheme.shapes.medium,
-                            border = BorderStroke(1.dp, Color(0xFF1976D2)),
+                            border = BorderStroke(1.dp, Color(0xFF3D44B6)),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(text = selectedTipoTutoria ?: "Selecciona el tipo de tutoría")
@@ -219,10 +219,10 @@ fun SolicitudTutoria(
                             onClick = { viewModel.toggleModalidadDropdown() },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
-                                contentColor = Color(0xFF1976D2)
+                                contentColor = Color(0xFF3D44B6)
                             ),
                             shape = MaterialTheme.shapes.medium,
-                            border = BorderStroke(1.dp, Color(0xFF1976D2)),
+                            border = BorderStroke(1.dp, Color(0xFF3D44B6)),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(text = selectedModalidad ?: "Selecciona la modalidad")
@@ -263,7 +263,7 @@ fun SolicitudTutoria(
                                 }
                             },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color(0xFF1976D2),
+                                focusedBorderColor = Color(0xFF3D44B6),
                                 cursorColor = Color(0xFF1976D2)
                             )
                         )
@@ -306,8 +306,8 @@ fun SolicitudTutoria(
                                 }
                             },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color(0xFF1976D2),
-                                cursorColor = Color(0xFF1976D2)
+                                focusedBorderColor = Color(0xFF3D44B6),
+                                cursorColor = Color(0xFF3D44B6)
                             )
                         )
                     }
@@ -343,7 +343,7 @@ fun SolicitudTutoria(
                             placeholder = { Text("Escribe tu comentario") },
                             maxLines = 3,
                             colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color(0xFF1976D2),
+                                focusedBorderColor = Color(0xFF3D44B6),
                                 cursorColor = Color(0xFF1976D2)
                             )
                         )
@@ -364,7 +364,7 @@ fun SolicitudTutoria(
                                     }
                                 }
                             },
-                            colors = ButtonDefaults.buttonColors(Color(0xFF1976D2)),
+                            colors = ButtonDefaults.buttonColors(Color(0xFF3D44B6)),
                             modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium
                         ) {
@@ -380,7 +380,7 @@ fun SolicitudTutoria(
                         .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFF1976D2))
+                    CircularProgressIndicator(color = Color(0xFF3D44B6))
                 }
             }
         }
