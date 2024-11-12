@@ -143,7 +143,7 @@ fun TutoriaCard(
 ) {
     // Estados para almacenar la información adicional
     val tutor = remember { mutableStateOf<Tutor1?>(null) }
-    val materiaNombre = remember { mutableStateOf(infotutoria.materiaId) } // Asumimos que materiaId es el nombre
+    val materiaNombre = remember { mutableStateOf(infotutoria.materiaId) }
 
     // Obtener la información del tutor
     LaunchedEffect(infotutoria.tutorId) {
@@ -157,7 +157,11 @@ fun TutoriaCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .shadow(12.dp, shape = RoundedCornerShape(8.dp)),
+            .shadow(12.dp, shape = RoundedCornerShape(8.dp))
+            .clickable {
+                // Navegar a la nueva vista de detalles de tutoría
+                navController.navigate(NavigationState.TutoriaDetalleEstudiante.createRoute(infotutoria.id))
+            },
         colors = CardDefaults.cardColors(
             containerColor = Color.DarkGray
         )

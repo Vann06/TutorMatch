@@ -18,6 +18,7 @@ import com.example.tutormatch.ui.estudiante.MyTutors.View.MyTutorsScreen
 import com.example.tutormatch.ui.estudiante.Perfil.View.PerfilEstudianteScreen
 import com.example.tutormatch.ui.estudiante.SolicitudTutoria.view.SolicitudTutoria
 import com.example.tutormatch.ui.estudiante.Tutor_Es.View.PerfilTutorEstudianteScreen
+import com.example.tutormatch.ui.estudiante.TutoriaDetalle.View.TutoriaDetalleEstudiante
 import com.example.tutormatch.ui.tutor.Estudiante_Tu.View.EstudianteTuScreen
 import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutoriasScreen
 import com.example.tutormatch.ui.tutor.crearTutoria.View.CreacionTutoria
@@ -51,15 +52,21 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
         composable(
             route = NavigationState.SolicitudTutoria.route,
             arguments = listOf(
-                navArgument("tutorId") { type = NavType.StringType }
+                navArgument("tutorId") { type = NavType.StringType },
+                navArgument("tutoriaId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
             )
         ) { backStackEntry ->
             val tutorId = backStackEntry.arguments?.getString("tutorId")
+            val tutoriaId = backStackEntry.arguments?.getString("tutoriaId")
             if (tutorId != null) {
                 // Supongamos que tienes un método en el viewModel para obtener el tutor por ID
                 val tutor = viewModel.getTutorById(tutorId)
                 if (tutor != null) {
-                    SolicitudTutoria(navController = navController, tutorId = tutorId)
+                    SolicitudTutoria(navController = navController, tutorId = tutorId, tutoriaId = tutoriaId)
                 } else {
                     // Manejo de error si no se encuentra el tutor
                     navController.popBackStack()
@@ -69,6 +76,7 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
                 navController.popBackStack()
             }
         }
+
         composable(NavigationState.Perfil_Es.route) {
             PerfilEstudianteScreen(navController = navController)
         }
@@ -85,6 +93,19 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
                 navController.popBackStack()
             }
         }
+        composable(
+            route = NavigationState.TutoriaDetalleEstudiante.route,
+            arguments = listOf(navArgument("tutoriaId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val tutoriaId = backStackEntry.arguments?.getString("tutoriaId")
+            if (tutoriaId != null) {
+                TutoriaDetalleEstudiante(tutoriaId = tutoriaId, navController = navController)
+            } else {
+                // Manejo de error si tutoriaId es nulo
+                navController.popBackStack()
+            }
+        }
+
 
         // TUTOR
         composable(NavigationState.MisTutorias.route) {

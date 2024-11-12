@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,12 +45,13 @@ import com.example.tutormatch.R
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.ui.theme.AzulTerciario
 import com.example.tutormatch.ui.theme.GrisPrimario
-import com.example.tutormatch.ui.tutor.Perfil.ViewModel.PerfilTutorViewModel
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Checkbox
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.layout.ContentScale
+import com.example.tutormatch.ui.tutor.Perfil.ViewModel.PerfilTutorViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,33 +73,27 @@ fun PerfilTutorScreen(
                         .padding(paddingValues)
                         .fillMaxSize()
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
                     ) {
-                        // Imagen de fondo en la parte superior
-                        Image(
-                            painter = painterResource(id = R.drawable.perfil_fondo),
-                            contentDescription = "Perfil de Usuario",
-                            contentScale = ContentScale.Crop,
+                        // Encabezado con imagen de fondo, foto de perfil y nombre
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(200.dp) // Ajusta la altura según tus necesidades
-                                .align(Alignment.TopStart)
-                        )
-
-                        // Contenido desplazable
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
+                                .height(300.dp)
                         ) {
-                            // Espacio para que el contenido comience debajo de la imagen de fondo
-                            Spacer(modifier = Modifier.height(160.dp)) // Debe ser un poco menos que la altura de la imagen
-
-                            // Foto y nombre del tutor
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 30.dp)
+                            Image(
+                                painter = painterResource(id = R.drawable.perfil_fondo),
+                                contentDescription = "Perfil de fondo",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
                             ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.tutor),
@@ -104,29 +101,30 @@ fun PerfilTutorScreen(
                                     modifier = Modifier
                                         .size(150.dp)
                                         .clip(CircleShape)
-                                        .border(2.dp, Color.White)
+                                        .border(2.dp, Color.White, CircleShape)
                                 )
+                                Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     text = tutor.nombre,
                                     fontWeight = FontWeight.ExtraBold,
-                                    fontSize = 20.sp,
+                                    fontSize = 30.sp,
                                     color = Color.White,
                                     modifier = Modifier
-                                        .padding(start = 35.dp)
-                                        .fillMaxWidth()
+                                        .align(Alignment.CenterHorizontally)
                                 )
                             }
+                        }
 
-                            Spacer(modifier = Modifier.height(16.dp))
+                        // Contenido desplazable
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 30.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
 
-                            // Resto del contenido
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 30.dp)
-                            ) {
-                                // Opciones Expandibles
-
+                            item {
                                 // Usuario
                                 ExpandablePerfilItem(
                                     iconResId = R.drawable.user,
@@ -141,7 +139,9 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
+                            }
 
+                            item {
                                 // Nombre
                                 ExpandablePerfilItem(
                                     iconResId = R.drawable.user,
@@ -156,7 +156,9 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
+                            }
 
+                            item {
                                 // Contraseña
                                 ExpandablePerfilItem(
                                     iconResId = R.drawable.eye,
@@ -170,7 +172,9 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
+                            }
 
+                            item {
                                 // Notificaciones
                                 PerfilItem(
                                     iconResId = R.drawable.bell,
@@ -181,7 +185,9 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
+                            }
 
+                            item {
                                 // Materias
                                 ExpandablePerfilItem(
                                     iconResId = R.drawable.star,
@@ -197,15 +203,15 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
+                            }
 
+                            item {
                                 // Modalidad
-                                MultiSelectPerfilItem(
+                                ExpandablePerfilItem(
                                     iconResId = R.drawable.clock_2,
                                     title = "Modalidad",
-                                    options = listOf("Virtual", "Presencial"),
-                                    selectedOptions = tutor.modalidad.split(", ").map { it.trim() },
-                                    onSave = { selectedModalidades ->
-                                        val newModalidad = selectedModalidades.joinToString(", ")
+                                    initialText = tutor.modalidad,
+                                    onEdit = { newModalidad ->
                                         val updatedTutor = tutor.copy(modalidad = newModalidad)
                                         viewModel.actualizarTutor(updatedTutor)
                                     }
@@ -214,8 +220,9 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
+                            }
 
-
+                            item {
                                 // Descripción
                                 ExpandablePerfilItem(
                                     iconResId = R.drawable.clock_2,
@@ -230,9 +237,9 @@ fun PerfilTutorScreen(
                                     modifier = Modifier.padding(vertical = 16.dp),
                                     color = AzulTerciario
                                 )
-
-                                Spacer(modifier = Modifier.height(16.dp))
                             }
+
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
                     }
                 }

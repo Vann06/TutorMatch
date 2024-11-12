@@ -1,29 +1,13 @@
-package com.example.tutormatch.ui.tutor.Estudiante_Tu.View
+package com.example.tutormatch.ui.estudiante.TutoriaDetalle.View
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,20 +16,42 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaConDetalles
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaConDetallesEstudiante
 import com.example.tutormatch.navigation.AppBar
+import com.example.tutormatch.navigation.NavigationState
+import com.example.tutormatch.ui.estudiante.TutoriaDetalle.ViewModel.TutoriaDetalleEstudianteViewModel
 import com.example.tutormatch.ui.theme.AzulClaro
 import com.example.tutormatch.ui.theme.AzulPrimario
-import com.example.tutormatch.ui.tutor.Estudiante_Tu.ViewModel.EstudianteTuViewModel
 
 @Composable
-fun EstudianteTuContenido(
-    solicitud: TutoriaConDetalles,
+fun TutoriaDetalleEstudiante(
+    tutoriaId: String,
+    navController: NavHostController
+) {
+    val viewModel: TutoriaDetalleEstudianteViewModel = viewModel()
+    LaunchedEffect(tutoriaId) {
+        viewModel.cargarDetalleTutoria(tutoriaId)
+    }
+    val detalle by viewModel.tutoriaConDetalles.collectAsState()
+
+    detalle?.let { detalleTutoria ->
+        TutoriaDetalleEstudianteContent(detalleTutoria, navController, viewModel)
+    } ?: run {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    }
+}
+
+@Composable
+fun TutoriaDetalleEstudianteContent(
+    detalleTutoria: TutoriaConDetallesEstudiante,
     navController: NavHostController,
-    viewModel: EstudianteTuViewModel
+    viewModel: TutoriaDetalleEstudianteViewModel
 ) {
     Scaffold(
         topBar = {
@@ -55,7 +61,7 @@ fun EstudianteTuContenido(
             Surface(color = Color.White) {
                 Image(
                     painter = painterResource(id = R.drawable.perfil_fondo),
-                    contentDescription = "Solicitud de Estudiante",
+                    contentDescription = "Detalles de Tutoría",
                     modifier = Modifier
                         .fillMaxSize()
                         .wrapContentSize(Alignment.TopStart)
@@ -78,10 +84,10 @@ fun EstudianteTuContenido(
 
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 AsyncImage(
-                                    model = solicitud.estudiante.fotoPerfilUrl.takeIf { it.isNotEmpty() },
-                                    placeholder = painterResource(R.drawable.estudiante),
-                                    error = painterResource(R.drawable.estudiante),
-                                    contentDescription = "Perfil del estudiante",
+                                    model = detalleTutoria.tutor.fotoPerfilUrl.takeIf { it.isNotEmpty() },
+                                    placeholder = painterResource(R.drawable.tutor),
+                                    error = painterResource(R.drawable.tutor),
+                                    contentDescription = "Perfil del tutor",
                                     modifier = Modifier
                                         .size(150.dp)
                                         .clip(CircleShape)
@@ -89,7 +95,7 @@ fun EstudianteTuContenido(
                                 )
 
                                 Text(
-                                    text = solicitud.estudiante.nombre,
+                                    text = detalleTutoria.tutor.nombre,
                                     fontWeight = FontWeight.ExtraBold,
                                     fontSize = 25.sp,
                                     color = Color.White,
@@ -101,7 +107,6 @@ fun EstudianteTuContenido(
 
                             Spacer(modifier = Modifier.height(20.dp))
 
-                            // Continúa con el resto de tus componentes
                             // Materia
                             Text(
                                 text = "Materia :",
@@ -113,7 +118,7 @@ fun EstudianteTuContenido(
                             Spacer(modifier = Modifier.height(10.dp))
 
                             Text(
-                                text = solicitud.materia.nombre,
+                                text = detalleTutoria.materia.nombre,
                                 fontSize = 20.sp,
                                 color = Color.Black,
                                 modifier = Modifier.padding(end = 10.dp)
@@ -132,7 +137,7 @@ fun EstudianteTuContenido(
                             Spacer(modifier = Modifier.height(10.dp))
 
                             Text(
-                                text = solicitud.tutoria.modalidad,
+                                text = detalleTutoria.tutoria.modalidad,
                                 fontSize = 20.sp,
                                 color = Color.Black,
                                 modifier = Modifier.padding(end = 10.dp)
@@ -152,14 +157,14 @@ fun EstudianteTuContenido(
 
                             Row {
                                 Text(
-                                    text = solicitud.tutoria.fecha,
+                                    text = detalleTutoria.tutoria.fecha,
                                     fontSize = 20.sp,
                                     color = Color.Black,
                                     modifier = Modifier.padding(end = 10.dp)
                                 )
 
                                 Text(
-                                    text = solicitud.tutoria.hora,
+                                    text = detalleTutoria.tutoria.hora,
                                     fontSize = 20.sp,
                                     color = Color.Black,
                                     modifier = Modifier.padding(end = 10.dp)
@@ -186,7 +191,7 @@ fun EstudianteTuContenido(
                                     .padding(10.dp)
                             ) {
                                 Text(
-                                    text = solicitud.tutoria.mensaje,
+                                    text = detalleTutoria.tutoria.mensaje,
                                     fontSize = 15.sp,
                                     color = Color.Black
                                 )
@@ -201,23 +206,31 @@ fun EstudianteTuContenido(
                             ) {
                                 Button(
                                     onClick = {
-                                        viewModel.aceptarSolicitud(solicitud.tutoria.id)
-                                        navController.popBackStack()
+                                        // Navegar a la pantalla de solicitud de tutoría con datos prellenados
+                                        navController.navigate(
+                                            NavigationState.SolicitudTutoria.createRoute(
+                                                detalleTutoria.tutor.id,
+                                                detalleTutoria.tutoria.id
+                                            )
+
+                                        )
+                                        viewModel.cancelarTutoria(detalleTutoria.tutoria.id)
+
                                     },
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Text(text = "Aceptar")
+                                    Text(text = "Reagendar")
                                 }
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Button(
                                     onClick = {
-                                        viewModel.rechazarSolicitud(solicitud.tutoria.id)
+                                        viewModel.cancelarTutoria(detalleTutoria.tutoria.id)
                                         navController.popBackStack()
                                     },
                                     modifier = Modifier.weight(1f),
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                                 ) {
-                                    Text(text = "Rechazar")
+                                    Text(text = "Cancelar")
                                 }
                             }
                         }
@@ -227,5 +240,3 @@ fun EstudianteTuContenido(
         }
     )
 }
-
-

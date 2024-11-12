@@ -60,6 +60,7 @@ import java.util.Calendar
 fun SolicitudTutoria(
     navController: NavHostController,
     tutorId: String,
+    tutoriaId: String? = null,
     viewModel: SolicitudTutoriaViewModel = viewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -166,7 +167,7 @@ fun SolicitudTutoria(
                                 )
                             }
                         }
-                        Text(text = "Materias cargadas: ${materiasTutor.size}")
+                        //Text(text = "Materias cargadas: ${materiasTutor.size}")
 
                     }
 
