@@ -32,9 +32,3 @@ fun EstudianteTuScreen(tutoriaId: String, navController: NavHostController){
             CircularProgressIndicator()
         }    }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewEstudianteDetailScreen() {
-    //EstudianteTuScreen()
-}

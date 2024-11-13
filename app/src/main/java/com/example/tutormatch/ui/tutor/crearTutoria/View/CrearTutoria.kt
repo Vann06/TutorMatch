@@ -1,5 +1,6 @@
 package com.example.tutormatch.ui.tutor.crearTutoria.View
 
+import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,6 +27,8 @@ import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.ui.tutor.crearTutoria.viewmodel.CrearTutoriaViewModel
 import com.example.tutormatch.ui.theme.AzulPrimario
+import java.util.Calendar
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,10 +43,19 @@ fun CreacionTutoria(
     var comment by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf("") }
     var selectedTime by remember { mutableStateOf("") }
+    var esGrupal by remember { mutableStateOf(false) }
 
     // Obtiene los datos de materias y tipos de tutoría desde el ViewModel
     val materias = viewModel.materiasDisponibles.collectAsState().value
     val tiposDeTutoria = viewModel.tiposDeTutoria.collectAsState().value
+
+    val context = LocalContext.current
+
+    val materiasTutor by viewModel.materiasTutor.collectAsState()
+
+    var timePickerDialogState = remember { mutableStateOf(false) }
+    var datePickerDialogState = remember { mutableStateOf(false) }
+    val calendar = Calendar.getInstance()
 
     Scaffold(
         topBar = {
@@ -60,7 +73,6 @@ fun CreacionTutoria(
                 // Materia dropdown
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         text = "Materia",
                         fontWeight = FontWeight.Bold,
@@ -68,34 +80,31 @@ fun CreacionTutoria(
                         color = Color.Black,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
-
                     Button(
-                        onClick = { expandedMateria = true },
+                        onClick = { viewModel.toggleMateriaDropdown() },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
-                            contentColor = AzulPrimario
+                            contentColor = Color(0xFF3D44B6)
                         ),
-                        shape = RoundedCornerShape(16.dp),
-                        border = BorderStroke(1.dp, AzulPrimario),
+                        shape = MaterialTheme.shapes.medium,
+                        border = BorderStroke(1.dp, Color(0xFF3D44B6)),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(text = selectedMateria?.nombre ?: "Selecciona la materia")
                     }
-
                     DropdownMenu(
-                        expanded = expandedMateria,
-                        onDismissRequest = { expandedMateria = false }
+                        expanded = viewModel.materiaDropdownExpanded.value,
+                        onDismissRequest = { viewModel.toggleMateriaDropdown() }
                     ) {
-                        materias.forEach { materia ->
+                        materiasTutor.forEach { materia ->
                             DropdownMenuItem(
                                 text = { Text(materia.nombre) },
-                                onClick = {
-                                    selectedMateria = materia
-                                    expandedMateria = false
-                                }
+                                onClick = { viewModel.setSelectedMateria(materia) }
                             )
                         }
                     }
+                    //Text(text = "Materias cargadas: ${materiasTutor.size}")
+
                 }
 
                 // Tipo de Tutoría dropdown
@@ -153,16 +162,13 @@ fun CreacionTutoria(
 
                     OutlinedTextField(
                         value = selectedDate,
-                        onValueChange = { selectedDate = it },
+                        onValueChange = {},
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text(text = "Selecciona una fecha") },
                         trailingIcon = {
-                            IconButton(onClick = { /* Lógica para selector de fecha */ }) {
-                                Icon(
-                                    imageVector = Icons.Filled.DateRange,
-                                    contentDescription = "Seleccionar fecha"
-                                )
+                            IconButton(onClick = { datePickerDialogState.value = true }) {
+                                Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Seleccionar fecha")
                             }
                         },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -170,6 +176,20 @@ fun CreacionTutoria(
                             cursorColor = AzulPrimario
                         )
                     )
+                }
+
+                if (datePickerDialogState.value) {
+                    android.app.DatePickerDialog(
+                        context,
+                        { _, year, month, dayOfMonth ->
+                            val selectedDateFormatted = "$dayOfMonth/${month + 1}/$year"
+                            viewModel.setSelectedDate(selectedDateFormatted)
+                            datePickerDialogState.value = false
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    ).show()
                 }
 
                 item {
@@ -185,17 +205,13 @@ fun CreacionTutoria(
 
                     OutlinedTextField(
                         value = selectedTime,
-                        onValueChange = { selectedTime = it },
+                        onValueChange = {},
                         readOnly = true,
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text(text = "Selecciona una hora") },
                         trailingIcon = {
-                            IconButton(onClick = { /* Lógica para selector de hora */ }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.clock_icon),
-                                    contentDescription = "Seleccionar hora",
-                                    modifier = Modifier.size(24.dp)
-                                )
+                            IconButton(onClick = { timePickerDialogState.value = true }) {
+                                Icon(imageVector = Icons.Filled.Schedule, contentDescription = "Seleccionar hora")
                             }
                         },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -203,6 +219,20 @@ fun CreacionTutoria(
                             cursorColor = AzulPrimario
                         )
                     )
+                }
+
+                if (timePickerDialogState.value) {
+                    TimePickerDialog(
+                        context,
+                        { _, hour, minute ->
+                            val selectedTimeFormatted = String.format("%02d:%02d", hour, minute)
+                            viewModel.setSelectedTime(selectedTimeFormatted)
+                            timePickerDialogState.value = false
+                        },
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        true
+                    ).show()
                 }
 
                 // Descripción
@@ -231,6 +261,30 @@ fun CreacionTutoria(
                     )
                 }
 
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "¿Tutoría Grupal?",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Switch(
+                            checked = esGrupal,
+                            onCheckedChange = { esGrupal = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = AzulPrimario
+                            )
+                        )
+                    }
+                }
+
                 // Botón de Crear Tutoría
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -243,7 +297,8 @@ fun CreacionTutoria(
                                 tipoTutoria = selectedTipoTutoria,
                                 fecha = selectedDate,
                                 hora = selectedTime,
-                                descripcion = comment
+                                descripcion = comment,
+                                esGrupal = esGrupal // Pasamos el nuevo campo
                             )
                             // Navegar a la pantalla deseada después de crear la tutoría
                             navController.navigate("home")

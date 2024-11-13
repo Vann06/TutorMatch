@@ -9,5 +9,6 @@ data class Tutoria1(
     val hora: String = "",
     val modalidad: String = "",
     val mensaje: String = "",
-    val estado: String = "Pendiente"
+    val estado: String = "Pendiente",
+    var esGrupal: Boolean = false
 )

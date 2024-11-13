@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -302,7 +303,7 @@ fun SolicitudTutoria(
                             placeholder = { Text(text = "Selecciona una hora") },
                             trailingIcon = {
                                 IconButton(onClick = { timePickerDialogState.value = true }) {
-                                    Icon(imageVector = Icons.Filled.DateRange, contentDescription = "Seleccionar hora")
+                                    Icon(imageVector = Icons.Filled.Schedule, contentDescription = "Seleccionar hora")
                                 }
                             },
                             colors = TextFieldDefaults.outlinedTextFieldColors(

@@ -14,7 +14,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.tutormatch.estructuras.Estudiante
 import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.navigation.Navigation
 import com.example.tutormatch.navigation.NavigationState

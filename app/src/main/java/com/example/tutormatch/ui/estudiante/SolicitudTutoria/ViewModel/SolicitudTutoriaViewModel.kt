@@ -87,28 +87,6 @@ class SolicitudTutoriaViewModel(
         }
     }
 
-    /*
-        fun fetchMateriasTutor(materiasNombres: List<String>) {
-            println("Nombres de materias del tutor: $materiasNombres")
-            viewModelScope.launch {
-                val result = repository.getMateriasByNombres(materiasNombres)
-                if (result.isSuccess) {
-                    _materiasTutor.value = result.getOrDefault(emptyList())
-                    println("Materias del tutor obtenidas: ${_materiasTutor.value}")
-                } else {
-                    println("Error al obtener materias del tutor: ${result.exceptionOrNull()?.message}")
-                }
-            }
-        }
-
-        fun fetchAllMaterias() {
-            viewModelScope.launch {
-                val materias = repository.getAllMaterias()
-                println("Materias obtenidas en la prueba: $materias")
-            }
-        }
-
-     */
 
     fun toggleMateriaDropdown() {
         materiaDropdownExpanded.value = !materiaDropdownExpanded.value

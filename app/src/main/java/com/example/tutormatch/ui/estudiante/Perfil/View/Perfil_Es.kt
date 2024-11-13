@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.Estudiante
 import com.example.tutormatch.ui.theme.AzulTerciario
 import com.example.tutormatch.ui.theme.GrisPrimario
 import androidx.compose.material.icons.filled.ExpandLess

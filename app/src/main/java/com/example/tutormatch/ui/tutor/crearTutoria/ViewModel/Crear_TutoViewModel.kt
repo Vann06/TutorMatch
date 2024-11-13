@@ -1,5 +1,6 @@
 package com.example.tutormatch.ui.tutor.crearTutoria.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
@@ -17,11 +18,43 @@ class CrearTutoriaViewModel(
     private val _materiasDisponibles = MutableStateFlow<List<Materia>>(emptyList())
     val materiasDisponibles: StateFlow<List<Materia>> = _materiasDisponibles
 
+    private val _selectedMateria = MutableStateFlow<Materia?>(null)
+    val selectedMateria: StateFlow<Materia?> = _selectedMateria
+
     private val _tiposDeTutoria = MutableStateFlow<List<String>>(listOf("Presencial", "Virtual"))
     val tiposDeTutoria: StateFlow<List<String>> = _tiposDeTutoria
 
     private val _estadoCreacion = MutableStateFlow<Result<String>?>(null)
     val estadoCreacion: StateFlow<Result<String>?> = _estadoCreacion
+
+    private val _materiasTutor = MutableStateFlow<List<Materia>>(emptyList())
+    val materiasTutor: StateFlow<List<Materia>> = _materiasTutor
+
+    private val _selectedDate = MutableStateFlow("")
+    val selectedDate: StateFlow<String> = _selectedDate
+
+    private val _selectedTime = MutableStateFlow("")
+    val selectedTime: StateFlow<String> = _selectedTime
+
+    var materiaDropdownExpanded = mutableStateOf(false)
+        private set
+
+    fun toggleMateriaDropdown() {
+        materiaDropdownExpanded.value = !materiaDropdownExpanded.value
+    }
+
+    fun setSelectedMateria(materia: Materia?) {
+        _selectedMateria.value = materia
+        toggleMateriaDropdown()
+    }
+
+    fun setSelectedDate(date: String) {
+        _selectedDate.value = date
+    }
+
+    fun setSelectedTime(time: String) {
+        _selectedTime.value = time
+    }
 
     init {
         cargarMateriasDisponibles()
@@ -39,7 +72,8 @@ class CrearTutoriaViewModel(
         tipoTutoria: String?,
         fecha: String,
         hora: String,
-        descripcion: String
+        descripcion: String,
+        esGrupal: Boolean
     ) {
         if (materia == null || tipoTutoria == null || fecha.isEmpty() || hora.isEmpty()) {
             _estadoCreacion.value = Result.failure(Exception("Todos los campos son obligatorios"))
@@ -54,7 +88,7 @@ class CrearTutoriaViewModel(
             hora = hora,
             modalidad = tipoTutoria,
             mensaje = descripcion,
-            estado = "Disponible"
+            esGrupal = esGrupal
         )
 
         viewModelScope.launch {
