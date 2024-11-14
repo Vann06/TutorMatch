@@ -207,11 +207,13 @@ fun PerfilTutorScreen(
 
                             item {
                                 // Modalidad
-                                ExpandablePerfilItem(
+                                MultiSelectPerfilItem(
                                     iconResId = R.drawable.clock_2,
                                     title = "Modalidad",
-                                    initialText = tutor.modalidad,
-                                    onEdit = { newModalidad ->
+                                    options = listOf("Virtual", "Presencial"),
+                                    selectedOptions = tutor.modalidad.split(", ").map { it.trim() },
+                                    onSave = { selectedModalidades ->
+                                        val newModalidad = selectedModalidades.joinToString(", ")
                                         val updatedTutor = tutor.copy(modalidad = newModalidad)
                                         viewModel.actualizarTutor(updatedTutor)
                                     }

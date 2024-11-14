@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
-import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaConDetalles
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaDetalles
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +14,8 @@ import kotlinx.coroutines.tasks.await
 
 class EstudianteTuViewModel : ViewModel() {
 
-    private val _tutoriaConDetalles = MutableStateFlow<TutoriaConDetalles?>(null)
-    val tutoriaConDetalles: StateFlow<TutoriaConDetalles?> get() = _tutoriaConDetalles
+    private val _tutoriaConDetalles = MutableStateFlow<TutoriaDetalles.TutoriaConDetalles?>(null)
+    val tutoriaConDetalles: StateFlow<TutoriaDetalles.TutoriaConDetalles?> get() = _tutoriaConDetalles
 
     fun cargarDetalleTutoria(tutoriaId: String) {
         viewModelScope.launch {
@@ -35,7 +35,8 @@ class EstudianteTuViewModel : ViewModel() {
                     val materia = Materia(id = tutoria.materiaId, nombre = tutoria.materiaId)
 
                     if (estudiante != null) {
-                        val detalle = TutoriaConDetalles(tutoria, estudiante, materia)
+                        val detalle =
+                            TutoriaDetalles.TutoriaConDetalles(tutoria, estudiante, materia)
                         _tutoriaConDetalles.value = detalle
                     } else {
                         // Manejar error

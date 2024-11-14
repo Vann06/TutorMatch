@@ -1,8 +1,8 @@
 package com.example.tutormatch.ui.tutor.crearTutoria.Repository
 
-// CrearTutoriaRepository.kt
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
-import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaGrupal
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -19,12 +19,28 @@ class CrearTutoriaRepository {
         }
     }
 
-    suspend fun crearTutoria(tutoria: Tutoria1): Result<String> {
+    suspend fun obtenerTutorPorId(tutorId: String): Result<Tutor1> {
+        return try {
+            val snapshot = firestore.collection("tutores").document(tutorId).get().await()
+            val tutor = snapshot.toObject(Tutor1::class.java)
+            if (tutor != null) {
+                Result.success(tutor)
+            } else {
+                Result.failure(Exception("Tutor no encontrado"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
+    // Cambiamos la función para aceptar TutoriaGrupal
+    suspend fun crearTutoria(tutoria: TutoriaGrupal): Result<String> {
         return try {
             val documentRef = firestore.collection("tutorias").document()
             tutoria.id = documentRef.id
             documentRef.set(tutoria).await()
-            Result.success("Tutoría creada con éxito")
+            Result.success("Tutoría grupal creada con éxito")
         } catch (e: Exception) {
             Result.failure(e)
         }

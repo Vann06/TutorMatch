@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.tutormatch.R
-import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaConDetalles
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaDetalles
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.ui.theme.AzulClaro
 import com.example.tutormatch.ui.theme.AzulPrimario
@@ -43,7 +43,7 @@ import com.example.tutormatch.ui.tutor.Estudiante_Tu.ViewModel.EstudianteTuViewM
 
 @Composable
 fun EstudianteTuContenido(
-    solicitud: TutoriaConDetalles,
+    solicitud: TutoriaDetalles.TutoriaConDetalles,
     navController: NavHostController,
     viewModel: EstudianteTuViewModel
 ) {

@@ -1,8 +1,7 @@
 package com.example.tutormatch.estructuras.firebaseImplementation
 
-data class Tutoria1(
+data class TutoriaGrupal(
     var id: String = "",
-    val estudianteId: String = "",
     val tutorId: String = "",
     val materiaId: String = "",
     val fecha: String = "",
@@ -10,5 +9,6 @@ data class Tutoria1(
     val modalidad: String = "",
     val mensaje: String = "",
     val estado: String = "Pendiente",
-    //var esGrupal: Boolean = false
+    val cuposMaximos: Int = 15, //Cuantos estudiantes pueden ir o permitidos
+    val estudiantesInscritos: MutableList<String> = mutableListOf() //ID de los estudiantes ya inscritos
 )

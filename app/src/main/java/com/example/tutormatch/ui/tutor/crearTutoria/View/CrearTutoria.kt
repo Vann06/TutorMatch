@@ -36,30 +36,22 @@ fun CreacionTutoria(
     navController: NavHostController,
     viewModel: CrearTutoriaViewModel = viewModel()
 ) {
-    var expandedMateria by remember { mutableStateOf(false) }
-    var selectedMateria by remember { mutableStateOf<Materia?>(null) }
-    var expandedTipoTutoria by remember { mutableStateOf(false) }
-    var selectedTipoTutoria by remember { mutableStateOf<String?>(null) }
-    var comment by remember { mutableStateOf("") }
-    var selectedDate by remember { mutableStateOf("") }
-    var selectedTime by remember { mutableStateOf("") }
-    var esGrupal by remember { mutableStateOf(false) }
-
-    // Obtiene los datos de materias y tipos de tutoría desde el ViewModel
     val materias = viewModel.materiasDisponibles.collectAsState().value
-    val tiposDeTutoria = viewModel.tiposDeTutoria.collectAsState().value
+    val selectedMateria = viewModel.selectedMateria.collectAsState().value
+    val selectedModalidad = viewModel.selectedModalidad.collectAsState().value
+    val selectedDate = viewModel.selectedDate.collectAsState().value
+    val selectedTime = viewModel.selectedTime.collectAsState().value
+    val comment = viewModel.comment.collectAsState().value
+    val tutoriaCreationStatus = viewModel.tutoriaCreationStatus.collectAsState().value
 
     val context = LocalContext.current
-
-    val materiasTutor by viewModel.materiasTutor.collectAsState()
-
-    var timePickerDialogState = remember { mutableStateOf(false) }
-    var datePickerDialogState = remember { mutableStateOf(false) }
     val calendar = Calendar.getInstance()
+    var datePickerDialogState = remember { mutableStateOf(false) }
+    var timePickerDialogState = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            AppBar(title = "Crear Tutoría", navController = navController)
+            AppBar(title = "Crear Tutoría Grupal", navController = navController)
         },
         content = { paddingValues ->
             LazyColumn(
@@ -96,23 +88,20 @@ fun CreacionTutoria(
                         expanded = viewModel.materiaDropdownExpanded.value,
                         onDismissRequest = { viewModel.toggleMateriaDropdown() }
                     ) {
-                        materiasTutor.forEach { materia ->
+                        materias.forEach { materia ->
                             DropdownMenuItem(
                                 text = { Text(materia.nombre) },
                                 onClick = { viewModel.setSelectedMateria(materia) }
                             )
                         }
                     }
-                    //Text(text = "Materias cargadas: ${materiasTutor.size}")
-
                 }
 
-                // Tipo de Tutoría dropdown
+                // Modalidad dropdown
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
-                        text = "Tipo de Tutoría",
+                        text = "Modalidad",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
@@ -120,38 +109,34 @@ fun CreacionTutoria(
                     )
 
                     Button(
-                        onClick = { expandedTipoTutoria = true },
+                        onClick = { viewModel.toggleModalidadDropdown() },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
-                            contentColor = AzulPrimario
+                            contentColor = Color(0xFF3D44B6)
                         ),
                         shape = RoundedCornerShape(16.dp),
-                        border = BorderStroke(1.dp, AzulPrimario),
+                        border = BorderStroke(1.dp, Color(0xFF3D44B6)),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = selectedTipoTutoria ?: "Selecciona el tipo de tutoría")
+                        Text(text = selectedModalidad ?: "Selecciona la modalidad")
                     }
 
                     DropdownMenu(
-                        expanded = expandedTipoTutoria,
-                        onDismissRequest = { expandedTipoTutoria = false }
+                        expanded = viewModel.modalidadDropdownExpanded.value,
+                        onDismissRequest = { viewModel.toggleModalidadDropdown() }
                     ) {
-                        tiposDeTutoria.forEach { tipo ->
+                        viewModel.modalidadesTutor.collectAsState().value.forEach { modalidad ->
                             DropdownMenuItem(
-                                text = { Text(tipo) },
-                                onClick = {
-                                    selectedTipoTutoria = tipo
-                                    expandedTipoTutoria = false
-                                }
+                                text = { Text(modalidad) },
+                                onClick = { viewModel.setSelectedModalidad(modalidad) }
                             )
                         }
                     }
                 }
 
-                // Fecha y Hora
+                // Fecha de la tutoría
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         text = "Fecha de la tutoría",
                         fontWeight = FontWeight.Bold,
@@ -159,7 +144,6 @@ fun CreacionTutoria(
                         color = Color.Black,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
-
                     OutlinedTextField(
                         value = selectedDate,
                         onValueChange = {},
@@ -172,8 +156,8 @@ fun CreacionTutoria(
                             }
                         },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = AzulPrimario,
-                            cursorColor = AzulPrimario
+                            focusedBorderColor = Color(0xFF3D44B6),
+                            cursorColor = Color(0xFF3D44B6)
                         )
                     )
                 }
@@ -192,9 +176,9 @@ fun CreacionTutoria(
                     ).show()
                 }
 
+                // Hora de la tutoría
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
                         text = "Hora de la tutoría",
                         fontWeight = FontWeight.Bold,
@@ -202,7 +186,6 @@ fun CreacionTutoria(
                         color = Color.Black,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
-
                     OutlinedTextField(
                         value = selectedTime,
                         onValueChange = {},
@@ -215,8 +198,8 @@ fun CreacionTutoria(
                             }
                         },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = AzulPrimario,
-                            cursorColor = AzulPrimario
+                            focusedBorderColor = Color(0xFF3D44B6),
+                            cursorColor = Color(0xFF3D44B6)
                         )
                     )
                 }
@@ -238,77 +221,41 @@ fun CreacionTutoria(
                 // Descripción
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-
                     Text(
-                        text = "Escribe una descripción de qué tratará tu clase:",
+                        text = "Descripción",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
-
                     TextField(
                         value = comment,
-                        onValueChange = { comment = it },
+                        onValueChange = { viewModel.setComment(it) },
                         placeholder = { Text(text = "Escribe aquí...") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(120.dp),
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFFF0F0F0),
-                            cursorColor = AzulPrimario
+                            cursorColor = Color(0xFF3D44B6)
                         )
                     )
                 }
 
+                // Botón de Crear Tutoría Grupal
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "¿Tutoría Grupal?",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.Black,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Switch(
-                            checked = esGrupal,
-                            onCheckedChange = { esGrupal = it },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = AzulPrimario
-                            )
-                        )
-                    }
-                }
-
-                // Botón de Crear Tutoría
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     Button(
                         onClick = {
-                            // Lógica para crear la tutoría
-                            viewModel.crearTutoria(
-                                materia = selectedMateria,
-                                tipoTutoria = selectedTipoTutoria,
-                                fecha = selectedDate,
-                                hora = selectedTime,
-                                descripcion = comment,
-                                esGrupal = esGrupal // Pasamos el nuevo campo
-                            )
-                            // Navegar a la pantalla deseada después de crear la tutoría
-                            navController.navigate("home")
+                            viewModel.crearTutoriaGrupal()
+                            //navController.navigate("home")
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 16.dp),
-                        colors = ButtonDefaults.buttonColors(AzulPrimario)
+                        colors = ButtonDefaults.buttonColors(Color(0xFF3D44B6))
                     ) {
-                        Text(text = "Crear Tutoría", color = Color.White)
+                        Text(text = "Crear Tutoría Grupal", color = Color.White)
                     }
                 }
             }
