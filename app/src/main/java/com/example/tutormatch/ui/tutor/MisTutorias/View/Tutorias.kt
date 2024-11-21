@@ -19,6 +19,8 @@ import androidx.navigation.NavHostController
 import com.example.tutormatch.ui.tutor.MisTutorias.ViewModel.MisTutoriasViewModel
 import com.example.tutormatch.ui.tutor.solicitudes.ViewModel.SolicitudesViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaGrupal
 
 @Composable
 fun MisTutoriasContent(navController: NavHostController, viewModel: MisTutoriasViewModel = viewModel()) {
@@ -44,7 +46,21 @@ fun MisTutoriasContent(navController: NavHostController, viewModel: MisTutoriasV
                 .fillMaxSize()
         ) {
             items(misTutorias) { tutoria ->
-                TutoriaCard(navController = navController, tutoria = tutoria)
+                when (tutoria) {
+                    is Tutoria1 -> {
+                        TutoriaCard(navController = navController, tutoria = tutoria)
+                    }
+                    is TutoriaGrupal -> {
+                        TutoriaGrupalCard(navController = navController, tutoriaGrupal = tutoria)
+                    }
+                    else -> {
+                        Text(
+                            text = "Tipo de tutoría desconocido",
+                            color = Color.Red,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
             }
         }
     } else {
@@ -57,6 +73,7 @@ fun MisTutoriasContent(navController: NavHostController, viewModel: MisTutoriasV
         }
     }
 }
+
 
 @Composable
 fun SolicitudesContent(navController: NavHostController, viewModel: SolicitudesViewModel = viewModel()) {

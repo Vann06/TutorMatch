@@ -1,5 +1,6 @@
 package com.example.tutormatch.ui.tutor.MisTutorias.View
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -38,6 +39,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +52,9 @@ import coil.compose.AsyncImage
 import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaGrupal
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.navigation.NavigationState
 import com.example.tutormatch.ui.theme.AzulPrimario
@@ -192,3 +196,100 @@ fun TutoriaCard(
         }
     }
 }
+
+@Composable
+fun TutoriaGrupalCard(
+    navController: NavController,
+    tutoriaGrupal: TutoriaGrupal,
+    esSolicitud: Boolean = false
+) {
+    // Estados para almacenar la información
+    val materiaNombre = remember { mutableStateOf("") }
+    val tutor = remember { mutableStateOf<Tutor1?>(null) }
+
+    // Obtener la información del tutor
+    LaunchedEffect(tutoriaGrupal.tutorId) {
+        val firestore = FirebaseFirestore.getInstance()
+        try {
+            val tutorSnapshot = firestore.collection("tutores").document(tutoriaGrupal.tutorId).get().await()
+            val tutorData = tutorSnapshot.toObject(Tutor1::class.java)
+            tutor.value = tutorData
+        } catch (e: Exception) {
+            Log.e("TutoriaGrupalCard", "Error al obtener tutor: ${e.message}")
+        }
+    }
+
+    // Obtener el nombre de la materia
+    LaunchedEffect(tutoriaGrupal.materiaId) {
+        val firestore = FirebaseFirestore.getInstance()
+        try {
+            val materiaSnapshot = firestore.collection("materias").document(tutoriaGrupal.materiaId).get().await()
+            materiaNombre.value = materiaSnapshot.getString("nombre") ?: "Materia desconocida"
+        } catch (e: Exception) {
+            Log.e("TutoriaGrupalCard", "Error al obtener materia: ${e.message}")
+        }
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = {
+                // Navegar a la vista detallada de la tutoría grupal
+
+            })
+            .padding(8.dp)
+            .shadow(12.dp, shape = RoundedCornerShape(8.dp)),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF37474F) // Color gris azulado oscuro
+        )
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Foto de perfil del tutor
+                AsyncImage(
+                    model = tutor.value?.fotoPerfilUrl.takeIf { !it.isNullOrEmpty() },
+                    placeholder = painterResource(R.drawable.tutor),
+                    error = painterResource(R.drawable.tutor),
+                    contentDescription = "Perfil del tutor",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Column {
+                    // Título: Materia solicitada
+                    Text(
+                        text = materiaNombre.value,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.White
+                    )
+                    // Subtítulo: Nombre del tutor
+                    Text(
+                        text = tutor.value?.nombre ?: "Tutor desconocido",
+                        fontSize = 14.sp,
+                        color = Color.LightGray
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            // Mensaje del tutor
+            Text(
+                text = tutoriaGrupal.mensaje,
+                fontSize = 14.sp,
+                color = Color.White,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Indicador de que es una tutoría grupal
+            Text(
+                text = "Tutoría Grupal",
+                fontSize = 12.sp,
+                color = Color.Cyan,
+                fontStyle = FontStyle.Italic
+            )
+        }
+    }
+}
+

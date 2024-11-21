@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tutormatch.R
@@ -29,6 +30,10 @@ import com.example.tutormatch.ui.tutor.crearTutoria.viewmodel.CrearTutoriaViewMo
 import com.example.tutormatch.ui.theme.AzulPrimario
 import java.util.Calendar
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,9 +54,17 @@ fun CreacionTutoria(
     var datePickerDialogState = remember { mutableStateOf(false) }
     var timePickerDialogState = remember { mutableStateOf(false) }
 
+    // CoroutineScope para manejar tareas suspendidas
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+
     Scaffold(
         topBar = {
             AppBar(title = "Crear Tutoría Grupal", navController = navController)
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         },
         content = { paddingValues ->
             LazyColumn(
@@ -247,8 +260,26 @@ fun CreacionTutoria(
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = {
-                            viewModel.crearTutoriaGrupal()
-                            //navController.navigate("home")
+                            if (selectedMateria != null &&
+                                !selectedModalidad.isNullOrBlank() &&
+                                selectedDate.isNotBlank() &&
+                                selectedTime.isNotBlank() &&
+                                comment.isNotBlank()
+                            ) {
+
+                                viewModel.crearTutoriaGrupal()
+                                navController.navigate("MisTutorias")
+                                CoroutineScope(Dispatchers.Main).launch {
+
+                                    snackbarHostState.showSnackbar("Tutoría creada exitosamente",
+                                        duration=SnackbarDuration.Long)
+                                }
+
+                            } else {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    snackbarHostState.showSnackbar("Por favor, llena todos los campos")
+                                }
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -262,4 +293,3 @@ fun CreacionTutoria(
         }
     )
 }
-
