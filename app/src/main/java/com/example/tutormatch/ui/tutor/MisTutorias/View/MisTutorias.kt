@@ -137,9 +137,21 @@ fun TutoriaCard(
     // Obtener la información del estudiante
     LaunchedEffect(tutoria.estudianteId) {
         val firestore = FirebaseFirestore.getInstance()
-        val estudianteSnapshot = firestore.collection("estudiantes").document(tutoria.estudianteId).get().await()
-        val estudianteData = estudianteSnapshot.toObject(Estudiante1::class.java)
-        estudiante.value = estudianteData
+        try {
+            if (tutoria.estudianteId.isNotEmpty()) {
+                val estudianteSnapshot = firestore
+                    .collection("estudiantes")
+                    .document(tutoria.estudianteId)
+                    .get()
+                    .await()
+
+                estudiante.value = estudianteSnapshot.toObject(Estudiante1::class.java)
+            } else {
+                Log.e("TutoriaCard", "El campo estudianteId está vacío o nulo")
+            }
+        } catch (e: Exception) {
+            Log.e("TutoriaCard", "Error al obtener estudiante: ${e.message}")
+        }
     }
 
     Card(
