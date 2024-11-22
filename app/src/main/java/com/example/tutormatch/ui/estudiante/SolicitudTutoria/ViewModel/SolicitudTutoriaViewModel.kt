@@ -128,44 +128,46 @@ class SolicitudTutoriaViewModel(
     // *** Métodos para Crear la Tutoría ***
     fun createTutoria(estudianteId: String, tutorId: String) {
         val materiaId = selectedMateria.value?.id ?: run {
-            // Manejar el caso de materia no seleccionada
             _tutoriaCreationStatus.value = Result.failure(Exception("Debe seleccionar una materia"))
             return
         }
         val modalidadSeleccionada = selectedModalidad.value ?: run {
-            // Manejar el caso de modalidad no seleccionada
             _tutoriaCreationStatus.value = Result.failure(Exception("Debe seleccionar una modalidad"))
             return
         }
         val tutoria = Tutoria1(
-            id = UUID.randomUUID().toString(), // ID único
+            id = UUID.randomUUID().toString(),
             estudianteId = estudianteId,
             tutorId = tutorId,
             materiaId = materiaId,
             fecha = selectedDate.value,
             hora = selectedTime.value,
-            modalidad = modalidadSeleccionada, // Usar la modalidad seleccionada
+            modalidad = modalidadSeleccionada,
             mensaje = comment.value,
-            estado = "Pendiente" // Estado inicial
+            estado = "Pendiente"
         )
 
         viewModelScope.launch {
-            val result = repository.createTutoria(tutoria)
+            val result = repository.createTutoriaIndividual(tutoria) // Usamos el método actualizado
             _tutoriaCreationStatus.value = result
         }
     }
+
+
+
+
     // Agregar el método para cargar la tutoría existente
     fun cargarTutoriaExistente(tutoriaId: String) {
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
-            val tutoriaSnapshot = firestore.collection("tutorias").document(tutoriaId).get().await()
+            val tutoriaSnapshot = firestore.collection("tutorias_individuales").document(tutoriaId).get().await()
             val tutoria = tutoriaSnapshot.toObject(Tutoria1::class.java)
 
             tutoria?.let {
                 // Setear los valores de la tutoría en los StateFlows
-                _selectedMateria.value = Materia(id = it.materiaId, nombre = it.materiaId) // Ajusta si tienes nombres diferentes
+                _selectedMateria.value = Materia(id = it.materiaId, nombre = it.materiaId)
                 _selectedModalidad.value = it.modalidad
-                _selectedTipoTutoria.value = it.mensaje // Aquí usa el campo que corresponda
+                _selectedTipoTutoria.value = it.mensaje // Ajusta si corresponde
                 _selectedDate.value = it.fecha
                 _selectedTime.value = it.hora
                 _comment.value = it.mensaje
@@ -173,8 +175,24 @@ class SolicitudTutoriaViewModel(
         }
     }
 
+
     fun resetTutoriaCreationStatus() {
         _tutoriaCreationStatus.value = null
+    }
+    // Método para actualizar una tutoría existente (reagendar)
+    fun updateTutoria(tutoria: Tutoria1) {
+        viewModelScope.launch {
+            val result = repository.updateTutoriaIndividual(tutoria)
+            // Manejar el resultado según necesites
+        }
+    }
+
+    // Método para cancelar una tutoría
+    fun cancelTutoria(tutoriaId: String) {
+        viewModelScope.launch {
+            val result = repository.cancelTutoriaIndividual(tutoriaId)
+            // Manejar el resultado según necesites
+        }
     }
 
 

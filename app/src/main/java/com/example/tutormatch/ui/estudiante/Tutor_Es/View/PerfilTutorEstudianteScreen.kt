@@ -23,7 +23,7 @@ fun PerfilTutorEstudianteScreen(
     val tutorState by viewModel.tutor.collectAsState()
 
     if (tutorState != null) {
-        PerfilTutorEstudiante(tutor = tutorState!!, navController = navController)
+        PerfilTutorEstudiante(tutor = tutorState!!, navController = navController, viewModel = viewModel)
     } else {
         // Mostrar un indicador de carga o un mensaje de error
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

@@ -23,7 +23,7 @@ class EstudianteTuViewModel : ViewModel() {
 
             try {
                 // Obtener la tutoría
-                val tutoriaSnapshot = firestore.collection("tutorias").document(tutoriaId).get().await()
+                val tutoriaSnapshot = firestore.collection("tutorias_individuales").document(tutoriaId).get().await()
                 val tutoria = tutoriaSnapshot.toObject(Tutoria1::class.java)
 
                 if (tutoria != null) {
@@ -53,7 +53,7 @@ class EstudianteTuViewModel : ViewModel() {
     fun aceptarSolicitud(tutoriaId: String) {
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
-            firestore.collection("tutorias").document(tutoriaId)
+            firestore.collection("tutorias_individuales").document(tutoriaId)
                 .update("estado", "Aceptada")
                 .await()
         }
@@ -61,7 +61,7 @@ class EstudianteTuViewModel : ViewModel() {
     fun rechazarSolicitud(tutoriaId: String) {
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
-            firestore.collection("tutorias").document(tutoriaId)
+            firestore.collection("tutorias_individuales").document(tutoriaId)
                 .update("estado", "Rechazada")
                 .await()
         }

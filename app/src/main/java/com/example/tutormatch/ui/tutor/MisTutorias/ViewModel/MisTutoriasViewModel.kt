@@ -3,6 +3,7 @@ package com.example.tutormatch.ui.tutor.MisTutorias.ViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaGrupal
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,8 +13,11 @@ import kotlinx.coroutines.tasks.await
 
 class MisTutoriasViewModel : ViewModel() {
 
-    private val _misTutorias = MutableStateFlow<List<Tutoria1>>(emptyList())
-    val misTutorias: StateFlow<List<Tutoria1>> = _misTutorias
+    private val _misTutoriasIndividuales = MutableStateFlow<List<Tutoria1>>(emptyList())
+    val misTutoriasIndividuales: StateFlow<List<Tutoria1>> = _misTutoriasIndividuales
+
+    private val _misTutoriasGrupales = MutableStateFlow<List<TutoriaGrupal>>(emptyList())
+    val misTutoriasGrupales: StateFlow<List<TutoriaGrupal>> = _misTutoriasGrupales
 
     private val _estadoCarga = MutableStateFlow<Result<Unit>?>(null)
     val estadoCarga: StateFlow<Result<Unit>?> = _estadoCarga
@@ -27,22 +31,23 @@ class MisTutoriasViewModel : ViewModel() {
             try {
                 val tutorId = FirebaseAuth.getInstance().currentUser?.uid
                 if (tutorId != null) {
-                    val tutorias = obtenerTutoriasAceptadasDelTutor(tutorId)
-                    _misTutorias.value = tutorias
-                    _estadoCarga.value = Result.success(Unit)
+                    val tutoriasIndividuales = obtenerTutoriasIndividualesDelTutor(tutorId)
+                    val tutoriasGrupales = obtenerTutoriasGrupalesDelTutor(tutorId)
+                    _misTutoriasIndividuales.value = tutoriasIndividuales
+                    _misTutoriasGrupales.value = tutoriasGrupales
+                    // ... (Actualizar estado de carga)
                 } else {
-                    _estadoCarga.value = Result.failure(Exception("Usuario no autenticado"))
+                    // ... (Manejar error de autenticación)
                 }
             } catch (e: Exception) {
-                _estadoCarga.value = Result.failure(e)
+                // ... (Manejar excepciones)
             }
         }
     }
-
-    private suspend fun obtenerTutoriasAceptadasDelTutor(tutorId: String): List<Tutoria1> {
+    private suspend fun obtenerTutoriasIndividualesDelTutor(tutorId: String): List<Tutoria1> {
         val firestore = FirebaseFirestore.getInstance()
         return try {
-            val snapshot = firestore.collection("tutorias")
+            val snapshot = firestore.collection("tutorias_individuales") // Asegúrate de usar 'tutorias_individuales'
                 .whereEqualTo("tutorId", tutorId)
                 .whereEqualTo("estado", "Aceptada")
                 .get()
@@ -51,6 +56,22 @@ class MisTutoriasViewModel : ViewModel() {
             snapshot.toObjects(Tutoria1::class.java)
         } catch (e: Exception) {
             emptyList() // Retorna lista vacía en caso de error
+        }
+    }
+
+
+    private suspend fun obtenerTutoriasGrupalesDelTutor(tutorId: String): List<TutoriaGrupal> {
+        val firestore = FirebaseFirestore.getInstance()
+        return try {
+            val snapshot = firestore.collection("tutorias_grupales")
+                .whereEqualTo("tutorId", tutorId)
+                .whereEqualTo("estado", "Disponible")
+                .get()
+                .await()
+
+            snapshot.toObjects(TutoriaGrupal::class.java)
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 

@@ -8,7 +8,7 @@ data class TutoriaGrupal(
     val hora: String = "",
     val modalidad: String = "",
     val mensaje: String = "",
-    val estado: String = "Pendiente",
+    val estado: String = "Disponible",
     val cuposMaximos: Int = 15, //Cuantos estudiantes pueden ir o permitidos
     val estudiantesInscritos: MutableList<String> = mutableListOf() //ID de los estudiantes ya inscritos
 )

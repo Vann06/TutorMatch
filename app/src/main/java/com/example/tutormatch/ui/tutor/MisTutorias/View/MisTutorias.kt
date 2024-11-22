@@ -51,6 +51,7 @@ import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
 import com.example.tutormatch.estructuras.firebaseImplementation.Materia
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaGrupal
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.navigation.NavigationState
 import com.example.tutormatch.ui.theme.AzulPrimario
@@ -188,6 +189,45 @@ fun TutoriaCard(
                 color = Color.White,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+fun TutoriaGrupalCard(
+    navController: NavController,
+    tutoriaGrupal: TutoriaGrupal
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable(onClick = {
+                // Navegar a la vista detallada de la tutoría grupal
+                navController.navigate(NavigationState.DetalleTutoriaGrupalTutor.createRoute(tutoriaGrupal.id))
+            }),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF424242) // Color gris oscuro
+        )
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            // Información de la tutoría grupal
+            Text(
+                text = "Materia: ${tutoriaGrupal.materiaId}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = Color.White
+            )
+            Text(
+                text = "Fecha: ${tutoriaGrupal.fecha} - Hora: ${tutoriaGrupal.hora}",
+                fontSize = 14.sp,
+                color = Color.LightGray
+            )
+            Text(
+                text = "Cupos disponibles: ${tutoriaGrupal.cuposMaximos - tutoriaGrupal.estudiantesInscritos.size}",
+                fontSize = 14.sp,
+                color = Color.LightGray
             )
         }
     }

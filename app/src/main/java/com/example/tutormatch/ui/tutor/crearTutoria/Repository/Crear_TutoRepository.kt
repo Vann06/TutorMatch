@@ -35,9 +35,10 @@ class CrearTutoriaRepository {
 
 
     // Cambiamos la función para aceptar TutoriaGrupal
-    suspend fun crearTutoria(tutoria: TutoriaGrupal): Result<String> {
+    suspend fun crearTutoriaGrupal(tutoria: TutoriaGrupal): Result<String> {
         return try {
-            val documentRef = firestore.collection("tutorias").document()
+            val documentRef =
+                firestore.collection("tutorias_grupales").document() // Usamos la nueva colección
             tutoria.id = documentRef.id
             documentRef.set(tutoria).await()
             Result.success("Tutoría grupal creada con éxito")

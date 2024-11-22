@@ -19,6 +19,8 @@ import com.example.tutormatch.ui.estudiante.Perfil.View.PerfilEstudianteScreen
 import com.example.tutormatch.ui.estudiante.SolicitudTutoria.view.SolicitudTutoria
 import com.example.tutormatch.ui.estudiante.Tutor_Es.View.PerfilTutorEstudianteScreen
 import com.example.tutormatch.ui.estudiante.TutoriaDetalle.View.TutoriaDetalleEstudiante
+import com.example.tutormatch.ui.estudiante.TutoriaGrupal.TutoriaGrupalView.DetalleTutoriaGrupal
+import com.example.tutormatch.ui.tutor.DetallesTutoriaGrupal.DetallesTutoriaGrupalView.DetalleTutoriaGrupalTutor
 import com.example.tutormatch.ui.tutor.Estudiante_Tu.View.EstudianteTuScreen
 import com.example.tutormatch.ui.tutor.MisTutorias.View.MisTutoriasScreen
 import com.example.tutormatch.ui.tutor.crearTutoria.View.CreacionTutoria
@@ -43,6 +45,19 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
         }
 
         // ESTUDIANTE
+        composable(
+            route = NavigationState.DetalleTutoriaGrupal.route,
+            arguments = listOf(navArgument("tutoriaId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val tutoriaId = backStackEntry.arguments?.getString("tutoriaId")
+            if (tutoriaId != null) {
+                DetalleTutoriaGrupal(tutoriaId = tutoriaId, navController = navController)
+            } else {
+                // Manejo de error si tutoriaId es nulo
+                navController.popBackStack()
+            }
+        }
+
         composable(NavigationState.Main_Es.route) {
             MainEstudiante(navController = navController, viewModel = viewModel)
         }
@@ -108,6 +123,18 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
 
 
         // TUTOR
+        composable(
+            route = NavigationState.DetalleTutoriaGrupalTutor.route,
+            arguments = listOf(navArgument("tutoriaId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val tutoriaId = backStackEntry.arguments?.getString("tutoriaId")
+            if (tutoriaId != null) {
+                DetalleTutoriaGrupalTutor(tutoriaId = tutoriaId, navController = navController)
+            } else {
+                // Manejo de error si tutoriaId es nulo
+                navController.popBackStack()
+            }
+        }
         composable(NavigationState.MisTutorias.route) {
             MisTutoriasScreen(navController = navController)
         }

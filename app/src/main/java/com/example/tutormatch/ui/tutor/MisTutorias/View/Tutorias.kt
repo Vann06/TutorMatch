@@ -2,8 +2,10 @@ package com.example.tutormatch.ui.tutor.MisTutorias.View
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -12,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -19,10 +22,10 @@ import androidx.navigation.NavHostController
 import com.example.tutormatch.ui.tutor.MisTutorias.ViewModel.MisTutoriasViewModel
 import com.example.tutormatch.ui.tutor.solicitudes.ViewModel.SolicitudesViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-
 @Composable
 fun MisTutoriasContent(navController: NavHostController, viewModel: MisTutoriasViewModel = viewModel()) {
-    val misTutorias by viewModel.misTutorias.collectAsState()
+    val misTutoriasIndividuales by viewModel.misTutoriasIndividuales.collectAsState()
+    val misTutoriasGrupales by viewModel.misTutoriasGrupales.collectAsState()
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -38,25 +41,38 @@ fun MisTutoriasContent(navController: NavHostController, viewModel: MisTutoriasV
         }
     }
 
-    if (misTutorias.isNotEmpty()) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            items(misTutorias) { tutoria ->
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        item {
+            Text(text = "Tutorías Individuales", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(12.dp))
+        }
+        if (misTutoriasIndividuales.isNotEmpty()) {
+            items(misTutoriasIndividuales) { tutoria ->
                 TutoriaCard(navController = navController, tutoria = tutoria)
             }
+        } else {
+            item {
+                Text(text = "No tienes tutorías individuales.", modifier = Modifier.padding(8.dp))
+            }
         }
-    } else {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "No tienes tutorías pendientes")
+
+        item {
+            Text(text = "Tutorías Grupales", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(12.dp))
+        }
+        if (misTutoriasGrupales.isNotEmpty()) {
+            items(misTutoriasGrupales) { tutoriaGrupal ->
+                TutoriaGrupalCard(navController = navController, tutoriaGrupal = tutoriaGrupal)
+            }
+        } else {
+            item {
+                Text(text = "No tienes tutorías grupales.", modifier = Modifier.padding(8.dp))
+            }
         }
     }
 }
+
 
 @Composable
 fun SolicitudesContent(navController: NavHostController, viewModel: SolicitudesViewModel = viewModel()) {

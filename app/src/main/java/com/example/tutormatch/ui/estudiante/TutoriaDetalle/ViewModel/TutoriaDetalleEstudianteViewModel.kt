@@ -26,7 +26,7 @@ class TutoriaDetalleEstudianteViewModel : ViewModel() {
 
             try {
                 // Obtener la tutoría
-                val tutoriaSnapshot = firestore.collection("tutorias").document(tutoriaId).get().await()
+                val tutoriaSnapshot = firestore.collection("tutorias_individuales").document(tutoriaId).get().await()
                 val tutoria = tutoriaSnapshot.toObject(Tutoria1::class.java)
 
                 if (tutoria != null) {
@@ -57,7 +57,7 @@ class TutoriaDetalleEstudianteViewModel : ViewModel() {
             try {
                 val firestore = FirebaseFirestore.getInstance()
                 // Cambiar el estado de la tutoría a "Pendiente"
-                firestore.collection("tutorias").document(detalleTutoria.tutoria.id)
+                firestore.collection("tutorias_individuales").document(detalleTutoria.tutoria.id)
                     .update("estado", "Pendiente").await()
 
                 // Navegar a la vista de solicitud de tutoría con los datos existentes
@@ -77,7 +77,7 @@ class TutoriaDetalleEstudianteViewModel : ViewModel() {
     fun cancelarTutoria(tutoriaId: String) {
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
-            firestore.collection("tutorias").document(tutoriaId)
+            firestore.collection("tutorias_individuales").document(tutoriaId)
                 .update("estado", "Cancelada")
                 .await()
         }

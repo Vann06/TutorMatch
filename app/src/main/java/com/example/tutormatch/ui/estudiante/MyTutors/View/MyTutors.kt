@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +49,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
+import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaGrupal
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.navigation.NavigationState
 import com.google.firebase.firestore.FirebaseFirestore
@@ -59,8 +61,9 @@ fun MyTutorsScreen(
     navController: NavHostController,
     viewModel: MyTutorsViewModel = viewModel()
 ) {
-    val tutorias by viewModel.tutorias.observeAsState()
-    val error by viewModel.error.observeAsState()
+    val tutoriasIndividuales by viewModel.tutoriasIndividuales.collectAsState()
+    val tutoriasGrupales by viewModel.tutoriasGrupales.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     Scaffold(
         topBar = {
@@ -81,33 +84,51 @@ fun MyTutorsScreen(
                     Text(text = "Error: $error", color = Color.Red)
                 }
             } else {
-                tutorias?.let { listaTutorias ->
-                    if (listaTutorias.isNotEmpty()) {
-                        MyTutors(
-                            listaTutorias = listaTutorias,
-                            navController = navController,
-                            modifier = Modifier.padding(paddingValues)
-                        )
-                    } else {
-                        // Mostrar mensaje de que no hay tutorías
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = "No tienes tutorías aún")
+                Column(modifier = Modifier.padding(paddingValues)) {
+                    // Mostrar tutorías individuales
+                    Text(
+                        text = "Tutorías Individuales",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    if (tutoriasIndividuales.isNotEmpty()) {
+                        LazyColumn {
+                            items(tutoriasIndividuales) { tutoria ->
+                                TutoriaCard(
+                                    infotutoria = tutoria,
+                                    navController = navController,
+                                    //esGrupal = false
+                                )
+                            }
                         }
+                    } else {
+                        Text(
+                            text = "No tienes tutorías individuales aún",
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
-                } ?: run {
-                    // Mostrar indicador de carga
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+
+                    // Mostrar tutorías grupales
+                    Text(
+                        text = "Tutorías Grupales",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    if (tutoriasGrupales.isNotEmpty()) {
+                        LazyColumn {
+                            items(tutoriasGrupales) { tutoriaGrupal ->
+                                TutoriaGrupalCard(
+                                    tutoriaGrupal = tutoriaGrupal,
+                                    navController = navController,
+                                    esMiTutoria = true
+                                )
+                            }
+                        }
+                    } else {
+                        Text(
+                            text = "No estás inscrito en tutorías grupales aún",
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
             }
@@ -283,5 +304,45 @@ fun BottomNavigationBar(navController: NavHostController) {
                 }
             }
         )
+    }
+}
+
+@Composable
+fun TutoriaGrupalCard(
+    tutoriaGrupal: TutoriaGrupal,
+    navController: NavController,
+    esMiTutoria: Boolean = false
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable {
+                if (esMiTutoria) {
+                    // Navegar a detalles de mi tutoría grupal
+                    navController.navigate("DetalleTutoriaGrupal/${tutoriaGrupal.id}")
+                } else {
+                    // Navegar a detalles de tutoría grupal para inscribirse
+                    navController.navigate("DetalleTutoriaGrupal/${tutoriaGrupal.id}")
+                }
+            },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = tutoriaGrupal.materiaId,
+                style = MaterialTheme.typography.titleMedium,
+                color = AzulPrimario
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Fecha: ${tutoriaGrupal.fecha} - Hora: ${tutoriaGrupal.hora}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Cupos disponibles: ${tutoriaGrupal.cuposMaximos - tutoriaGrupal.estudiantesInscritos.size}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }

@@ -27,6 +27,10 @@ sealed class NavigationState(val route: String) {
     object TutoriaDetalleEstudiante : NavigationState("TutoriaDetalleEstudiante/{tutoriaId}") {
         fun createRoute(tutoriaId: String) = "TutoriaDetalleEstudiante/$tutoriaId"
     }
+    object DetalleTutoriaGrupal : NavigationState("DetalleTutoriaGrupal/{tutoriaId}") {
+        fun createRoute(tutoriaId: String) = "DetalleTutoriaGrupal/$tutoriaId"
+    }
+
 
     // TUTOR
     object CrearTutoria : NavigationState("CrearTutoria")
@@ -35,4 +39,8 @@ sealed class NavigationState(val route: String) {
     object Estudiante_Tu : NavigationState("Estudiante_Tu/{tutoriaId}") {
         fun createRoute(tutoriaId: String) = "Estudiante_Tu/$tutoriaId"
     }
+    object DetalleTutoriaGrupalTutor : NavigationState("DetalleTutoriaGrupalTutor/{tutoriaId}") {
+        fun createRoute(tutoriaId: String) = "DetalleTutoriaGrupalTutor/$tutoriaId"
+    }
+
 }

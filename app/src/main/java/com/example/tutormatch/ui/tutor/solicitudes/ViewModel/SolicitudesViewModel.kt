@@ -32,7 +32,7 @@ class SolicitudesViewModel : ViewModel() {
     private suspend fun obtenerSolicitudes(tutorId: String): List<Tutoria1> {
         val firestore = FirebaseFirestore.getInstance()
         return try {
-            val snapshot = firestore.collection("tutorias")
+            val snapshot = firestore.collection("tutorias_individuales") // Cambiado a 'tutorias_individuales'
                 .whereEqualTo("tutorId", tutorId)
                 .whereEqualTo("estado", "Pendiente")
                 .get()
@@ -48,7 +48,7 @@ class SolicitudesViewModel : ViewModel() {
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
             try {
-                firestore.collection("tutorias").document(tutoria.id)
+                firestore.collection("tutorias_individuales").document(tutoria.id) // Cambiado a 'tutorias_individuales'
                     .update("estado", "Aceptada")
                     .await()
                 // Actualizar la lista de solicitudes
@@ -63,7 +63,7 @@ class SolicitudesViewModel : ViewModel() {
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
             try {
-                firestore.collection("tutorias").document(tutoria.id)
+                firestore.collection("tutorias_individuales").document(tutoria.id) // Cambiado a 'tutorias_individuales'
                     .update("estado", "Rechazada")
                     .await()
                 // Actualizar la lista de solicitudes

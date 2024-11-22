@@ -134,22 +134,23 @@ class CrearTutoriaViewModel(
         }
 
         val nuevaTutoriaGrupal = TutoriaGrupal(
-            id = "", // El ID será asignado por Firestore
+            id = "", // El ID asignado por Firestore
             tutorId = tutorId,
             materiaId = materiaId,
             fecha = selectedDate.value,
             hora = selectedTime.value,
             modalidad = modalidadSeleccionada,
             mensaje = comment.value,
-            cuposMaximos = 15, // Número de cupos definido
-            estudiantesInscritos = mutableListOf() // Lista vacía de estudiantes inicialmente
+            cuposMaximos = 15,
+            estudiantesInscritos = mutableListOf()
         )
 
         viewModelScope.launch {
-            val resultado = repository.crearTutoria(nuevaTutoriaGrupal)
+            val resultado = repository.crearTutoriaGrupal(nuevaTutoriaGrupal)
             _tutoriaCreationStatus.value = resultado
         }
     }
+
 
     // Reiniciar estado después de manejarlo
     fun resetTutoriaCreationStatus() {
