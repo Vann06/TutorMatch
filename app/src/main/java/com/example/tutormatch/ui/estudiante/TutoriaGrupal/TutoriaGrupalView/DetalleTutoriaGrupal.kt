@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -89,7 +90,7 @@ fun DetalleTutoriaGrupalContent(
             AppBar(title = "Detalles de Tutoría Grupal", navController = navController)
         },
         content = { paddingValues ->
-            Surface(color = Color.White) {
+            Surface(color = MaterialTheme.colorScheme.background) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -117,7 +118,7 @@ fun DetalleTutoriaGrupalContent(
                                     modifier = Modifier
                                         .size(150.dp)
                                         .clip(CircleShape)
-                                        .border(2.dp, Color.White)
+                                        .border(2.dp, MaterialTheme.colorScheme.onBackground)
                                 )
 
                                 Text(
@@ -146,7 +147,7 @@ fun DetalleTutoriaGrupalContent(
                             Text(
                                 text = tutoriaGrupal.materiaId,
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -165,7 +166,7 @@ fun DetalleTutoriaGrupalContent(
                             Text(
                                 text = tutoriaGrupal.modalidad,
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -185,14 +186,14 @@ fun DetalleTutoriaGrupalContent(
                                 Text(
                                     text = tutoriaGrupal.fecha,
                                     fontSize = 20.sp,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.padding(end = 10.dp)
                                 )
 
                                 Text(
                                     text = tutoriaGrupal.hora,
                                     fontSize = 20.sp,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.padding(end = 10.dp)
                                 )
 
@@ -208,7 +209,7 @@ fun DetalleTutoriaGrupalContent(
                             Text(
                                 text = tutoriaGrupal.mensaje,
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -227,7 +228,7 @@ fun DetalleTutoriaGrupalContent(
                             Text(
                                 text = "${tutoriaGrupal.cuposMaximos - tutoriaGrupal.estudiantesInscritos.size}",
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -244,12 +245,12 @@ fun DetalleTutoriaGrupalContent(
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(
-                                    if (isInscrito) Color.Red else AzulPrimario
+                                    if (isInscrito) MaterialTheme.colorScheme.error else AzulPrimario
                                 )
                             ) {
                                 Text(
                                     text = if (isInscrito) "Desinscribirse" else "Inscribirse",
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.onPrimary,
                                     fontSize = 16.sp
                                 )
                             }

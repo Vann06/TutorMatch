@@ -130,7 +130,7 @@ fun SolicitudTutoria(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.background)
                         .padding(horizontal = 16.dp)
                         .padding(innerPadding),
                     horizontalAlignment = Alignment.Start
@@ -142,7 +142,7 @@ fun SolicitudTutoria(
                             text = "Materia",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                         Button(
@@ -179,7 +179,7 @@ fun SolicitudTutoria(
                             text = "Tipo de Tutoría",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                         Button(
@@ -213,7 +213,7 @@ fun SolicitudTutoria(
                             text = "Modalidad",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                         Button(
@@ -249,7 +249,7 @@ fun SolicitudTutoria(
                             text = "Fecha de la tutoría",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                         OutlinedTextField(
@@ -292,7 +292,7 @@ fun SolicitudTutoria(
                             text = "Hora de la tutoría",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                         OutlinedTextField(
@@ -334,7 +334,7 @@ fun SolicitudTutoria(
                             text = "Comentario",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                         OutlinedTextField(

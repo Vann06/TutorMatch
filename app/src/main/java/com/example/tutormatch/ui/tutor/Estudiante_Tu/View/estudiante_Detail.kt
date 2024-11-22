@@ -52,7 +52,7 @@ fun EstudianteTuContenido(
             AppBar(title = "Detalles de Tutoría", navController = navController)
         },
         content = { paddingValues ->
-            Surface(color = Color.White) {
+            Surface(color = MaterialTheme.colorScheme.background) {
                 Image(
                     painter = painterResource(id = R.drawable.perfil_fondo),
                     contentDescription = "Solicitud de Estudiante",
@@ -115,7 +115,7 @@ fun EstudianteTuContenido(
                             Text(
                                 text = solicitud.materia.nombre,
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -134,7 +134,7 @@ fun EstudianteTuContenido(
                             Text(
                                 text = solicitud.tutoria.modalidad,
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -154,14 +154,14 @@ fun EstudianteTuContenido(
                                 Text(
                                     text = solicitud.tutoria.fecha,
                                     fontSize = 20.sp,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.padding(end = 10.dp)
                                 )
 
                                 Text(
                                     text = solicitud.tutoria.hora,
                                     fontSize = 20.sp,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.padding(end = 10.dp)
                                 )
                             }
@@ -188,7 +188,7 @@ fun EstudianteTuContenido(
                                 Text(
                                     text = solicitud.tutoria.mensaje,
                                     fontSize = 15.sp,
-                                    color = Color.Black
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
 

@@ -150,7 +150,7 @@ fun MainEstudiante(
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(38.dp))
 
                     SearchBar(
                         query = searchQuery,
@@ -160,21 +160,7 @@ fun MainEstudiante(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Button(
-                        onClick = { isDropdownVisible = !isDropdownVisible },
-                        colors = ButtonDefaults.buttonColors(AzulPrimario),
-                    ) {
-                        Text(
-                            text = if (isDropdownVisible) "Ocultar Materias" else "Mostrar Materias",
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            imageVector = if (isDropdownVisible) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                            contentDescription = if (isDropdownVisible) "Ocultar" else "Mostrar"
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(35.dp))
 
                     if (isDropdownVisible) {
                         LazyColumn(

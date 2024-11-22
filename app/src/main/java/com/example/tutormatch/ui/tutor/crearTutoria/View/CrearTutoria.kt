@@ -57,7 +57,7 @@ fun CreacionTutoria(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 16.dp)
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.Start
@@ -69,7 +69,7 @@ fun CreacionTutoria(
                         text = "Materia",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                     Button(
@@ -104,7 +104,7 @@ fun CreacionTutoria(
                         text = "Modalidad",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
 
@@ -141,7 +141,7 @@ fun CreacionTutoria(
                         text = "Fecha de la tutoría",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                     OutlinedTextField(
@@ -183,7 +183,7 @@ fun CreacionTutoria(
                         text = "Hora de la tutoría",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                     OutlinedTextField(
@@ -225,7 +225,7 @@ fun CreacionTutoria(
                         text = "Descripción",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                     TextField(

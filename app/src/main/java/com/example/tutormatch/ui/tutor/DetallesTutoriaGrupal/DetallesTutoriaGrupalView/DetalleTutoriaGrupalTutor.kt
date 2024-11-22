@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -71,7 +72,7 @@ fun DetalleTutoriaGrupalTutorContent(
             AppBar(title = "Detalles de Tutoría Grupal", navController = navController)
         },
         content = { paddingValues ->
-            Surface(color = Color.White) {
+            Surface(color = MaterialTheme.colorScheme.background) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -101,7 +102,7 @@ fun DetalleTutoriaGrupalTutorContent(
                             Text(
                                 text = tutoriaGrupal.materiaId,
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -120,7 +121,7 @@ fun DetalleTutoriaGrupalTutorContent(
                             Text(
                                 text = tutoriaGrupal.modalidad,
                                 fontSize = 20.sp,
-                                color = Color.Black,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 modifier = Modifier.padding(end = 10.dp)
                             )
 
@@ -140,14 +141,14 @@ fun DetalleTutoriaGrupalTutorContent(
                                 Text(
                                     text = tutoriaGrupal.fecha,
                                     fontSize = 20.sp,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.padding(end = 10.dp)
                                 )
 
                                 Text(
                                     text = tutoriaGrupal.hora,
                                     fontSize = 20.sp,
-                                    color = Color.Black,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier.padding(end = 10.dp)
                                 )
                             }

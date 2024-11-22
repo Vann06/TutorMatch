@@ -64,7 +64,7 @@ fun PerfilTutorEstudiante(
             AppBar(title = "", navController = navController)
         },
         content = { paddingValues ->
-            Surface(color = Color.White) {
+            Surface(color = MaterialTheme.colorScheme.background) {
                 Image(
                     painter = painterResource(id = R.drawable.perfil_fondo),
                     contentDescription = "Perfil del tutor",
@@ -114,7 +114,7 @@ fun PerfilTutorEstudiante(
                                     text = tutor.nombre,
                                     fontWeight = FontWeight.ExtraBold,
                                     fontSize = 25.sp,
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     modifier = Modifier
                                         .padding(start = 20.dp)
                                         .fillMaxWidth()
@@ -136,7 +136,7 @@ fun PerfilTutorEstudiante(
                                     Text(
                                         text = "- Virtual",
                                         fontSize = 16.sp,
-                                        color = Color.Black,
+                                        color = MaterialTheme.colorScheme.onBackground,
                                         modifier = Modifier.padding(end = 10.dp)
                                     )
                                 }
@@ -144,7 +144,7 @@ fun PerfilTutorEstudiante(
                                     Text(
                                         text = "- Presencial",
                                         fontSize = 16.sp,
-                                        color = Color.Black
+                                        color = MaterialTheme.colorScheme.onBackground
                                     )
                                 }
                             }
@@ -169,7 +169,7 @@ fun PerfilTutorEstudiante(
                                 Text(
                                     text = tutor.descripcion,
                                     fontSize = 15.sp,
-                                    color = Color.Black
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
 
