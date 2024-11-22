@@ -141,7 +141,7 @@ fun MainEstudiante(
         ) {
             Surface {
                 Image(
-                    painter = painterResource(id = R.drawable.perfil_fondo),
+                    painter = painterResource(id = R.drawable.perfil_fondo_2),
                     contentDescription = "Fondo de pantalla",
                 )
 
