@@ -52,11 +52,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun SignUpScreen(navController: NavHostController) {
-    val auth = FirebaseAuth.getInstance() // Obtén la instancia de FirebaseAuth
-    val firestore = FirebaseFirestore.getInstance() // Obtén la instancia de Firestore
+    val auth = FirebaseAuth.getInstance()
+    val firestore = FirebaseFirestore.getInstance()
 
-    val authRepository = AuthRepository(auth = auth, firestore = firestore) // Pasa las instancias
-    val signUpViewModel = SignUpViewModel(authRepository) // Pasa el repo al ViewModel
+    val authRepository = AuthRepository(auth = auth, firestore = firestore)
+    val signUpViewModel = SignUpViewModel(authRepository)
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }

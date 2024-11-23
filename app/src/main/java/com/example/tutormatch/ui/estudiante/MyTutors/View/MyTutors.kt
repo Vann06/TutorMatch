@@ -3,7 +3,17 @@ package com.example.tutormatch.ui.estudiante.MyTutors.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -14,7 +24,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,20 +46,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tutormatch.R
-import com.example.tutormatch.ui.estudiante.MyTutors.ViewModel.MyTutorsViewModel
-import com.example.tutormatch.ui.theme.AzulPrimario
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tutormatch.estructuras.firebaseImplementation.Estudiante1
-import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
-
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.tutormatch.R
 import com.example.tutormatch.estructuras.firebaseImplementation.Tutor1
+import com.example.tutormatch.estructuras.firebaseImplementation.Tutoria1
 import com.example.tutormatch.estructuras.firebaseImplementation.TutoriaGrupal
 import com.example.tutormatch.navigation.AppBar
 import com.example.tutormatch.navigation.NavigationState
+import com.example.tutormatch.ui.estudiante.MyTutors.ViewModel.MyTutorsViewModel
+import com.example.tutormatch.ui.theme.AzulPrimario
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -97,7 +103,6 @@ fun MyTutorsScreen(
                                 TutoriaCard(
                                     infotutoria = tutoria,
                                     navController = navController,
-                                    //esGrupal = false
                                 )
                             }
                         }
@@ -135,27 +140,6 @@ fun MyTutorsScreen(
         }
     )
 }
-
-@Composable
-fun MyTutors(
-    listaTutorias: List<Tutoria1>,
-    navController: NavController,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        items(listaTutorias) { tutoria ->
-            TutoriaCard(
-                infotutoria = tutoria,
-                navController = navController
-            )
-        }
-    }
-}
-
 
 @Composable
 fun TutoriaCard(

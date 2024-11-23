@@ -305,7 +305,7 @@ fun ExpandablePerfilItem(
             TextField(
                 value = editText,
                 onValueChange = { editText = it },
-                label = { Text("Edit $title") }, //Muestra la opcion reciente
+                label = { Text("Edit $title") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)

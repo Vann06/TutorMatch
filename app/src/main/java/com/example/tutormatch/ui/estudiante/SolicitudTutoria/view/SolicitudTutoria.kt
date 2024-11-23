@@ -91,7 +91,6 @@ fun SolicitudTutoria(
     // Obtener el tutor
     val tutor by viewModel.tutor.collectAsState()
 
-    // Crear una variable local para evitar el error de smart cast
     val currentTutor = tutor
 
     val materiasTutor by viewModel.materiasTutor.collectAsState()
@@ -168,8 +167,6 @@ fun SolicitudTutoria(
                                 )
                             }
                         }
-                        //Text(text = "Materias cargadas: ${materiasTutor.size}")
-
                     }
 
                     // Tipo de Tutoría dropdown

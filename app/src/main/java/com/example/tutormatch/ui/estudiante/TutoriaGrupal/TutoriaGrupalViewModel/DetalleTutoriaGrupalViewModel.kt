@@ -47,7 +47,6 @@ class DetalleTutoriaGrupalViewModel(private val tutoriaId: String) : ViewModel()
                     _isEstudianteInscrito.value = estudianteId != null && it.estudiantesInscritos.contains(estudianteId)
                 }
             } catch (e: Exception) {
-                // Manejar error
             }
         }
     }

@@ -23,7 +23,6 @@ import com.example.tutormatch.ui.theme.AzulPrimario
 
 @Composable
 fun Bienvenida(navController: NavController) {
-    // Caja
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -32,8 +31,8 @@ fun Bienvenida(navController: NavController) {
         Image(
             painter = painterResource(id = R.drawable.gato_inicio),
             contentDescription = "Fondo de pantalla",
-            contentScale = ContentScale.Crop, // llenar toda la pantalla
-            modifier = Modifier.fillMaxSize() // Ocupa toda la pantalla
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
         )
 
         // Column para colocar el texto y los botones encima de la imagen
@@ -91,8 +90,3 @@ fun Bienvenida(navController: NavController) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun WelcomeScreenPreview() {
-    //Bienvenida(navController = )
-}

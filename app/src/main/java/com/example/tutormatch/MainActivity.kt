@@ -41,55 +41,11 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Navigation(
-                        navController = navController, // Llama a la función Navigation
+                        navController = navController,
                         viewModel = estudianteViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
-            }
-        }
-    }
-}
-
-
-@Composable
-fun NavigationGraph(
-    navController: NavHostController,
-    viewModel: MainEstudianteViewModel,
-    modifier: Modifier = Modifier
-) {
-    NavHost(
-        navController = navController,
-        startDestination = NavigationState.Bienvenida.route,
-        modifier = modifier
-    ) {
-        composable(NavigationState.Bienvenida.route) {
-            Bienvenida(navController)
-        }
-        composable(NavigationState.Login.route) {
-            LoginScreen(navController)
-        }
-        composable(NavigationState.SignUp.route) {
-            SignUpScreen(navController)
-        }
-        composable(NavigationState.Main_Es.route) {
-            MainEstudiante(navController, viewModel)
-        }
-        composable(NavigationState.MisTutorias.route) {
-            MisTutoriasScreen(navController)
-        }
-
-        // **Agrega este bloque para la ruta PerfilTutorEstudiante**
-        composable(
-            route = NavigationState.PerfilTutorEstudiante.route,
-            arguments = listOf(navArgument("tutorId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val tutorId = backStackEntry.arguments?.getString("tutorId")
-            if (tutorId != null) {
-                PerfilTutorEstudianteScreen(tutorId = tutorId, navController = navController)
-            } else {
-                // Manejo de error si tutorId es nulo
-                navController.popBackStack()
             }
         }
     }

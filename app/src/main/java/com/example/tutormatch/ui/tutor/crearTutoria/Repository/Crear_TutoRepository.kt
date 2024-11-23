@@ -32,9 +32,6 @@ class CrearTutoriaRepository {
             Result.failure(e)
         }
     }
-
-
-    // Cambiamos la función para aceptar TutoriaGrupal
     suspend fun crearTutoriaGrupal(tutoria: TutoriaGrupal): Result<String> {
         return try {
             val documentRef =

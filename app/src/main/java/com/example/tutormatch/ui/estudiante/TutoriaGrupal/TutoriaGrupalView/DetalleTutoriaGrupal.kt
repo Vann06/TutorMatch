@@ -105,8 +105,6 @@ fun DetalleTutoriaGrupalContent(
                     ) {
                         item {
                             // Mostrar detalles de la tutoría grupal
-                            // Similar a TutoriaDetalleEstudianteContent, pero adaptado para TutoriaGrupal
-
                             Spacer(modifier = Modifier.height(16.dp))
 
                             Row(verticalAlignment = Alignment.CenterVertically) {

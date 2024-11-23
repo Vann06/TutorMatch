@@ -39,13 +39,10 @@ class EstudianteTuViewModel : ViewModel() {
                             TutoriaDetalles.TutoriaConDetalles(tutoria, estudiante, materia)
                         _tutoriaConDetalles.value = detalle
                     } else {
-                        // Manejar error
                     }
                 } else {
-                    // Manejar error
                 }
             } catch (e: Exception) {
-                // Manejar excepción
             }
         }
     }

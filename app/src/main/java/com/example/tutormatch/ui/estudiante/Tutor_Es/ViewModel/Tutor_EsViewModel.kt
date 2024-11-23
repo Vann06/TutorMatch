@@ -37,7 +37,7 @@ class PerfilTutorEstudianteViewModel(private val tutorId: String) : ViewModel() 
         viewModelScope.launch {
             val tutorias = repository.getTutoriasGrupales(tutorId)
             // Filtrar tutorías que no estén canceladas
-            val tutoriasDisponibles = tutorias.filter { it.estado != "Cancelada" }
+            //val tutoriasDisponibles = tutorias.filter { it.estado != "Cancelada" }
             _tutoriasGrupales.value = tutorias
         }
     }

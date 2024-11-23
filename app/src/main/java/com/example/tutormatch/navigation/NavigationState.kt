@@ -2,6 +2,8 @@ package com.example.tutormatch.navigation
 
 
 sealed class NavigationState(val route: String) {
+
+    // GENERAL
     object Bienvenida : NavigationState("Bienvenida")
     object Login : NavigationState("Login")
     object SignUp : NavigationState("SignUp")
@@ -19,8 +21,6 @@ sealed class NavigationState(val route: String) {
             }
         }
     }
-
-    //object Tutor_Es : NavigationState("Tutor_Es")
     object PerfilTutorEstudiante : NavigationState("PerfilTutorEstudiante/{tutorId}") {
         fun createRoute(tutorId: String) = "PerfilTutorEstudiante/$tutorId"
     }

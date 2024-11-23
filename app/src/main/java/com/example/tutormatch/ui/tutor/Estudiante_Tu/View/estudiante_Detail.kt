@@ -100,8 +100,6 @@ fun EstudianteTuContenido(
                             }
 
                             Spacer(modifier = Modifier.height(20.dp))
-
-                            // Continúa con el resto de tus componentes
                             // Materia
                             Text(
                                 text = "Materia :",

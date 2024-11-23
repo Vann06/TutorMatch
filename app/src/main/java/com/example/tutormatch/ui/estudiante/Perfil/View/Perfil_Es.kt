@@ -147,6 +147,7 @@ fun PerfilEstudianteScreen(
                                     initialText = "********",
                                     onEdit = { newPassword ->
                                         // Manejar actualización de contraseña
+                                        // Pendiente aun
                                     }
                                 )
                                 Divider(
@@ -203,7 +204,6 @@ fun PerfilEstudianteScreen(
     )
 }
 
-//  Funcion para opciones expandibles y modificar datos
 @Composable
 fun ExpandablePerfilItem(
     iconResId: Int,
@@ -240,12 +240,11 @@ fun ExpandablePerfilItem(
             Button(expanded = expanded, onClick = { expanded = !expanded })
         }
 
-        // Verificacion de si se expandio muestra opcion
         if (expanded) {
             TextField(
                 value = editText,
                 onValueChange = { editText = it },
-                label = { Text("Edit $title") }, //Muestra la opcion reciente
+                label = { Text("Edit $title") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -263,7 +262,6 @@ fun ExpandablePerfilItem(
 }
 
 
-// Un item del perfil que no necesita expansion
 @Composable
 fun PerfilItem(
     iconResId: Int,

@@ -95,7 +95,7 @@ fun MainEstudiante(
         matchesName || matchesSubject
     }
 
-    // Materias para mostrar en el dropdown (puedes filtrar si deseas)
+    // Materias para mostrar en el dropdown
     val filteredMaterias = materias.filter { materia ->
         materia.nombre.contains(searchQuery, ignoreCase = true)
     }

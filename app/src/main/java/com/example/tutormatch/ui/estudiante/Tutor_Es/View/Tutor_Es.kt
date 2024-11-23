@@ -204,8 +204,6 @@ fun PerfilTutorEstudiante(
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
                         }
-
-                        // Ahora, fuera del 'item', llamamos a 'items' para las tutorías grupales
                         items(tutoriasGrupales) { tutoriaGrupal ->
                             TutoriaGrupalCard(
                                 tutoriaGrupal = tutoriaGrupal,

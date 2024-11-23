@@ -1,6 +1,5 @@
 package com.example.tutormatch.estructuras.firebaseImplementation
 
-// Estudiante1.kt
 class Estudiante1 (
     override val id: String = "",
     override var nombre: String = "",

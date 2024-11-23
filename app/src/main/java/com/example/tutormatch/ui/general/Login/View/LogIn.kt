@@ -52,7 +52,6 @@ fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier)
     val errorMessage by viewModel.errorMessage.collectAsState()
     val successMessage by viewModel.successMessage.collectAsState()
 
-    // Observa los cambios en el estado de inicio de sesión
     LaunchedEffect(successMessage) {
         successMessage?.let {
             // Navega a la pantalla correspondiente según el tipo de cuenta

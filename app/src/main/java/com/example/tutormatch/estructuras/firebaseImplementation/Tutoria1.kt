@@ -10,5 +10,4 @@ data class Tutoria1(
     val modalidad: String = "",
     val mensaje: String = "",
     val estado: String = "Pendiente",
-    //var esGrupal: Boolean = false
-)
+    )

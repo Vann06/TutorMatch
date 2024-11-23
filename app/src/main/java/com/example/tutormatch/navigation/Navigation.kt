@@ -53,7 +53,6 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
             if (tutoriaId != null) {
                 DetalleTutoriaGrupal(tutoriaId = tutoriaId, navController = navController)
             } else {
-                // Manejo de error si tutoriaId es nulo
                 navController.popBackStack()
             }
         }
@@ -78,16 +77,13 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
             val tutorId = backStackEntry.arguments?.getString("tutorId")
             val tutoriaId = backStackEntry.arguments?.getString("tutoriaId")
             if (tutorId != null) {
-                // Supongamos que tienes un método en el viewModel para obtener el tutor por ID
                 val tutor = viewModel.getTutorById(tutorId)
                 if (tutor != null) {
                     SolicitudTutoria(navController = navController, tutorId = tutorId, tutoriaId = tutoriaId)
                 } else {
-                    // Manejo de error si no se encuentra el tutor
                     navController.popBackStack()
                 }
             } else {
-                // Manejo de error si el tutorId es nulo
                 navController.popBackStack()
             }
         }
@@ -104,7 +100,6 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
             if (tutorId != null) {
                 PerfilTutorEstudianteScreen(tutorId = tutorId, navController = navController)
             } else {
-                // Manejo de error si tutorId es nulo
                 navController.popBackStack()
             }
         }
@@ -116,7 +111,6 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
             if (tutoriaId != null) {
                 TutoriaDetalleEstudiante(tutoriaId = tutoriaId, navController = navController)
             } else {
-                // Manejo de error si tutoriaId es nulo
                 navController.popBackStack()
             }
         }
@@ -131,7 +125,6 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
             if (tutoriaId != null) {
                 DetalleTutoriaGrupalTutor(tutoriaId = tutoriaId, navController = navController)
             } else {
-                // Manejo de error si tutoriaId es nulo
                 navController.popBackStack()
             }
         }
@@ -144,7 +137,6 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
         composable(NavigationState.PerfilTutor.route) {
             PerfilTutorScreen(navController = navController)
         }
-        // Agregar la nueva ruta
         composable(
             route = NavigationState.Estudiante_Tu.route,
             arguments = listOf(navArgument("tutoriaId") { type = NavType.StringType })
@@ -153,7 +145,6 @@ fun Navigation(navController: NavHostController, modifier: Modifier = Modifier, 
             if (tutoriaId != null) {
                 EstudianteTuScreen(tutoriaId = tutoriaId, navController = navController)
             } else {
-                // Manejo de error si tutoriaId es nulo
                 navController.popBackStack()
             }
         }

@@ -148,13 +148,10 @@ class SolicitudTutoriaViewModel(
         )
 
         viewModelScope.launch {
-            val result = repository.createTutoriaIndividual(tutoria) // Usamos el método actualizado
+            val result = repository.createTutoriaIndividual(tutoria)
             _tutoriaCreationStatus.value = result
         }
     }
-
-
-
 
     // Agregar el método para cargar la tutoría existente
     fun cargarTutoriaExistente(tutoriaId: String) {
@@ -167,7 +164,7 @@ class SolicitudTutoriaViewModel(
                 // Setear los valores de la tutoría en los StateFlows
                 _selectedMateria.value = Materia(id = it.materiaId, nombre = it.materiaId)
                 _selectedModalidad.value = it.modalidad
-                _selectedTipoTutoria.value = it.mensaje // Ajusta si corresponde
+                _selectedTipoTutoria.value = it.mensaje
                 _selectedDate.value = it.fecha
                 _selectedTime.value = it.hora
                 _comment.value = it.mensaje
